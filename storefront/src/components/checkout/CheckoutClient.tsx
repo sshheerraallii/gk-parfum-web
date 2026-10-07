@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { loadStripe, type Stripe } from "@stripe/stripe-js/pure";
+import { loadStripe } from "@stripe/stripe-js/pure";
+import type { Stripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useCart } from "@/lib/cart";
 import { useCatalog } from "../CatalogProvider";
@@ -522,7 +523,7 @@ function StripePay({ cart, onDone, name, email }: { cart: MCart; onDone: (id: st
 
   return (
     <div>
-      <PaymentElement options={{ layout: { type: "accordion", defaultCollapsed: false, radios: true, spacedAccordionItems: true }, wallets: { applePay: "auto", googlePay: "auto" } }} />
+      <PaymentElement options={{ layout: { type: "accordion", defaultCollapsed: false, radios: "always", spacedAccordionItems: true }, wallets: { applePay: "auto", googlePay: "auto" } }} />
       <button type="button" onClick={pay} disabled={!stripe || busy} className="btn btn-ink mt-6 w-full">
         {busy ? "Paying…" : `Pay ${formatPrice(Math.round(cart.total * 100))}`}
       </button>

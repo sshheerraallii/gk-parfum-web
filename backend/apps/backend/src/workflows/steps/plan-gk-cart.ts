@@ -3,6 +3,7 @@ import { ContainerRegistrationKeys, MedusaError, QueryContext } from "@medusajs/
 import { allocate, GIFT_BOX_SKU } from "../../lib/offers"
 import { GK_SETTINGS_MODULE } from "../../modules/gk-settings"
 import type GkSettingsService from "../../modules/gk-settings/service"
+import type { PricedVariant } from "../../lib/query-types"
 
 export type PlanGkCartInput = {
   cart_id: string
@@ -69,7 +70,7 @@ export const planGkCartStep = createStep("plan-gk-cart", async (input: PlanGkCar
         calculated_price: QueryContext({ region_id: cart.region_id, currency_code: cart.currency_code }),
       },
     })
-    for (const v of variants) {
+    for (const v of variants as unknown as PricedVariant[]) {
       const amount = Number(v.calculated_price?.calculated_amount)
       if (Number.isFinite(amount)) {
         prices.set(v.id, amount)

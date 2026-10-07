@@ -3,6 +3,7 @@ import { ContainerRegistrationKeys, MedusaError, QueryContext } from "@medusajs/
 import { allocate } from "../../lib/offers"
 import { GK_SETTINGS_MODULE } from "../../modules/gk-settings"
 import type GkSettingsService from "../../modules/gk-settings/service"
+import type { PricedVariant } from "../../lib/query-types"
 
 /**
  * Last line of defence: before an order is created, re-run the pricing rules and
@@ -17,14 +18,14 @@ completeCartWorkflow.hooks.validate(async ({ cart }, { container }) => {
   if (!items.length) {
     return
   }
-  const ids = [...new Set(items.map((i) => i!.variant_id as string))]
+  const ids = Array.from(new Set<string>(items.map((i) => String(i?.variant_id))))
   const { data: variants } = await query.graph({
     entity: "product_variant",
     fields: ["id", "calculated_price.calculated_amount"],
     filters: { id: ids },
     context: { calculated_price: QueryContext({ region_id: cart.region_id, currency_code: cart.currency_code }) },
   })
-  const base = new Map(variants.map((v) => [v.id, Number(v.calculated_price?.calculated_amount)]))
+  const base = new Map((variants as unknown as PricedVariant[]).map((v) => [v.id, Number(v.calculated_price?.calculated_amount)]))
 
   const allItems = (cart.items ?? []).filter((i) => i?.variant_id && base.has(i.variant_id as string))
   const units = allItems.flatMap((i) =>

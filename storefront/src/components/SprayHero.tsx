@@ -77,7 +77,8 @@ export function SprayHero() {
       const j = (Math.random() * (i + 1)) | 0;
       [pts[i], pts[j]] = [pts[j], pts[i]];
     }
-    const cap = window.innerWidth < 720 ? 1500 : 3000;
+    const weak = (navigator.hardwareConcurrency || 8) <= 4;
+    const cap = window.innerWidth < 720 ? (weak ? 900 : 1200) : weak ? 1800 : 2600;
     s.targets = pts.slice(0, cap);
   }, []);
 
@@ -110,7 +111,7 @@ export function SprayHero() {
     const aimY = slot.top + slot.height * 0.5 - hr.top;
     const baseAng = Math.atan2(aimY - n.y, aimX - n.x);
     const mobile = window.innerWidth < 720;
-    const extra = mobile ? 500 : 1100;
+    const extra = mobile ? 320 : 800;
     const total = s.targets.length + extra;
     // keep ambient motes, replace everything else
     s.parts = s.parts.filter((p) => p.ambient).slice(0, 80);
@@ -187,16 +188,22 @@ export function SprayHero() {
     img.decoding = "async";
     img.src = WORDMARK_SRC;
     let startTimer = 0;
+    const start = () => {
+      const go = () => (startTimer = window.setTimeout(() => spray(), 250));
+      if (document.readyState === "complete") go();
+      else window.addEventListener("load", go, { once: true });
+    };
     img.onload = () => {
       s.img = img;
       sampleTargets();
-      startTimer = window.setTimeout(() => spray(), 650);
+      start();
     };
 
     const io = new IntersectionObserver(([e]) => { s.running = e.isIntersecting; }, { threshold: 0.01 });
     io.observe(sectionRef.current!);
 
     let raf = 0;
+    let slow = 0;
     let last = performance.now();
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
@@ -276,6 +283,11 @@ export function SprayHero() {
         ctx.drawImage(s.sprite!, p.x - sz, p.y - sz, sz * 2, sz * 2);
       }
       s.parts = alive;
+      slow = slow * 0.9 + (dt > 0.024 ? 1 : 0) * 0.1;
+      if (slow > 0.6) {
+        s.parts = s.parts.filter((p) => p.hasT || p.ambient || Math.random() > 0.35);
+        slow = 0;
+      }
       ctx.globalAlpha = 1;
       ctx.globalCompositeOperation = "source-over";
     };
@@ -328,13 +340,13 @@ export function SprayHero() {
             />
           </div>
 
-          <h1 id="hero-title" className="display-xl hero-reveal mt-10 max-w-[13ch] text-ivory" style={{ ["--d" as string]: "3.25s" }}>
+          <h1 id="hero-title" className="display-xl hero-reveal mt-10 max-w-[13ch] text-ivory" style={{ ["--d" as string]: "1.1s" }}>
             Luxury perfume, made in the UK
           </h1>
-          <p className="lede hero-reveal mt-6" style={{ ["--d" as string]: "3.4s" }}>
+          <p className="lede hero-reveal mt-6" style={{ ["--d" as string]: "1.3s" }}>
             100&nbsp;ml of 40% extrait for £17.99. The scents you already know, built to last all day.
           </p>
-          <div className="hero-reveal mt-9 flex flex-wrap gap-3" style={{ ["--d" as string]: "3.55s" }}>
+          <div className="hero-reveal mt-9 flex flex-wrap gap-3" style={{ ["--d" as string]: "1.5s" }}>
             <Link href="/shop" className="btn btn-gold">Shop all 16 scents</Link>
             <Link href="#find" className="btn btn-ghost">Find my scent</Link>
           </div>
@@ -350,7 +362,7 @@ export function SprayHero() {
           >
             <Bottle cap={false} pressed={pressed} tint="#C9A15B" name="Crimson Luxe" className="h-full w-auto drop-shadow-[0_40px_60px_rgba(0,0,0,.6)]" />
             {!reduced && (
-              <span className="hero-reveal small absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap text-smoke transition-colors group-hover:text-champagne" style={{ ["--d" as string]: "4s" }}>
+              <span className="hero-reveal small absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap text-smoke transition-colors group-hover:text-champagne" style={{ ["--d" as string]: "3.2s" }}>
                 Tap the bottle
               </span>
             )}

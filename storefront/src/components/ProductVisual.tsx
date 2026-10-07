@@ -6,7 +6,6 @@ export function ProductVisual({ s, className, sizes = "(min-width: 1024px) 25vw,
   const img = s.images?.[0];
   if (img) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={img}
         alt={`${s.name} — ${s.inspiredBy ? `inspired by ${s.inspiredBy.brand} ${s.inspiredBy.name}` : "GK Parfum"} 100ml extrait de parfum`}

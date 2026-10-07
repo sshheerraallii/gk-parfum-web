@@ -3,22 +3,25 @@ import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
 import { GIFT_BOX_SKU } from "../../../../lib/offers"
 import { GK_SETTINGS_MODULE } from "../../../../modules/gk-settings"
 import type GkSettingsService from "../../../../modules/gk-settings/service"
+import type { PricedBoxVariant, PricedShippingOption } from "../../../../lib/query-types"
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const settings = req.scope.resolve<GkSettingsService>(GK_SETTINGS_MODULE)
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
   const offers = await settings.getOffers()
 
-  const { data: options } = await query.graph({
+  const { data: rawOptions } = await query.graph({
     entity: "shipping_option",
     fields: ["id", "name", "type.code", "type.description", "prices.amount", "prices.currency_code", "prices.price_rules.attribute"],
   })
-  const { data: box } = await query.graph({
+  const { data: rawBox } = await query.graph({
     entity: "product_variant",
     fields: ["id", "prices.amount", "prices.currency_code", "product.title"],
     filters: { sku: GIFT_BOX_SKU },
   })
 
+  const options = rawOptions as unknown as PricedShippingOption[]
+  const box = rawBox as unknown as PricedBoxVariant[]
   const pence = (n: unknown) => Math.round(Number(n ?? 0) * 100)
   res.json({
     offers: {
@@ -33,7 +36,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
       shipping: options
         .filter((o) => o.type?.code)
         .map((o) => ({
-          id: o.type!.code,
+          id: o.type!.code as string,
           option_id: o.id,
           name: o.name,
           eta: o.type?.description ?? "",

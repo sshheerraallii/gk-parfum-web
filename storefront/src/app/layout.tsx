@@ -41,10 +41,12 @@ export const metadata: Metadata = {
     url: SITE.url,
     title: "GK Parfum — Luxury Inspired Perfumes, Made in the UK",
     description: SITE.description,
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "GK Parfum" }],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", images: ["/og.png"] },
   icons: {
     icon: [{ url: "/brand/gk-favicon-foil-transparent.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   robots: { index: true, follow: true, "max-image-preview": "large" } as Metadata["robots"],
 };

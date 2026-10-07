@@ -199,3 +199,51 @@ body {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--line), transparent);
 }
+
+/* long-form pages */
+.prose-gk {
+  color: var(--smoke);
+  font-size: 1.06rem;
+  line-height: 1.75;
+}
+.prose-gk > * + * {
+  margin-top: 1.1em;
+}
+.prose-gk h2 {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(1.6rem, 2.4vw, 2rem);
+  line-height: 1.15;
+  color: var(--ivory);
+  margin-top: 2.2em;
+}
+.prose-gk ul {
+  list-style: none;
+  padding: 0;
+}
+.prose-gk ul li {
+  position: relative;
+  padding-left: 1.4em;
+}
+.prose-gk ul li + li {
+  margin-top: 0.55em;
+}
+.prose-gk ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 6px;
+  height: 6px;
+  transform: rotate(45deg);
+  background: var(--gilt);
+}
+.prose-gk a {
+  color: var(--champagne);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.prose-gk strong {
+  color: var(--ivory);
+  font-weight: 500;
+}

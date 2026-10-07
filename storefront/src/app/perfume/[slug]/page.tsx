@@ -18,13 +18,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const s = bySlug(slug, await getScents());
   if (!s) return {};
-  const insp = s.inspiredBy ? `Inspired by ${inspiredLabel(s)}` : "A GK original";
-  const title = `${s.name} — ${insp} | ${SIZE_ML}ml Extrait`;
+  const title = s.inspiredBy ? `${s.name} — ${s.inspiredBy.name} Inspired Perfume` : `${s.name} — Extrait de Parfum ${SIZE_ML}ml`;
   const description = s.inspiredBy
     ? `${s.name} smells like ${inspiredLabel(s)}. ${SIZE_ML}ml extrait de parfum, ${OIL_PERCENT}% oil, lasts ${s.longevityHours[0]}–${s.longevityHours[1]} hours. ${formatPrice(s.price)}, made in the UK.`
     : `${s.name}: ${s.oneLiner} ${SIZE_ML}ml extrait de parfum, ${formatPrice(s.price)}, made in the UK.`;
   return {
-    title: { absolute: `${title} | GK Parfum` },
+    title,
     description,
     alternates: { canonical: `/perfume/${s.slug}` },
     openGraph: { title, description, url: `/perfume/${s.slug}`, type: "website" },

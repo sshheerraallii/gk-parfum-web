@@ -1,0 +1,14 @@
+# Automatic HTTPS for both domains.
+{$SITE_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy storefront:3000
+}
+
+www.{$SITE_DOMAIN} {
+	redir https://{$SITE_DOMAIN}{uri} permanent
+}
+
+{$ADMIN_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy backend:9000
+}

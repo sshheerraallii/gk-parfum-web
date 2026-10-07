@@ -4,9 +4,10 @@ import { updateShippingOptionsWorkflow } from "@medusajs/medusa/core-flows"
 import type { GkOffers } from "../lib/offers"
 import { GK_SETTINGS_MODULE } from "../modules/gk-settings"
 import type GkSettingsService from "../modules/gk-settings/service"
+import type { PricedShippingOption } from "../lib/query-types"
 
 const saveOffersStep = createStep(
-  "save-gk-offers",
+  "save-offers",
   async (next: GkOffers, { container }) => {
     const settings = container.resolve<GkSettingsService>(GK_SETTINGS_MODULE)
     const prev = await settings.getOffers()
@@ -21,13 +22,13 @@ const saveOffersStep = createStep(
 )
 
 /** Keeps the Tracked 48 option's "free over £X" price in step with the free-delivery switch. */
-const syncFreeDeliveryStep = createStep("sync-gk-free-delivery", async (next: GkOffers, { container }) => {
+const syncFreeDeliveryStep = createStep("sync-free-delivery", async (next: GkOffers, { container }) => {
   const query = container.resolve(ContainerRegistrationKeys.QUERY)
   const { data: options } = await query.graph({
     entity: "shipping_option",
     fields: ["id", "type.code", "prices.amount", "prices.currency_code", "prices.price_rules.attribute"],
   })
-  const t48 = options.find((o) => o.type?.code === "tracked-48")
+  const t48 = (options as unknown as PricedShippingOption[]).find((o) => o.type?.code === "tracked-48")
   if (!t48) {
     return new StepResponse(null)
   }
