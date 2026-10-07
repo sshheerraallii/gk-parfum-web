@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { formatPrice, inspiredLabel, scents } from "@/lib/catalog";
+import { formatPrice, inspiredLabel } from "@/lib/catalog";
+import { useCatalog } from "./CatalogProvider";
 import { useCart } from "@/lib/cart";
 import { useOffers } from "@/lib/useOffers";
-import { Bottle } from "./Bottle";
+import { ProductVisual } from "./ProductVisual";
 
 /** The ivory room: pick three, watch the box fill, add it in one go. */
 export function BoxBuilder({ id = "box" }: { id?: string }) {
   const offers = useOffers();
+  const scents = useCatalog();
   const { addMany, setGiftBoxes, giftBoxes } = useCart();
   const N = offers.bundle.qty;
   const [picked, setPicked] = useState<string[]>([]);
@@ -45,7 +47,7 @@ export function BoxBuilder({ id = "box" }: { id?: string }) {
                   <div key={i} className="flex aspect-[3/4] flex-col items-center justify-center rounded-[var(--radius-s)] border border-[var(--line)] bg-black/30 p-2 text-center">
                     {s ? (
                       <>
-                        <Bottle tint={s.tint} className="h-[70%] w-auto" />
+                        <ProductVisual s={s} className="h-[70%] w-auto max-w-full" />
                         <span className="mt-1 line-clamp-2 font-display text-[0.95rem] leading-tight">{s.name}</span>
                       </>
                     ) : (

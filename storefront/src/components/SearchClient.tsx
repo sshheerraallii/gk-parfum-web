@@ -2,19 +2,21 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { searchScents, scents } from "@/lib/catalog";
+import { searchScents } from "@/lib/catalog";
+import { useCatalog } from "./CatalogProvider";
 import { ScentCard } from "./ScentCard";
 
 export function SearchClient({ initial }: { initial: string }) {
   const [q, setQ] = useState(initial);
   const router = useRouter();
+  const scents = useCatalog();
   const ref = useRef<HTMLInputElement>(null);
   useEffect(() => ref.current?.focus(), []);
   useEffect(() => {
     const t = setTimeout(() => router.replace(q ? `/search?q=${encodeURIComponent(q)}` : "/search", { scroll: false }), 300);
     return () => clearTimeout(t);
   }, [q, router]);
-  const results = useMemo(() => (q.trim() ? searchScents(q) : scents), [q]);
+  const results = useMemo(() => (q.trim() ? searchScents(q, scents) : scents), [q, scents]);
   return (
     <section className="wrap py-14 md:py-20">
       <h1 className="display-l">Search</h1>

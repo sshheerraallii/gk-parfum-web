@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { type Gender, type Mood, scents } from "@/lib/catalog";
+import { type Gender, type Mood } from "@/lib/catalog";
+import { useCatalog } from "./CatalogProvider";
 import { ScentCard } from "./ScentCard";
 
 const WHO: { id: Gender | "all"; label: string }[] = [
@@ -31,6 +32,7 @@ export function Collection({
   as?: "h1" | "h2";
   intro?: string;
 }) {
+  const scents = useCatalog();
   const [who, setWho] = useState<Gender | "all">(initialWho);
   const [mood, setMood] = useState<Mood | "all">("all");
   const list = scents.filter(

@@ -4,12 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { type Scent, formatPrice, genderLabel, inspiredLabel } from "@/lib/catalog";
 import { useCart } from "@/lib/cart";
-import { Bottle } from "./Bottle";
+import { ProductVisual } from "./ProductVisual";
 
 export function ScentCard({ s, priority = false }: { s: Scent; priority?: boolean }) {
   const add = useCart((st) => st.add);
   const [added, setAdded] = useState(false);
-  void priority;
   return (
     <article className="group relative flex flex-col">
       <Link
@@ -23,7 +22,7 @@ export function ScentCard({ s, priority = false }: { s: Scent; priority?: boolea
           style={{ background: `radial-gradient(70% 55% at 50% 62%, ${s.tint}33, transparent 70%)` }}
         />
         <div className="absolute inset-0 flex items-center justify-center p-6">
-          <Bottle tint={s.tint} name={s.name} className="h-[86%] w-auto" />
+          <ProductVisual s={s} priority={priority} className="h-[86%] w-auto max-w-full" />
         </div>
         <span className="small absolute left-3 top-3 rounded-full bg-black/45 px-3 py-1 text-ivory backdrop-blur">
           {genderLabel[s.gender]}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { formatPrice, scents } from "@/lib/catalog";
+import { formatPrice } from "@/lib/catalog";
+import { getScents } from "@/lib/medusa";
 
 export const metadata: Metadata = {
   title: "Smells Like — Find the Inspired Version of Your Favourite Perfume",
@@ -9,7 +10,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/smells-like" },
 };
 
-export default function SmellsLike() {
+export const revalidate = 60;
+
+export default async function SmellsLike() {
+  const scents = await getScents();
   const list = scents.filter((s) => s.inspiredBy).sort((a, b) => a.inspiredBy!.brand.localeCompare(b.inspiredBy!.brand));
   return (
     <section className="wrap py-14 md:py-20">

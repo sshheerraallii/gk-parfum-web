@@ -1,19 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CONCENTRATION, OIL_PERCENT, SIZE_ML, bySlug, formatPrice, genderLabel, inspiredLabel, scents } from "@/lib/catalog";
+import { CONCENTRATION, OIL_PERCENT, SIZE_ML, bySlug, formatPrice, genderLabel, inspiredLabel } from "@/lib/catalog";
+import { getScents } from "@/lib/medusa";
+import { ProductVisual } from "@/components/ProductVisual";
 import { SITE } from "@/lib/site";
-import { Bottle } from "@/components/Bottle";
 import { ScentCard } from "@/components/ScentCard";
 import { BuyBox } from "@/components/BuyBox";
 
-export function generateStaticParams() {
-  return scents.map((s) => ({ slug: s.slug }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return (await getScents()).map((s) => ({ slug: s.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const s = bySlug(slug);
+  const s = bySlug(slug, await getScents());
   if (!s) return {};
   const insp = s.inspiredBy ? `Inspired by ${inspiredLabel(s)}` : "A GK original";
   const title = `${s.name} — ${insp} | ${SIZE_ML}ml Extrait`;
@@ -36,7 +39,8 @@ const STAGES = [
 
 export default async function PerfumePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const s = bySlug(slug);
+  const scents = await getScents();
+  const s = bySlug(slug, scents);
   if (!s) notFound();
 
   const related = scents
@@ -54,7 +58,7 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
         sku: s.sku,
         brand: { "@type": "Brand", name: "GK Parfum" },
         category: "Health & Beauty > Personal Care > Cosmetics > Perfume & Cologne",
-        image: [`${SITE.url}/brand/gk-mark-foil-transparent.svg`],
+        image: s.images?.length ? s.images : [`${SITE.url}/brand/gk-mark-foil-transparent.svg`],
         audience: { "@type": "PeopleAudience", suggestedGender: s.gender === "men" ? "male" : s.gender === "women" ? "female" : "unisex" },
         additionalProperty: [
           { "@type": "PropertyValue", name: "Volume", value: `${SIZE_ML} ml` },
@@ -117,7 +121,7 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
         <div className="md:sticky md:top-24 md:self-start">
           <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[var(--radius-m)] bg-ebony md:aspect-[4/5]">
             <div aria-hidden className="absolute inset-0" style={{ background: `radial-gradient(60% 50% at 50% 60%, ${s.tint}40, transparent 70%)` }} />
-            <Bottle tint={s.tint} name={s.name} className="relative h-[78%] w-auto drop-shadow-[0_40px_50px_rgba(0,0,0,.55)]" />
+            <ProductVisual s={s} priority sizes="(min-width: 768px) 50vw, 100vw" className="relative h-[78%] w-auto max-w-[85%] drop-shadow-[0_40px_50px_rgba(0,0,0,.55)]" />
           </div>
         </div>
 

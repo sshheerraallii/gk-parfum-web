@@ -4,13 +4,15 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/lib/cart";
 import { useOffers } from "@/lib/useOffers";
-import { bySlug, formatPrice, inspiredLabel, scents } from "@/lib/catalog";
+import { bySlug, formatPrice, inspiredLabel } from "@/lib/catalog";
+import { useCatalog } from "./CatalogProvider";
+import { ProductVisual } from "./ProductVisual";
 import { priceCart } from "@/lib/offers";
-import { Bottle } from "./Bottle";
 
 export function CartDrawer() {
   const { lines, open, setOpen, setQty, add, giftBoxes, setGiftBoxes } = useCart();
   const offers = useOffers();
+  const scents = useCatalog();
   const [mounted, setMounted] = useState(false);
   const panel = useRef<HTMLDivElement>(null);
   useEffect(() => setMounted(true), []);
@@ -30,7 +32,7 @@ export function CartDrawer() {
   if (!mounted) return null;
 
   const priced = lines
-    .map((l) => ({ l, s: bySlug(l.slug) }))
+    .map((l) => ({ l, s: bySlug(l.slug, scents) }))
     .filter((x): x is { l: (typeof lines)[number]; s: NonNullable<ReturnType<typeof bySlug>> } => !!x.s);
   const totals = priceCart(priced.map(({ l, s }) => ({ slug: l.slug, qty: l.qty, unit: s.price })), offers, giftBoxes);
   const inBag = new Set(lines.map((l) => l.slug));
@@ -99,7 +101,7 @@ export function CartDrawer() {
               {priced.map(({ l, s }) => (
                 <li key={l.slug} className="flex gap-4 py-4">
                   <Link href={`/perfume/${s.slug}`} onClick={() => setOpen(false)} className="flex h-24 w-16 shrink-0 items-center justify-center rounded-[var(--radius-s)] bg-black/30">
-                    <Bottle tint={s.tint} className="h-20 w-auto" />
+                    <ProductVisual s={s} className="h-20 w-auto max-w-[56px]" />
                   </Link>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-2">
@@ -147,7 +149,7 @@ export function CartDrawer() {
               <ul className="no-scrollbar -mx-6 flex gap-3 overflow-x-auto px-6">
                 {suggestions.map((s) => (
                   <li key={s.slug} className="w-[150px] shrink-0 rounded-[var(--radius-m)] bg-[var(--ebony-2)] p-3">
-                    <div className="flex h-24 items-center justify-center"><Bottle tint={s.tint} className="h-24 w-auto" /></div>
+                    <div className="flex h-24 items-center justify-center"><ProductVisual s={s} className="h-24 w-auto max-w-[110px]" /></div>
                     <p className="mt-2 font-display text-[1.05rem] leading-tight">{s.name}</p>
                     <p className="small truncate text-smoke">{inspiredLabel(s)}</p>
                     <button type="button" onClick={() => add(s.slug)} className="small mt-2 h-9 w-full rounded-full border border-[var(--line)] text-ivory hover:border-gilt hover:text-champagne">

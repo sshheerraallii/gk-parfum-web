@@ -35,6 +35,10 @@ export interface Scent {
   tint: string;
   /** Short line for cards — plain words */
   oneLiner: string;
+  /** Set when loaded from the backend */
+  variantId?: string;
+  /** Product photos uploaded in the admin (first one is the hero) */
+  images?: string[];
 }
 
 export const SIZE_ML = 100;
@@ -396,7 +400,7 @@ export const scents: Scent[] = [
   },
 ];
 
-export const bySlug = (slug: string) => scents.find((s) => s.slug === slug);
+export const bySlug = (slug: string, list: Scent[] = scents) => list.find((s) => s.slug === slug);
 
 export const genderLabel: Record<Gender, string> = {
   men: "For him",
@@ -415,11 +419,11 @@ export const inspiredLabel = (s: Scent) =>
   s.inspiredBy ? `${s.inspiredBy.brand} ${s.inspiredBy.name}` : "A GK original";
 
 /** Lightweight search: matches our name, the original's brand/name, notes and families. */
-export function searchScents(q: string): Scent[] {
+export function searchScents(q: string, list: Scent[] = scents): Scent[] {
   const n = q.trim().toLowerCase();
   if (!n) return [];
   const words = n.split(/\s+/);
-  return scents
+  return list
     .map((s) => {
       const hay = [
         s.name,

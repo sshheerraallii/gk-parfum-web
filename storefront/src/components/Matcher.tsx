@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { formatPrice, inspiredLabel, searchScents, scents } from "@/lib/catalog";
+import { formatPrice, inspiredLabel, searchScents } from "@/lib/catalog";
+import { useCatalog } from "./CatalogProvider";
+import { ProductVisual } from "./ProductVisual";
 import { useCart } from "@/lib/cart";
-import { Bottle } from "./Bottle";
 
 const QUICK = ["Aventus", "Baccarat Rouge", "Sauvage", "Black Orchid", "Lost Cherry", "Delina", "Oud Wood", "Angels' Share"];
 
@@ -12,7 +13,8 @@ const QUICK = ["Aventus", "Baccarat Rouge", "Sauvage", "Black Orchid", "Lost Che
 export function Matcher() {
   const [q, setQ] = useState("");
   const add = useCart((s) => s.add);
-  const results = useMemo(() => searchScents(q).slice(0, 3), [q]);
+  const scents = useCatalog();
+  const results = useMemo(() => searchScents(q, scents).slice(0, 3), [q, scents]);
   const best = results[0];
 
   return (
@@ -65,7 +67,7 @@ export function Matcher() {
                     <Link href={`/perfume/${best.slug}`} className="btn btn-ghost">See notes</Link>
                   </div>
                 </div>
-                <Bottle tint={best.tint} name={best.name} className="h-56 w-auto md:h-64" />
+                <ProductVisual s={best} className="h-56 w-auto max-w-[160px] md:h-64" />
               </div>
               {results.length > 1 && (
                 <div className="relative mt-6 border-t border-[var(--line-soft)] pt-4">

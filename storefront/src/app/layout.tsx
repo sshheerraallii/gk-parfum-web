@@ -5,6 +5,8 @@ import { Announcement, Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { SITE } from "@/lib/site";
+import { CatalogProvider } from "@/components/CatalogProvider";
+import { getOffers, getScents } from "@/lib/medusa";
 
 const jost = localFont({
   src: "../fonts/jost.woff2",
@@ -79,18 +81,21 @@ const orgLd = {
   ],
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const [scents, offers] = await Promise.all([getScents(), getOffers()]);
   return (
     <html lang="en-GB" className={`${jost.variable} ${cormorant.variable}`}>
       <body>
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-gilt focus:px-4 focus:py-2 focus:text-[#1a140c]">
           Skip to content
         </a>
-        <Announcement />
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
-        <CartDrawer />
+        <CatalogProvider scents={scents} offers={offers}>
+          <Announcement />
+          <Header />
+          <main id="main">{children}</main>
+          <Footer />
+          <CartDrawer />
+        </CatalogProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
       </body>
     </html>
