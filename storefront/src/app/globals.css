@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+/* ── GK Parfum tokens ───────────────────────────────────────────── */
+:root {
+  --velvet: #14110e;      /* page */
+  --ebony: #1e1a16;       /* raised surfaces */
+  --ebony-2: #27221c;     /* hover / inputs */
+  --gilt: #c9a15b;        /* brand gold — matches logo */
+  --champagne: #e9d5a5;   /* highlights */
+  --ivory: #f3ecdf;       /* primary text on dark */
+  --smoke: #a39a8c;       /* secondary text on dark (AA on velvet) */
+  --line: rgba(201, 161, 91, 0.22);
+  --line-soft: rgba(243, 236, 223, 0.08);
+
+  /* the ivory "atelier" room */
+  --paper: #f1e9da;
+  --ink: #1d1813;
+  --ink-soft: #5f5548;
+  --paper-line: rgba(29, 24, 19, 0.14);
+
+  --radius-s: 6px;
+  --radius-m: 14px;
+  --radius-pill: 999px;
+
+  --gutter: clamp(16px, 4vw, 48px);
+  --max: 1320px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme inline {
+  --color-velvet: var(--velvet);
+  --color-ebony: var(--ebony);
+  --color-ebony-2: var(--ebony-2);
+  --color-gilt: var(--gilt);
+  --color-champagne: var(--champagne);
+  --color-ivory: var(--ivory);
+  --color-smoke: var(--smoke);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-jost);
+}
+
+html {
+  background: var(--velvet);
+  color: var(--ivory);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-jost), system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+  background:
+    radial-gradient(1200px 700px at 78% -10%, rgba(201, 161, 91, 0.07), transparent 60%),
+    var(--velvet);
+  min-height: 100dvh;
+}
+
+::selection {
+  background: var(--gilt);
+  color: var(--velvet);
+}
+
+:focus-visible {
+  outline: 2px solid var(--champagne);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Type scale (1.25 minor-third-ish, display steps larger) ───── */
+.display-xl {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.6rem, 6.2vw, 5.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+.display-l {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.1rem, 4.4vw, 3.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+.display-m {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  line-height: 1.1;
+}
+.lede {
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  line-height: 1.6;
+  color: var(--smoke);
+  max-width: 34em;
+}
+.small {
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 52px;
+  padding: 0 1.6em;
+  border-radius: var(--radius-pill);
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out),
+    border-color 0.25s var(--ease-out), transform 0.15s var(--ease-out);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn-gold {
+  background: linear-gradient(180deg, #d9b56f, #b88c45);
+  color: #1a140c;
+  box-shadow: inset 0 1px 0 rgba(255, 240, 200, 0.5), 0 10px 30px -12px rgba(201, 161, 91, 0.55);
+}
+.btn-gold:hover {
+  background: linear-gradient(180deg, #e6c27d, #c39650);
+}
+.btn-ghost {
+  border: 1px solid var(--line);
+  color: var(--ivory);
+}
+.btn-ghost:hover {
+  border-color: var(--gilt);
+  color: var(--champagne);
+}
+.btn-ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn-ink:hover {
+  background: #352c22;
+}
+.btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Hero entrance (the single orchestrated moment) ──────────────── */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero-reveal {
+  animation: rise 0.9s var(--ease-out) both;
+  animation-delay: var(--d, 3.4s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* utility: hide scrollbar on horizontal rails */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* thin gilt rule used sparingly to separate rooms */
+.gilt-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line), transparent);
+}
