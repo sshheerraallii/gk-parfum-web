@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:demo": "DEMO_STATIC=1 NEXT_PUBLIC_MEDUSA_BACKEND_URL= NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY= MEDUSA_BACKEND_URL= NEXT_PUBLIC_STRIPE_KEY= next build"
   },
   "dependencies": {
     "@fontsource-variable/cormorant-garamond": "^5.3.0",

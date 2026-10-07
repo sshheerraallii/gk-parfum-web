@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { searchScents } from "@/lib/catalog";
 import { useCatalog } from "./CatalogProvider";
 import { ScentCard } from "./ScentCard";
 
-export function SearchClient({ initial }: { initial: string }) {
-  const [q, setQ] = useState(initial);
+export function SearchClient() {
+  const params = useSearchParams();
+  const [q, setQ] = useState(params.get("q") ?? "");
   const router = useRouter();
   const scents = useCatalog();
   const ref = useRef<HTMLInputElement>(null);

@@ -16,6 +16,15 @@ export function Ledger() {
           <p className="lede mt-5">
             Designer prices pay for advertising, celebrity faces and department-store rent. Ours pay for the oil in the bottle.
           </p>
+          <img
+            src="/brand/mockup-box-800.webp"
+            alt="A GK Parfum bottle in black glass with a gold crest label, resting in its blue presentation box"
+            width={800}
+            height={994}
+            loading="lazy"
+            decoding="async"
+            className="mt-10 w-full max-w-[420px] rounded-[var(--radius-m)] shadow-[0_40px_80px_-40px_rgba(0,0,0,.8)]"
+          />
         </div>
         <div className="overflow-hidden rounded-[var(--radius-m)] border border-[var(--line)]">
           <table className="w-full border-collapse text-left">

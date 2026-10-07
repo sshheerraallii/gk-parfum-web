@@ -6,3 +6,4 @@ node_modules
 .DS_Store
 backend/.medusa
 backend/build
+storefront/out

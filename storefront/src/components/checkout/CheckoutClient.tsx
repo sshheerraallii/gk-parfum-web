@@ -7,6 +7,7 @@ import { loadStripe } from "@stripe/stripe-js/pure";
 import type { Stripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useCart } from "@/lib/cart";
+import { DemoCheckout } from "./DemoCheckout";
 import { useCatalog } from "../CatalogProvider";
 import { useOffers } from "@/lib/useOffers";
 import { formatPrice } from "@/lib/catalog";
@@ -44,10 +45,10 @@ type Address = {
 };
 const EMPTY: Address = { first_name: "", last_name: "", address_1: "", address_2: "", city: "", postal_code: "", phone: "" };
 
-const UK_POSTCODE = /^([A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}|GIR ?0A{2})$/i;
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const UK_POSTCODE = /^([A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}|GIR ?0A{2})$/i;
+export const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function Field({
+export function Field({
   label,
   id,
   error,
@@ -75,7 +76,7 @@ function Field({
   );
 }
 
-function Section({ n, title, children, muted }: { n: number; title: string; children: React.ReactNode; muted?: boolean }) {
+export function Section({ n, title, children, muted }: { n: number; title: string; children: React.ReactNode; muted?: boolean }) {
   return (
     <section className={`border-t border-[var(--paper-line)] py-8 first:border-t-0 first:pt-0 ${muted ? "opacity-50" : ""}`} aria-labelledby={`step-${n}`}>
       <h2 id={`step-${n}`} className="mb-5 flex items-baseline gap-3 font-display text-[1.7rem] leading-none text-ink">
@@ -117,7 +118,6 @@ export function CheckoutClient() {
   useEffect(() => {
     if (!mounted) return;
     if (!backendReady()) {
-      setFatal("Checkout isn't connected to the shop backend yet. Set NEXT_PUBLIC_MEDUSA_BACKEND_URL and the publishable key.");
       setLoading(false);
       return;
     }
@@ -262,6 +262,8 @@ export function CheckoutClient() {
       setPlacing(false);
     }
   };
+
+  if (mounted && !backendReady()) return <DemoCheckout />;
 
   if (!mounted || loading) {
     return (

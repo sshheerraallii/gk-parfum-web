@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { SearchClient } from "@/components/SearchClient";
 
 export const metadata: Metadata = {
@@ -6,7 +7,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
-  const { q = "" } = await searchParams;
-  return <SearchClient initial={q} />;
+export default function SearchPage() {
+  return (
+    <Suspense fallback={null}>
+      <SearchClient />
+    </Suspense>
+  );
 }

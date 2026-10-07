@@ -19,7 +19,7 @@ type P = {
 
 const WORDMARK_SRC = "/brand/gk-wordmark-main-foil.svg";
 // nozzle tip in Bottle viewBox (240 × 420)
-const NOZZLE = { x: 103, y: 82, vbW: 240, vbH: 420 };
+const NOZZLE = { x: 101, y: 80, vbW: 240, vbH: 420 };
 // timeline (seconds from press)
 const T_HOLD = 1.85;
 const T_RELEASE = 3.0;

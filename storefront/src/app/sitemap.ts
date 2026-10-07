@@ -4,6 +4,7 @@ import { guides } from "@/lib/guides";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 3600;
+export const dynamic = "force-static";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();

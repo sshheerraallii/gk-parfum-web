@@ -8,7 +8,70 @@ import { formatPrice } from "@/lib/catalog";
 type Order = Awaited<ReturnType<typeof getOrder>>;
 const pence = (n: number) => Math.round(Number(n) * 100);
 
+type DemoOrder = {
+  display_id: number;
+  email: string;
+  first_name: string;
+  items: { title: string; qty: number; unit: number }[];
+  giftBoxes: number;
+  giftBoxPrice: number;
+  bundleSaving: number;
+  bundleLabel: string;
+  discount: number;
+  shipping: { name: string; cost: number };
+  total: number;
+};
+
+function DemoThanks() {
+  const [o, setO] = useState<DemoOrder | null>(null);
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("gk-demo-order");
+      if (raw) setO(JSON.parse(raw));
+    } catch {
+      /* nothing saved */
+    }
+  }, []);
+  return (
+    <section className="wrap max-w-2xl py-20 md:py-28">
+      <img src="/brand/gk-emblem-foil-transparent.svg" alt="" aria-hidden className="h-24 w-auto" />
+      <h1 className="display-xl mt-8">Thank you{o?.first_name ? `, ${o.first_name}` : ""}</h1>
+      <p className="lede mt-5">
+        {o ? <>Order #{o.display_id} is confirmed. We&apos;ll pack it by hand and email {o.email} when it&apos;s on its way.</> : <>Your order is confirmed.</>}
+      </p>
+      <p className="small mt-3 text-champagne">Preview order — nothing was charged.</p>
+      {o && (
+        <div className="mt-10 rounded-[var(--radius-m)] border border-[var(--line)] bg-ebony p-6">
+          <ul className="divide-y divide-[var(--line-soft)]">
+            {o.items.map((i) => (
+              <li key={i.title} className="flex justify-between gap-4 py-3">
+                <span className="text-ivory">{i.title} <span className="text-smoke">× {i.qty}</span></span>
+                <span className="text-ivory">{formatPrice(i.unit * i.qty)}</span>
+              </li>
+            ))}
+            {o.giftBoxes > 0 && (
+              <li className="flex justify-between gap-4 py-3"><span className="text-ivory">Gift box × {o.giftBoxes}</span><span className="text-ivory">{formatPrice(o.giftBoxPrice * o.giftBoxes)}</span></li>
+            )}
+          </ul>
+          <dl className="mt-4 space-y-1 border-t border-[var(--line-soft)] pt-4">
+            {o.bundleSaving > 0 && <div className="flex justify-between text-champagne"><dt>{o.bundleLabel}</dt><dd>−{formatPrice(o.bundleSaving)}</dd></div>}
+            {o.discount > 0 && <div className="flex justify-between text-champagne"><dt>Discount</dt><dd>−{formatPrice(o.discount)}</dd></div>}
+            <div className="flex justify-between text-smoke"><dt>Delivery ({o.shipping.name})</dt><dd>{o.shipping.cost === 0 ? "Free" : formatPrice(o.shipping.cost)}</dd></div>
+            <div className="flex justify-between text-[1.15rem] text-ivory"><dt>Total</dt><dd>{formatPrice(o.total)}</dd></div>
+          </dl>
+        </div>
+      )}
+      <Link href="/shop" className="btn btn-ghost mt-10">Keep browsing</Link>
+    </section>
+  );
+}
+
 export function OrderClient({ id }: { id: string }) {
+  if (id === "demo") return <DemoThanks />;
+  return <LiveOrder id={id} />;
+}
+
+function LiveOrder({ id }: { id: string }) {
   const [o, setO] = useState<Order | null>(null);
   const [err, setErr] = useState<string | null>(null);
   useEffect(() => {
