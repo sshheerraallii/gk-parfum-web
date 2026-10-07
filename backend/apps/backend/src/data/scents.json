@@ -1,0 +1,817 @@
+[
+  {
+    "sku": "GKP-001M",
+    "slug": "royal-adventure",
+    "name": "Royal Adventure",
+    "inspiredBy": {
+      "brand": "Creed",
+      "name": "Aventus"
+    },
+    "gender": "men",
+    "families": [
+      "Fruity",
+      "Fresh",
+      "Woody"
+    ],
+    "mood": "fresh",
+    "time": "any",
+    "notes": {
+      "top": [
+        "Pineapple",
+        "Bergamot",
+        "Lemon",
+        "Blackcurrant"
+      ],
+      "heart": [
+        "Ambroxan",
+        "Jasmine",
+        "Ambrette seed",
+        "Geranium"
+      ],
+      "base": [
+        "Oakmoss",
+        "Cedarwood",
+        "Musk",
+        "Ambroxan"
+      ]
+    },
+    "description": "A bright, fruity opening that settles into a balanced, woody dry-down. Fresh, crisp and commanding — the scent of someone who has already closed the deal.",
+    "longevityHours": [
+      8,
+      10
+    ],
+    "occasions": [
+      "Office",
+      "Daily wear",
+      "Special occasion"
+    ],
+    "price": 1799,
+    "tint": "#B9C79A",
+    "oneLiner": "Pineapple, oakmoss and confidence."
+  },
+  {
+    "sku": "GKP-002M",
+    "slug": "imagination-elegance",
+    "name": "Imagination Elegance",
+    "inspiredBy": {
+      "brand": "Louis Vuitton",
+      "name": "Imagination"
+    },
+    "gender": "men",
+    "families": [
+      "Citrus",
+      "Floral",
+      "Woody"
+    ],
+    "mood": "fresh",
+    "time": "day",
+    "notes": {
+      "top": [
+        "Bergamot",
+        "Lemon",
+        "Pink pepper",
+        "Grapefruit"
+      ],
+      "heart": [
+        "Iris",
+        "Violet",
+        "Jasmine",
+        "Nutmeg"
+      ],
+      "base": [
+        "Sandalwood",
+        "Musk",
+        "Vetiver",
+        "Amber"
+      ]
+    },
+    "description": "Citrus brightness blended with floral sophistication. A spicy-floral heart gives it a quiet, refined elegance for the man who notices details.",
+    "longevityHours": [
+      7,
+      8
+    ],
+    "occasions": [
+      "Smart casual",
+      "Daily wear",
+      "Date night"
+    ],
+    "price": 1799,
+    "tint": "#E6D58A",
+    "oneLiner": "Sunlit citrus with a soft iris heart."
+  },
+  {
+    "sku": "GKP-003M",
+    "slug": "kings-code",
+    "name": "King's Code",
+    "inspiredBy": {
+      "brand": "Dolce & Gabbana",
+      "name": "K"
+    },
+    "gender": "men",
+    "families": [
+      "Aromatic",
+      "Spicy",
+      "Leather"
+    ],
+    "mood": "warm",
+    "time": "any",
+    "notes": {
+      "top": [
+        "Cardamom",
+        "Ginger",
+        "Lemon",
+        "Pink pepper"
+      ],
+      "heart": [
+        "Juniper",
+        "Lavender",
+        "Aromatic herbs",
+        "Cedar"
+      ],
+      "base": [
+        "Leather",
+        "Sandalwood",
+        "Oakmoss",
+        "Amber musk"
+      ]
+    },
+    "description": "An aromatic, spicy powerhouse. Sharp cardamom up top, a herbal heart, and a leather-and-wood base that gives real presence.",
+    "longevityHours": [
+      9,
+      11
+    ],
+    "occasions": [
+      "Office",
+      "Daily wear",
+      "Evening out"
+    ],
+    "price": 1699,
+    "tint": "#B88A5A",
+    "oneLiner": "Cardamom, cedar and quiet authority."
+  },
+  {
+    "sku": "GKP-004M",
+    "slug": "desert-nectar-elixir",
+    "name": "Desert Nectar Elixir",
+    "inspiredBy": {
+      "brand": "Dior",
+      "name": "Sauvage Elixir"
+    },
+    "gender": "men",
+    "families": [
+      "Spicy",
+      "Amber",
+      "Sweet"
+    ],
+    "mood": "warm",
+    "time": "night",
+    "notes": {
+      "top": [
+        "Cardamom",
+        "Nutmeg",
+        "Black pepper",
+        "Cinnamon"
+      ],
+      "heart": [
+        "Ambrette seed",
+        "Spices",
+        "Tonka bean",
+        "Vanilla"
+      ],
+      "base": [
+        "Ambroxan",
+        "Musk",
+        "Cedarwood",
+        "Amber",
+        "Tobacco"
+      ]
+    },
+    "description": "A warm, spicy amber with a rich, almost intoxicating sweetness. Built on spice and warmth rather than freshness — sensual and deeply masculine.",
+    "longevityHours": [
+      10,
+      12
+    ],
+    "occasions": [
+      "Evening out",
+      "Date night",
+      "Special occasion"
+    ],
+    "price": 1699,
+    "tint": "#C7743E",
+    "oneLiner": "Spice, tobacco and a long evening."
+  },
+  {
+    "sku": "GKP-005U",
+    "slug": "angels-cognac",
+    "name": "Angel's Cognac",
+    "inspiredBy": {
+      "brand": "Kilian",
+      "name": "Angels' Share"
+    },
+    "gender": "unisex",
+    "families": [
+      "Gourmand",
+      "Boozy",
+      "Spicy"
+    ],
+    "mood": "sweet",
+    "time": "night",
+    "notes": {
+      "top": [
+        "Almond",
+        "Cinnamon",
+        "Clove",
+        "Ginger"
+      ],
+      "heart": [
+        "Cognac accord",
+        "Vanilla",
+        "Caramel",
+        "Tonka bean"
+      ],
+      "base": [
+        "Oak",
+        "Cedarwood",
+        "Sandalwood",
+        "Ambroxan",
+        "Musk"
+      ]
+    },
+    "description": "Built around a warm cognac accord with creamy vanilla and caramel. Like an aged liqueur with a touch of almond — slightly intoxicating and completely addictive.",
+    "longevityHours": [
+      8,
+      10
+    ],
+    "occasions": [
+      "Evening out",
+      "Special occasion",
+      "Date night"
+    ],
+    "price": 1799,
+    "tint": "#B5652B",
+    "oneLiner": "Cognac, caramel and warm oak."
+  },
+  {
+    "sku": "GKP-006M",
+    "slug": "altair-mystique",
+    "name": "Altair Mystique",
+    "inspiredBy": {
+      "brand": "Parfums de Marly",
+      "name": "Althaïr"
+    },
+    "gender": "men",
+    "families": [
+      "Aromatic",
+      "Woody",
+      "Citrus"
+    ],
+    "mood": "fresh",
+    "time": "any",
+    "notes": {
+      "top": [
+        "Bergamot",
+        "Petitgrain",
+        "Cardamom",
+        "Pink pepper"
+      ],
+      "heart": [
+        "Iris",
+        "Geranium",
+        "Cinnamon",
+        "Nutmeg"
+      ],
+      "base": [
+        "Vetiver",
+        "Cedarwood",
+        "Patchouli",
+        "Amber musk"
+      ]
+    },
+    "description": "Citrus freshness with aromatic spice and woody depth. Iris adds elegance, the woods give it staying power. Balanced and timeless.",
+    "longevityHours": [
+      8,
+      9
+    ],
+    "occasions": [
+      "Office",
+      "Daily wear",
+      "Smart casual"
+    ],
+    "price": 1799,
+    "tint": "#C9B48A",
+    "oneLiner": "Bergamot and iris in a tailored suit."
+  },
+  {
+    "sku": "GKP-007U",
+    "slug": "crimson-luxe",
+    "name": "Crimson Luxe",
+    "inspiredBy": {
+      "brand": "Maison Francis Kurkdjian",
+      "name": "Baccarat Rouge 540"
+    },
+    "gender": "unisex",
+    "families": [
+      "Amber",
+      "Woody",
+      "Sweet"
+    ],
+    "mood": "sweet",
+    "time": "any",
+    "notes": {
+      "top": [
+        "Jasmine",
+        "Ambroxan",
+        "Lemon",
+        "Caraway"
+      ],
+      "heart": [
+        "Ambroxan",
+        "Fir balsam",
+        "Cedar",
+        "Saffron"
+      ],
+      "base": [
+        "Amber",
+        "Sandalwood",
+        "Cedarwood",
+        "Musk",
+        "Oud"
+      ]
+    },
+    "description": "Rich, complex and unmistakably expensive. Saffron and ambroxan give it that airy, almost burnt-sugar glow; the amber base keeps it warm for hours.",
+    "longevityHours": [
+      10,
+      12
+    ],
+    "occasions": [
+      "Special occasion",
+      "Evening out",
+      "Date night"
+    ],
+    "price": 1799,
+    "tint": "#C23B3B",
+    "oneLiner": "Saffron, amber and burnt sugar."
+  },
+  {
+    "sku": "GKP-008M",
+    "slug": "shadow-in-silk",
+    "name": "Shadow in Silk",
+    "inspiredBy": {
+      "brand": "Louis Vuitton",
+      "name": "Ombre Nouvelle"
+    },
+    "gender": "men",
+    "families": [
+      "Citrus",
+      "Floral",
+      "Woody"
+    ],
+    "mood": "fresh",
+    "time": "day",
+    "notes": {
+      "top": [
+        "Bergamot",
+        "Grapefruit",
+        "Lime",
+        "Petitgrain"
+      ],
+      "heart": [
+        "Iris",
+        "Geranium",
+        "Jasmine",
+        "Lavender"
+      ],
+      "base": [
+        "Cedarwood",
+        "Vetiver",
+        "Sandalwood",
+        "Musk"
+      ]
+    },
+    "description": "Fresh and sophisticated — bright citrus, a delicate floral heart, and a woody base that adds depth without weight. For people who prefer subtlety.",
+    "longevityHours": [
+      6,
+      8
+    ],
+    "occasions": [
+      "Office",
+      "Daily wear",
+      "Smart casual"
+    ],
+    "price": 1799,
+    "tint": "#9FB7B5",
+    "oneLiner": "Grapefruit and lavender, pressed and clean."
+  },
+  {
+    "sku": "GKP-009U",
+    "slug": "midnight-orchid",
+    "name": "Midnight Orchid",
+    "inspiredBy": {
+      "brand": "Tom Ford",
+      "name": "Black Orchid"
+    },
+    "gender": "unisex",
+    "families": [
+      "Floral",
+      "Dark",
+      "Spicy"
+    ],
+    "mood": "dark",
+    "time": "night",
+    "notes": {
+      "top": [
+        "Black truffle",
+        "Ylang-ylang",
+        "Bergamot",
+        "Black orchid"
+      ],
+      "heart": [
+        "Black orchid",
+        "Spices",
+        "Dark woods",
+        "Rum"
+      ],
+      "base": [
+        "Black orchid",
+        "Sandalwood",
+        "Musk",
+        "Amber",
+        "Oud"
+      ]
+    },
+    "description": "Dark, sensual and mysterious, centred on black orchid. Rich spice and dark woods create an intoxicating aura. Not for the faint-hearted.",
+    "longevityHours": [
+      8,
+      10
+    ],
+    "occasions": [
+      "Evening out",
+      "Date night",
+      "Special occasion"
+    ],
+    "price": 1699,
+    "tint": "#6B3E6E",
+    "oneLiner": "Black orchid, truffle and velvet."
+  },
+  {
+    "sku": "GKP-010M",
+    "slug": "oud-heritage",
+    "name": "Oud Heritage",
+    "inspiredBy": {
+      "brand": "Tom Ford",
+      "name": "Oud Wood"
+    },
+    "gender": "men",
+    "families": [
+      "Oud",
+      "Woody",
+      "Spicy"
+    ],
+    "mood": "dark",
+    "time": "any",
+    "notes": {
+      "top": [
+        "Cardamom",
+        "Spices",
+        "Cinnamon",
+        "Black pepper"
+      ],
+      "heart": [
+        "Oud",
+        "Agarwood",
+        "Sandalwood",
+        "Cypress",
+        "Geranium"
+      ],
+      "base": [
+        "Oud",
+        "Agarwood",
+        "Vetiver",
+        "Cedar",
+        "Amber",
+        "Musk"
+      ]
+    },
+    "description": "A premium woody scent built around prized oud. A spiced opening gives way to rich oud and sandalwood — warm, earthy and commanding.",
+    "longevityHours": [
+      10,
+      12
+    ],
+    "occasions": [
+      "Office",
+      "Evening out",
+      "Special occasion"
+    ],
+    "price": 1799,
+    "tint": "#7A5532",
+    "oneLiner": "Smoked oud and sandalwood."
+  },
+  {
+    "sku": "GKP-011U",
+    "slug": "lost-cherry-dream",
+    "name": "Lost Cherry Dream",
+    "inspiredBy": {
+      "brand": "Tom Ford",
+      "name": "Lost Cherry"
+    },
+    "gender": "unisex",
+    "families": [
+      "Gourmand",
+      "Fruity",
+      "Sweet"
+    ],
+    "mood": "sweet",
+    "time": "any",
+    "notes": {
+      "top": [
+        "Black cherry",
+        "Rum",
+        "Vanilla",
+        "Almond"
+      ],
+      "heart": [
+        "Maraschino",
+        "Cherry liqueur",
+        "Almond",
+        "Tonka bean"
+      ],
+      "base": [
+        "Vanilla",
+        "Almond",
+        "Sandalwood",
+        "Tobacco",
+        "Musk"
+      ]
+    },
+    "description": "Cherry liqueur and almond sweetness — playful, slightly boozy and utterly delicious. The smooth vanilla base keeps it wearable all day.",
+    "longevityHours": [
+      7,
+      8
+    ],
+    "occasions": [
+      "Smart casual",
+      "Daily wear",
+      "Date night"
+    ],
+    "price": 1799,
+    "tint": "#9E1F33",
+    "oneLiner": "Black cherry, almond and a little rum."
+  },
+  {
+    "sku": "GKP-012F",
+    "slug": "symphony-of-florals",
+    "name": "Symphony of Florals",
+    "inspiredBy": {
+      "brand": "Louis Vuitton",
+      "name": "Symphony"
+    },
+    "gender": "women",
+    "families": [
+      "Floral",
+      "Citrus",
+      "Fresh"
+    ],
+    "mood": "fresh",
+    "time": "day",
+    "notes": {
+      "top": [
+        "Lemon",
+        "Grapefruit",
+        "Rose",
+        "Freesia"
+      ],
+      "heart": [
+        "Rose",
+        "Jasmine",
+        "Peony",
+        "Iris",
+        "Geranium"
+      ],
+      "base": [
+        "Cedarwood",
+        "Sandalwood",
+        "Musk",
+        "Amber",
+        "Patchouli"
+      ]
+    },
+    "description": "Opens with citrus and blooms into a bouquet of rose, jasmine and peony. A woody base adds warmth and lasting power. Timeless and refined.",
+    "longevityHours": [
+      7,
+      9
+    ],
+    "occasions": [
+      "Office",
+      "Daily wear",
+      "Smart casual"
+    ],
+    "price": 1799,
+    "tint": "#E3B5A4",
+    "oneLiner": "Rose and peony in morning light."
+  },
+  {
+    "sku": "GKP-013U",
+    "slug": "amber-levant-luxe",
+    "name": "Amber Levant Luxe",
+    "inspiredBy": {
+      "brand": "Louis Vuitton",
+      "name": "Ambre Levant"
+    },
+    "gender": "unisex",
+    "families": [
+      "Amber",
+      "Spicy",
+      "Smoky"
+    ],
+    "mood": "warm",
+    "time": "night",
+    "notes": {
+      "top": [
+        "Ginger",
+        "Pepper",
+        "Cinnamon",
+        "Cardamom"
+      ],
+      "heart": [
+        "Amber",
+        "Incense",
+        "Clove",
+        "Myrrh",
+        "Tobacco"
+      ],
+      "base": [
+        "Amber",
+        "Vetiver",
+        "Cedarwood",
+        "Sandalwood",
+        "Musk"
+      ]
+    },
+    "description": "A warm, spiced amber with a Middle Eastern soul. A sharp, spicy opening, a smoky heart of tobacco and incense, and a deep amber base.",
+    "longevityHours": [
+      8,
+      10
+    ],
+    "occasions": [
+      "Evening out",
+      "Special occasion",
+      "Date night"
+    ],
+    "price": 1799,
+    "tint": "#C08A3E",
+    "oneLiner": "Incense, myrrh and golden amber."
+  },
+  {
+    "sku": "GKP-014F",
+    "slug": "delina-exclusive",
+    "name": "Delina Exclusive",
+    "inspiredBy": {
+      "brand": "Parfums de Marly",
+      "name": "Delina"
+    },
+    "gender": "women",
+    "families": [
+      "Floral",
+      "Fruity",
+      "Sweet"
+    ],
+    "mood": "sweet",
+    "time": "day",
+    "notes": {
+      "top": [
+        "Pink pepper",
+        "Apple",
+        "Pear",
+        "Bergamot"
+      ],
+      "heart": [
+        "Rose",
+        "Peony",
+        "Orchid",
+        "Strawberry",
+        "Almond"
+      ],
+      "base": [
+        "Musk",
+        "Sandalwood",
+        "Vanilla",
+        "Tonka bean",
+        "Amber"
+      ]
+    },
+    "description": "Delicate and feminine — a fruity opening, a rose-and-peony heart with a hint of strawberry, and a creamy vanilla base. Soft, romantic, everyday elegance.",
+    "longevityHours": [
+      6,
+      8
+    ],
+    "occasions": [
+      "Daily wear",
+      "Smart casual",
+      "Date night"
+    ],
+    "price": 1799,
+    "tint": "#E7A3B6",
+    "oneLiner": "Rose, peony and a little strawberry."
+  },
+  {
+    "sku": "GKP-015F",
+    "slug": "royal-adventure-for-her",
+    "name": "Royal Adventure for Her",
+    "inspiredBy": {
+      "brand": "Creed",
+      "name": "Aventus for Her"
+    },
+    "gender": "women",
+    "families": [
+      "Fruity",
+      "Floral",
+      "Fresh"
+    ],
+    "mood": "fresh",
+    "time": "any",
+    "notes": {
+      "top": [
+        "Pineapple",
+        "Bergamot",
+        "Blackcurrant",
+        "Lemon"
+      ],
+      "heart": [
+        "Rose",
+        "Jasmine",
+        "Lily of the valley",
+        "Peony",
+        "Magnolia"
+      ],
+      "base": [
+        "Oakmoss",
+        "Cedarwood",
+        "Ambroxan",
+        "Musk",
+        "Woody notes"
+      ]
+    },
+    "description": "The feminine counterpart to Royal Adventure. Fresh, energetic fruit up top, a romantic floral heart, and a woody base. Powerful and feminine.",
+    "longevityHours": [
+      8,
+      10
+    ],
+    "occasions": [
+      "Office",
+      "Daily wear",
+      "Special occasion"
+    ],
+    "price": 1799,
+    "tint": "#D7C27A",
+    "oneLiner": "Blackcurrant and magnolia, confidently worn."
+  },
+  {
+    "sku": "GKP-016U",
+    "slug": "signature-green-musk",
+    "name": "Signature Green Musk",
+    "inspiredBy": null,
+    "gender": "unisex",
+    "families": [
+      "Green",
+      "Fresh",
+      "Musky"
+    ],
+    "mood": "fresh",
+    "time": "day",
+    "notes": {
+      "top": [
+        "Galbanum",
+        "Green leaf accord",
+        "Bergamot",
+        "Lemon"
+      ],
+      "heart": [
+        "Green notes",
+        "Calone",
+        "Lily of the valley",
+        "Jasmine",
+        "Iris"
+      ],
+      "base": [
+        "Musk",
+        "Ambroxan",
+        "Sandalwood",
+        "Vetiver",
+        "Cedarwood"
+      ]
+    },
+    "description": "Our own creation. A clean, green scent of newly cut grass and leaves, a watery floral heart, and a soft musk that sits close to the skin.",
+    "longevityHours": [
+      5,
+      7
+    ],
+    "occasions": [
+      "Sport",
+      "Daily wear",
+      "Smart casual"
+    ],
+    "price": 1699,
+    "tint": "#7FA36A",
+    "oneLiner": "Cut grass, green leaves, clean skin."
+  }
+]

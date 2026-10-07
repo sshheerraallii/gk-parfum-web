@@ -22,10 +22,14 @@ export function Collection({
   initialWho = "all",
   heading = "The collection",
   showFilters = true,
+  as: H = "h2",
+  intro = "Every bottle is 100\u00a0ml of extrait de parfum. Pick by who it\u2019s for, then by how it feels.",
 }: {
   initialWho?: Gender | "all";
   heading?: string;
   showFilters?: boolean;
+  as?: "h1" | "h2";
+  intro?: string;
 }) {
   const [who, setWho] = useState<Gender | "all">(initialWho);
   const [mood, setMood] = useState<Mood | "all">("all");
@@ -37,8 +41,8 @@ export function Collection({
     <section className="wrap py-20 md:py-28" aria-labelledby="collection-title">
       <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>
-          <h2 id="collection-title" className="display-l">{heading}</h2>
-          <p className="lede mt-3">Every bottle is 100&nbsp;ml of extrait de parfum. Pick by who it&apos;s for, then by how it feels.</p>
+          <H id="collection-title" className={H === "h1" ? "display-xl" : "display-l"}>{heading}</H>
+          <p className="lede mt-3">{intro}</p>
         </div>
       </div>
 
