@@ -1,49 +1,64 @@
 /**
- * Offer switches shared by the API routes, the cart repricer and the admin page.
- * Money is in major units (pounds), matching Medusa v2.
+ * Offer switches shared by the API routes, the cart repricer, the order check and the
+ * admin page. Money is in major units (pounds), matching Medusa v2.
+ *
+ * Bundle tiers (no stacking — each bottle gets at most one discount):
+ *   2+ bottles -> discountPct off every bottle
+ *   3+ bottles -> discountPct off + free delivery
+ * Subscribe & save -> subscription.pct off that bottle (only when the tier discount isn't on)
+ * Free delivery when goods total >= freeDelivery.threshold
+ * Free signature gift box added to every order
  */
 export type GkOffers = {
-  bundle: { enabled: boolean; qty: number; price: number; label: string }
+  tiers: { enabled: boolean; discountQty: number; discountPct: number; freeShipQty: number }
   freeDelivery: { enabled: boolean; threshold: number }
   giftBox: { enabled: boolean }
+  subscription: { enabled: boolean; pct: number; weeks: number }
+  /** product handles, in display order. Empty = best-stocked products are used. */
+  bestSellers: string[]
 }
 
 export const DEFAULT_OFFERS: GkOffers = {
-  bundle: { enabled: true, qty: 3, price: 45, label: "Any 3 for £45" },
-  freeDelivery: { enabled: true, threshold: 35 },
+  tiers: { enabled: true, discountQty: 2, discountPct: 10, freeShipQty: 3 },
+  freeDelivery: { enabled: true, threshold: 65 },
   giftBox: { enabled: true },
+  subscription: { enabled: true, pct: 10, weeks: 4 },
+  bestSellers: [],
+}
+
+/** Older saved settings (any-3-for-£45 era) are upgraded to the tier model. */
+export function normaliseOffers(raw: Partial<GkOffers> | null | undefined): GkOffers {
+  const r = (raw ?? {}) as Partial<GkOffers>
+  return {
+    tiers: { ...DEFAULT_OFFERS.tiers, ...(r.tiers ?? {}) },
+    freeDelivery: { ...DEFAULT_OFFERS.freeDelivery, ...(r.freeDelivery ?? {}) },
+    giftBox: { ...DEFAULT_OFFERS.giftBox, ...(r.giftBox ?? {}) },
+    subscription: { ...DEFAULT_OFFERS.subscription, ...(r.subscription ?? {}) },
+    bestSellers: Array.isArray(r.bestSellers) ? r.bestSellers.filter((h) => typeof h === "string") : [],
+  }
 }
 
 export const GIFT_BOX_SKU = "GKP-BOX-01"
-export const PERFUME_TYPE = "Perfume"
+/** Promotion code the cart sync adds automatically when a bag reaches the free-delivery tier. */
+export const BUNDLE_DELIVERY_CODE = "GK-BUNDLE-DELIVERY"
 
-export type Unit = { variant_id: string; base: number }
+export type Unit = { variant_id: string; base: number; sub: boolean }
+export type Charged = Unit & { charged: number; reason: "tier" | "subscription" | null }
 
-/**
- * Bundle allocation: units sorted dearest-first; every complete group of `qty`
- * costs `price`, split evenly in pence (remainder on the last unit). Others pay base.
- * Returns the charged price per unit, in the same order as the sorted input.
- */
-export function allocate(units: Unit[], offers: GkOffers) {
-  const sorted = [...units].sort((a, b) => b.base - a.base)
-  const out: { variant_id: string; base: number; charged: number; bundled: boolean }[] = []
-  const { enabled, qty, price } = offers.bundle
-  const groups = enabled && qty > 0 ? Math.floor(sorted.length / qty) : 0
-  for (let g = 0; g < groups; g++) {
-    const group = sorted.slice(g * qty, (g + 1) * qty)
-    const full = group.reduce((a, u) => a + u.base, 0)
-    if (full <= price) {
-      // never charge more than the normal price
-      group.forEach((u) => out.push({ ...u, charged: u.base, bundled: false }))
-      continue
+const pct = (pounds: number, off: number) => Math.round(Math.round(pounds * 100) * (100 - off) / 100) / 100
+
+export function allocate(units: Unit[], offers: GkOffers): { units: Charged[]; count: number; freeShip: boolean } {
+  const count = units.length
+  const t = offers.tiers
+  const tierOn = t.enabled && count >= t.discountQty
+  const out = units.map<Charged>((u) => {
+    if (tierOn) {
+      return { ...u, charged: pct(u.base, t.discountPct), reason: "tier" }
     }
-    const pence = Math.round(price * 100)
-    const each = Math.floor(pence / qty)
-    group.forEach((u, i) => {
-      const p = i === qty - 1 ? pence - each * (qty - 1) : each
-      out.push({ ...u, charged: p / 100, bundled: true })
-    })
-  }
-  sorted.slice(groups * qty).forEach((u) => out.push({ ...u, charged: u.base, bundled: false }))
-  return out
+    if (offers.subscription.enabled && u.sub) {
+      return { ...u, charged: pct(u.base, offers.subscription.pct), reason: "subscription" }
+    }
+    return { ...u, charged: u.base, reason: null }
+  })
+  return { units: out, count, freeShip: t.enabled && count >= t.freeShipQty }
 }

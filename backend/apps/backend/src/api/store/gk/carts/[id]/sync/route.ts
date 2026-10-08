@@ -4,10 +4,8 @@ import { syncGkCartWorkflow } from "../../../../../../workflows/sync-gk-cart"
 import type { SyncGkCartBody } from "../../../../../middlewares"
 
 export async function POST(req: MedusaRequest<SyncGkCartBody>, res: MedusaResponse) {
-  const { lines, gift_boxes } = req.validatedBody
-  await syncGkCartWorkflow(req.scope).run({
-    input: { cart_id: req.params.id, lines, gift_boxes: gift_boxes ?? 0 },
-  })
+  const { lines } = req.validatedBody
+  await syncGkCartWorkflow(req.scope).run({ input: { cart_id: req.params.id, lines } })
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
   const {
     data: [cart],

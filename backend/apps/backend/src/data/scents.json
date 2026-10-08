@@ -37,8 +37,8 @@
     },
     "description": "A bright, fruity opening that settles into a balanced, woody dry-down. Fresh, crisp and commanding — the scent of someone who has already closed the deal.",
     "longevityHours": [
-      8,
-      10
+      12,
+      24
     ],
     "occasions": [
       "Office",
@@ -47,7 +47,14 @@
     ],
     "price": 1799,
     "tint": "#B9C79A",
-    "oneLiner": "Pineapple, oakmoss and confidence."
+    "oneLiner": "Pineapple, oakmoss and confidence.",
+    "tags": [
+      "Fruity",
+      "Fresh",
+      "Woody",
+      "Summer",
+      "Day to night"
+    ]
   },
   {
     "sku": "GKP-002M",
@@ -87,8 +94,8 @@
     },
     "description": "Citrus brightness blended with floral sophistication. A spicy-floral heart gives it a quiet, refined elegance for the man who notices details.",
     "longevityHours": [
-      7,
-      8
+      12,
+      24
     ],
     "occasions": [
       "Smart casual",
@@ -97,7 +104,14 @@
     ],
     "price": 1799,
     "tint": "#E6D58A",
-    "oneLiner": "Sunlit citrus with a soft iris heart."
+    "oneLiner": "Sunlit citrus with a soft iris heart.",
+    "tags": [
+      "Citrus",
+      "Floral",
+      "Woody",
+      "Summer",
+      "Daytime"
+    ]
   },
   {
     "sku": "GKP-003M",
@@ -137,8 +151,8 @@
     },
     "description": "An aromatic, spicy powerhouse. Sharp cardamom up top, a herbal heart, and a leather-and-wood base that gives real presence.",
     "longevityHours": [
-      9,
-      11
+      12,
+      24
     ],
     "occasions": [
       "Office",
@@ -147,7 +161,14 @@
     ],
     "price": 1699,
     "tint": "#B88A5A",
-    "oneLiner": "Cardamom, cedar and quiet authority."
+    "oneLiner": "Cardamom, cedar and quiet authority.",
+    "tags": [
+      "Aromatic",
+      "Spicy",
+      "Leather",
+      "Winter",
+      "Day to night"
+    ]
   },
   {
     "sku": "GKP-004M",
@@ -188,8 +209,8 @@
     },
     "description": "A warm, spicy amber with a rich, almost intoxicating sweetness. Built on spice and warmth rather than freshness — sensual and deeply masculine.",
     "longevityHours": [
-      10,
-      12
+      12,
+      24
     ],
     "occasions": [
       "Evening out",
@@ -198,7 +219,14 @@
     ],
     "price": 1699,
     "tint": "#C7743E",
-    "oneLiner": "Spice, tobacco and a long evening."
+    "oneLiner": "Spice, tobacco and a long evening.",
+    "tags": [
+      "Spicy",
+      "Amber",
+      "Sweet",
+      "Winter",
+      "Night out"
+    ]
   },
   {
     "sku": "GKP-005U",
@@ -239,8 +267,8 @@
     },
     "description": "Built around a warm cognac accord with creamy vanilla and caramel. Like an aged liqueur with a touch of almond — slightly intoxicating and completely addictive.",
     "longevityHours": [
-      8,
-      10
+      12,
+      24
     ],
     "occasions": [
       "Evening out",
@@ -249,7 +277,14 @@
     ],
     "price": 1799,
     "tint": "#B5652B",
-    "oneLiner": "Cognac, caramel and warm oak."
+    "oneLiner": "Cognac, caramel and warm oak.",
+    "tags": [
+      "Gourmand",
+      "Boozy",
+      "Spicy",
+      "All year",
+      "Night out"
+    ]
   },
   {
     "sku": "GKP-006M",
@@ -289,8 +324,8 @@
     },
     "description": "Citrus freshness with aromatic spice and woody depth. Iris adds elegance, the woods give it staying power. Balanced and timeless.",
     "longevityHours": [
-      8,
-      9
+      12,
+      24
     ],
     "occasions": [
       "Office",
@@ -299,7 +334,14 @@
     ],
     "price": 1799,
     "tint": "#C9B48A",
-    "oneLiner": "Bergamot and iris in a tailored suit."
+    "oneLiner": "Bergamot and iris in a tailored suit.",
+    "tags": [
+      "Aromatic",
+      "Woody",
+      "Citrus",
+      "Summer",
+      "Day to night"
+    ]
   },
   {
     "sku": "GKP-007U",
@@ -340,8 +382,8 @@
     },
     "description": "Rich, complex and unmistakably expensive. Saffron and ambroxan give it that airy, almost burnt-sugar glow; the amber base keeps it warm for hours.",
     "longevityHours": [
-      10,
-      12
+      12,
+      24
     ],
     "occasions": [
       "Special occasion",
@@ -350,7 +392,14 @@
     ],
     "price": 1799,
     "tint": "#C23B3B",
-    "oneLiner": "Saffron, amber and burnt sugar."
+    "oneLiner": "Saffron, amber and burnt sugar.",
+    "tags": [
+      "Amber",
+      "Woody",
+      "Sweet",
+      "All year",
+      "Day to night"
+    ]
   },
   {
     "sku": "GKP-008M",
@@ -358,7 +407,7 @@
     "name": "Shadow in Silk",
     "inspiredBy": {
       "brand": "Louis Vuitton",
-      "name": "Ombre Nouvelle"
+      "name": "Ombre Nomade"
     },
     "gender": "men",
     "families": [
@@ -390,8 +439,8 @@
     },
     "description": "Fresh and sophisticated — bright citrus, a delicate floral heart, and a woody base that adds depth without weight. For people who prefer subtlety.",
     "longevityHours": [
-      6,
-      8
+      12,
+      24
     ],
     "occasions": [
       "Office",
@@ -400,7 +449,14 @@
     ],
     "price": 1799,
     "tint": "#9FB7B5",
-    "oneLiner": "Grapefruit and lavender, pressed and clean."
+    "oneLiner": "Grapefruit and lavender, pressed and clean.",
+    "tags": [
+      "Citrus",
+      "Floral",
+      "Woody",
+      "Summer",
+      "Daytime"
+    ]
   },
   {
     "sku": "GKP-009U",
@@ -441,8 +497,8 @@
     },
     "description": "Dark, sensual and mysterious, centred on black orchid. Rich spice and dark woods create an intoxicating aura. Not for the faint-hearted.",
     "longevityHours": [
-      8,
-      10
+      12,
+      24
     ],
     "occasions": [
       "Evening out",
@@ -451,7 +507,14 @@
     ],
     "price": 1699,
     "tint": "#6B3E6E",
-    "oneLiner": "Black orchid, truffle and velvet."
+    "oneLiner": "Black orchid, truffle and velvet.",
+    "tags": [
+      "Floral",
+      "Dark",
+      "Spicy",
+      "Winter",
+      "Night out"
+    ]
   },
   {
     "sku": "GKP-010M",
@@ -494,8 +557,8 @@
     },
     "description": "A premium woody scent built around prized oud. A spiced opening gives way to rich oud and sandalwood — warm, earthy and commanding.",
     "longevityHours": [
-      10,
-      12
+      12,
+      24
     ],
     "occasions": [
       "Office",
@@ -504,7 +567,14 @@
     ],
     "price": 1799,
     "tint": "#7A5532",
-    "oneLiner": "Smoked oud and sandalwood."
+    "oneLiner": "Smoked oud and sandalwood.",
+    "tags": [
+      "Oud",
+      "Woody",
+      "Spicy",
+      "Winter",
+      "Day to night"
+    ]
   },
   {
     "sku": "GKP-011U",
@@ -545,8 +615,8 @@
     },
     "description": "Cherry liqueur and almond sweetness — playful, slightly boozy and utterly delicious. The smooth vanilla base keeps it wearable all day.",
     "longevityHours": [
-      7,
-      8
+      12,
+      24
     ],
     "occasions": [
       "Smart casual",
@@ -555,7 +625,14 @@
     ],
     "price": 1799,
     "tint": "#9E1F33",
-    "oneLiner": "Black cherry, almond and a little rum."
+    "oneLiner": "Black cherry, almond and a little rum.",
+    "tags": [
+      "Gourmand",
+      "Fruity",
+      "Sweet",
+      "All year",
+      "Day to night"
+    ]
   },
   {
     "sku": "GKP-012F",
@@ -597,8 +674,8 @@
     },
     "description": "Opens with citrus and blooms into a bouquet of rose, jasmine and peony. A woody base adds warmth and lasting power. Timeless and refined.",
     "longevityHours": [
-      7,
-      9
+      12,
+      24
     ],
     "occasions": [
       "Office",
@@ -607,7 +684,14 @@
     ],
     "price": 1799,
     "tint": "#E3B5A4",
-    "oneLiner": "Rose and peony in morning light."
+    "oneLiner": "Rose and peony in morning light.",
+    "tags": [
+      "Floral",
+      "Citrus",
+      "Fresh",
+      "Summer",
+      "Daytime"
+    ]
   },
   {
     "sku": "GKP-013U",
@@ -649,8 +733,8 @@
     },
     "description": "A warm, spiced amber with a Middle Eastern soul. A sharp, spicy opening, a smoky heart of tobacco and incense, and a deep amber base.",
     "longevityHours": [
-      8,
-      10
+      12,
+      24
     ],
     "occasions": [
       "Evening out",
@@ -659,7 +743,14 @@
     ],
     "price": 1799,
     "tint": "#C08A3E",
-    "oneLiner": "Incense, myrrh and golden amber."
+    "oneLiner": "Incense, myrrh and golden amber.",
+    "tags": [
+      "Amber",
+      "Spicy",
+      "Smoky",
+      "Winter",
+      "Night out"
+    ]
   },
   {
     "sku": "GKP-014F",
@@ -701,8 +792,8 @@
     },
     "description": "Delicate and feminine — a fruity opening, a rose-and-peony heart with a hint of strawberry, and a creamy vanilla base. Soft, romantic, everyday elegance.",
     "longevityHours": [
-      6,
-      8
+      12,
+      24
     ],
     "occasions": [
       "Daily wear",
@@ -711,7 +802,14 @@
     ],
     "price": 1799,
     "tint": "#E7A3B6",
-    "oneLiner": "Rose, peony and a little strawberry."
+    "oneLiner": "Rose, peony and a little strawberry.",
+    "tags": [
+      "Floral",
+      "Fruity",
+      "Sweet",
+      "All year",
+      "Daytime"
+    ]
   },
   {
     "sku": "GKP-015F",
@@ -753,8 +851,8 @@
     },
     "description": "The feminine counterpart to Royal Adventure. Fresh, energetic fruit up top, a romantic floral heart, and a woody base. Powerful and feminine.",
     "longevityHours": [
-      8,
-      10
+      12,
+      24
     ],
     "occasions": [
       "Office",
@@ -763,7 +861,14 @@
     ],
     "price": 1799,
     "tint": "#D7C27A",
-    "oneLiner": "Blackcurrant and magnolia, confidently worn."
+    "oneLiner": "Blackcurrant and magnolia, confidently worn.",
+    "tags": [
+      "Fruity",
+      "Floral",
+      "Fresh",
+      "Summer",
+      "Day to night"
+    ]
   },
   {
     "sku": "GKP-016U",
@@ -802,8 +907,8 @@
     },
     "description": "Our own creation. A clean, green scent of newly cut grass and leaves, a watery floral heart, and a soft musk that sits close to the skin.",
     "longevityHours": [
-      5,
-      7
+      12,
+      24
     ],
     "occasions": [
       "Sport",
@@ -812,6 +917,13 @@
     ],
     "price": 1699,
     "tint": "#7FA36A",
-    "oneLiner": "Cut grass, green leaves, clean skin."
+    "oneLiner": "Cut grass, green leaves, clean skin.",
+    "tags": [
+      "Green",
+      "Fresh",
+      "Musky",
+      "Summer",
+      "Daytime"
+    ]
   }
 ]

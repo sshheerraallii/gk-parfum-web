@@ -10,6 +10,7 @@ import {
   createCollectionsWorkflow,
   createInventoryLevelsWorkflow,
   createProductCategoriesWorkflow,
+  createProductTagsWorkflow,
   createProductsWorkflow,
   createPromotionsWorkflow,
   createRegionsWorkflow,
@@ -22,7 +23,7 @@ import {
   linkSalesChannelsToStockLocationWorkflow,
 } from "@medusajs/medusa/core-flows"
 import scents from "../data/scents.json"
-import { DEFAULT_OFFERS, GIFT_BOX_SKU } from "../lib/offers"
+import { BUNDLE_DELIVERY_CODE, DEFAULT_OFFERS, GIFT_BOX_SKU } from "../lib/offers"
 import { GK_SETTINGS_MODULE } from "../modules/gk-settings"
 import type GkSettingsService from "../modules/gk-settings/service"
 
@@ -163,6 +164,13 @@ export default async function initial_data_seed({ container }: { container: Medu
     input: { collections: [{ title: "Extrait de Parfum 100ml", handle: "extrait-100ml" }] },
   })
 
+  logger.info("GK: tags (a product can carry many — edit in Admin → Products)")
+  const tagValues = [...new Set(scents.flatMap((s) => s.tags ?? []))]
+  const { result: tags } = await createProductTagsWorkflow(container).run({
+    input: { product_tags: tagValues.map((value) => ({ value })) },
+  })
+  const tagIds = (values: string[] = []) => tags.filter((t) => values.includes(t.value)).map((t) => t.id)
+
   logger.info("GK: products")
   const perfume = (s: Scent) => ({
     title: s.name,
@@ -175,6 +183,7 @@ export default async function initial_data_seed({ container }: { container: Medu
     origin_country: "gb",
     collection_id: cols[0].id,
     category_ids: [catId(GENDER_CATEGORY[s.gender])],
+    tag_ids: tagIds(s.tags),
     shipping_profile_id: profile.id,
     sales_channels: [{ id: channel.id }],
     // Everything the storefront shows is editable here in Admin → Products → Metadata.
@@ -215,7 +224,7 @@ export default async function initial_data_seed({ container }: { container: Medu
         {
           title: "Signature gift box",
           handle: "signature-gift-box",
-          description: "A presentation box for three GK Parfum bottles.",
+          description: "The GK signature presentation box. Added free to every order — the price stays at £0.",
           status: ProductStatus.PUBLISHED,
           weight: 150,
           category_ids: [catId("Gift boxes")],
@@ -229,7 +238,7 @@ export default async function initial_data_seed({ container }: { container: Medu
               sku: GIFT_BOX_SKU,
               manage_inventory: true,
               options: { Type: "Box" },
-              prices: [{ currency_code: "gbp", amount: 4.99 }],
+              prices: [{ currency_code: "gbp", amount: 0 }],
             },
           ],
         },
@@ -259,6 +268,20 @@ export default async function initial_data_seed({ container }: { container: Medu
             target_type: "order",
             allocation: "across",
             value: 10,
+            currency_code: "gbp",
+          },
+        },
+        {
+          // Applied and removed automatically by the cart when a bag reaches the free-delivery tier.
+          code: BUNDLE_DELIVERY_CODE,
+          type: "standard",
+          status: "active",
+          is_automatic: false,
+          application_method: {
+            type: "percentage",
+            target_type: "shipping_methods",
+            allocation: "across",
+            value: 100,
             currency_code: "gbp",
           },
         },
