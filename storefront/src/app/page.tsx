@@ -1,8 +1,9 @@
 import { SprayHero } from "@/components/SprayHero";
 import { Matcher } from "@/components/Matcher";
 import { Collection } from "@/components/Collection";
-import { BoxBuilder } from "@/components/BoxBuilder";
+import { BundleTeaser } from "@/components/BundleTeaser";
 import { Ledger } from "@/components/Ledger";
+import { ReviewsStrip } from "@/components/Reviews";
 import { Faq } from "@/components/Faq";
 
 export default function Home() {
@@ -11,9 +12,10 @@ export default function Home() {
       <SprayHero />
       <div className="gilt-rule" />
       <Matcher />
+      <BundleTeaser />
       <Collection />
-      <BoxBuilder />
       <Ledger />
+      <ReviewsStrip />
       <div className="gilt-rule" />
       <Faq />
     </>

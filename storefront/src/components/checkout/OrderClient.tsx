@@ -12,11 +12,9 @@ type DemoOrder = {
   display_id: number;
   email: string;
   first_name: string;
-  items: { title: string; qty: number; unit: number }[];
-  giftBoxes: number;
-  giftBoxPrice: number;
-  bundleSaving: number;
-  bundleLabel: string;
+  items: { title: string; qty: number; unit: number; sub?: boolean }[];
+  giftBox: boolean;
+  saving: number;
   discount: number;
   shipping: { name: string; cost: number };
   total: number;
@@ -34,7 +32,7 @@ function DemoThanks() {
   }, []);
   return (
     <section className="wrap max-w-2xl py-20 md:py-28">
-      <img src="/brand/gk-emblem-foil-transparent.svg" alt="" aria-hidden className="h-24 w-auto" />
+      <img src="/brand/gk-crest-240.webp" alt="" aria-hidden className="h-28 w-auto" />
       <h1 className="display-xl mt-8">Thank you{o?.first_name ? `, ${o.first_name}` : ""}</h1>
       <p className="lede mt-5">
         {o ? <>Order #{o.display_id} is confirmed. We&apos;ll pack it by hand and email {o.email} when it&apos;s on its way.</> : <>Your order is confirmed.</>}
@@ -45,16 +43,19 @@ function DemoThanks() {
           <ul className="divide-y divide-[var(--line-soft)]">
             {o.items.map((i) => (
               <li key={i.title} className="flex justify-between gap-4 py-3">
-                <span className="text-ivory">{i.title} <span className="text-smoke">× {i.qty}</span></span>
+                <span className="text-ivory">
+                  {i.title} <span className="text-smoke">× {i.qty}</span>
+                  {i.sub && <span className="small block text-champagne">Delivered every 4 weeks</span>}
+                </span>
                 <span className="text-ivory">{formatPrice(i.unit * i.qty)}</span>
               </li>
             ))}
-            {o.giftBoxes > 0 && (
-              <li className="flex justify-between gap-4 py-3"><span className="text-ivory">Gift box × {o.giftBoxes}</span><span className="text-ivory">{formatPrice(o.giftBoxPrice * o.giftBoxes)}</span></li>
+            {o.giftBox && (
+              <li className="flex justify-between gap-4 py-3"><span className="text-ivory">Signature gift box</span><span className="text-champagne">Free</span></li>
             )}
           </ul>
           <dl className="mt-4 space-y-1 border-t border-[var(--line-soft)] pt-4">
-            {o.bundleSaving > 0 && <div className="flex justify-between text-champagne"><dt>{o.bundleLabel}</dt><dd>−{formatPrice(o.bundleSaving)}</dd></div>}
+            {o.saving > 0 && <div className="flex justify-between text-champagne"><dt>Bundle &amp; subscription savings</dt><dd>−{formatPrice(o.saving)}</dd></div>}
             {o.discount > 0 && <div className="flex justify-between text-champagne"><dt>Discount</dt><dd>−{formatPrice(o.discount)}</dd></div>}
             <div className="flex justify-between text-smoke"><dt>Delivery ({o.shipping.name})</dt><dd>{o.shipping.cost === 0 ? "Free" : formatPrice(o.shipping.cost)}</dd></div>
             <div className="flex justify-between text-[1.15rem] text-ivory"><dt>Total</dt><dd>{formatPrice(o.total)}</dd></div>
@@ -80,7 +81,7 @@ function LiveOrder({ id }: { id: string }) {
 
   return (
     <section className="wrap max-w-2xl py-20 md:py-28">
-      <img src="/brand/gk-emblem-foil-transparent.svg" alt="" aria-hidden className="h-24 w-auto" />
+      <img src="/brand/gk-crest-240.webp" alt="" aria-hidden className="h-28 w-auto" />
       <h1 className="display-xl mt-8">Thank you{o?.shipping_address?.first_name ? `, ${o.shipping_address.first_name}` : ""}</h1>
       {err ? (
         <p className="lede mt-5">Your order is placed. We couldn&apos;t load the details just now — your confirmation email has everything.</p>

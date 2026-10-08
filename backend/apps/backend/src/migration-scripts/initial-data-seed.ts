@@ -114,7 +114,7 @@ export default async function initial_data_seed({ container }: { container: Medu
     { attribute: "enabled_in_store", value: "true", operator: "eq" as const },
     { attribute: "is_return", value: "false", operator: "eq" as const },
   ]
-  await createShippingOptionsWorkflow(container).run({
+  const { result: shippingOptions } = await createShippingOptionsWorkflow(container).run({
     input: [
       {
         name: "Royal Mail Tracked 48",
@@ -273,6 +273,7 @@ export default async function initial_data_seed({ container }: { container: Medu
         },
         {
           // Applied and removed automatically by the cart when a bag reaches the free-delivery tier.
+          // Covers standard Tracked 48 only — express delivery is still charged.
           code: BUNDLE_DELIVERY_CODE,
           type: "standard",
           status: "active",
@@ -283,6 +284,13 @@ export default async function initial_data_seed({ container }: { container: Medu
             allocation: "across",
             value: 100,
             currency_code: "gbp",
+            target_rules: [
+              {
+                attribute: "shipping_methods.shipping_option_id",
+                operator: "in",
+                values: shippingOptions.filter((o) => o.name === "Royal Mail Tracked 48").map((o) => o.id),
+              },
+            ],
           },
         },
         {

@@ -39,6 +39,8 @@ export interface Scent {
   variantId?: string;
   /** Product photos uploaded in the admin (first one is the hero) */
   images?: string[];
+  /** Free-form tags set in Admin → Products → Tags (a scent can have many) */
+  tags?: string[];
 }
 
 export const SIZE_ML = 100;
@@ -62,7 +64,7 @@ export const scents: Scent[] = [
     },
     description:
       "A bright, fruity opening that settles into a balanced, woody dry-down. Fresh, crisp and commanding — the scent of someone who has already closed the deal.",
-    longevityHours: [8, 10],
+    longevityHours: [12, 24],
     occasions: ["Office", "Daily wear", "Special occasion"],
     price: 1799,
     tint: "#B9C79A",
@@ -84,7 +86,7 @@ export const scents: Scent[] = [
     },
     description:
       "Citrus brightness blended with floral sophistication. A spicy-floral heart gives it a quiet, refined elegance for the man who notices details.",
-    longevityHours: [7, 8],
+    longevityHours: [12, 24],
     occasions: ["Smart casual", "Daily wear", "Date night"],
     price: 1799,
     tint: "#E6D58A",
@@ -106,7 +108,7 @@ export const scents: Scent[] = [
     },
     description:
       "An aromatic, spicy powerhouse. Sharp cardamom up top, a herbal heart, and a leather-and-wood base that gives real presence.",
-    longevityHours: [9, 11],
+    longevityHours: [12, 24],
     occasions: ["Office", "Daily wear", "Evening out"],
     price: 1699,
     tint: "#B88A5A",
@@ -128,7 +130,7 @@ export const scents: Scent[] = [
     },
     description:
       "A warm, spicy amber with a rich, almost intoxicating sweetness. Built on spice and warmth rather than freshness — sensual and deeply masculine.",
-    longevityHours: [10, 12],
+    longevityHours: [12, 24],
     occasions: ["Evening out", "Date night", "Special occasion"],
     price: 1699,
     tint: "#C7743E",
@@ -150,7 +152,7 @@ export const scents: Scent[] = [
     },
     description:
       "Built around a warm cognac accord with creamy vanilla and caramel. Like an aged liqueur with a touch of almond — slightly intoxicating and completely addictive.",
-    longevityHours: [8, 10],
+    longevityHours: [12, 24],
     occasions: ["Evening out", "Special occasion", "Date night"],
     price: 1799,
     tint: "#B5652B",
@@ -172,7 +174,7 @@ export const scents: Scent[] = [
     },
     description:
       "Citrus freshness with aromatic spice and woody depth. Iris adds elegance, the woods give it staying power. Balanced and timeless.",
-    longevityHours: [8, 9],
+    longevityHours: [12, 24],
     occasions: ["Office", "Daily wear", "Smart casual"],
     price: 1799,
     tint: "#C9B48A",
@@ -194,7 +196,7 @@ export const scents: Scent[] = [
     },
     description:
       "Rich, complex and unmistakably expensive. Saffron and ambroxan give it that airy, almost burnt-sugar glow; the amber base keeps it warm for hours.",
-    longevityHours: [10, 12],
+    longevityHours: [12, 24],
     occasions: ["Special occasion", "Evening out", "Date night"],
     price: 1799,
     tint: "#C23B3B",
@@ -204,7 +206,7 @@ export const scents: Scent[] = [
     sku: "GKP-008M",
     slug: "shadow-in-silk",
     name: "Shadow in Silk",
-    inspiredBy: { brand: "Louis Vuitton", name: "Ombre Nouvelle" },
+    inspiredBy: { brand: "Louis Vuitton", name: "Ombre Nomade" },
     gender: "men",
     families: ["Citrus", "Floral", "Woody"],
     mood: "fresh",
@@ -216,7 +218,7 @@ export const scents: Scent[] = [
     },
     description:
       "Fresh and sophisticated — bright citrus, a delicate floral heart, and a woody base that adds depth without weight. For people who prefer subtlety.",
-    longevityHours: [6, 8],
+    longevityHours: [12, 24],
     occasions: ["Office", "Daily wear", "Smart casual"],
     price: 1799,
     tint: "#9FB7B5",
@@ -238,7 +240,7 @@ export const scents: Scent[] = [
     },
     description:
       "Dark, sensual and mysterious, centred on black orchid. Rich spice and dark woods create an intoxicating aura. Not for the faint-hearted.",
-    longevityHours: [8, 10],
+    longevityHours: [12, 24],
     occasions: ["Evening out", "Date night", "Special occasion"],
     price: 1699,
     tint: "#6B3E6E",
@@ -260,7 +262,7 @@ export const scents: Scent[] = [
     },
     description:
       "A premium woody scent built around prized oud. A spiced opening gives way to rich oud and sandalwood — warm, earthy and commanding.",
-    longevityHours: [10, 12],
+    longevityHours: [12, 24],
     occasions: ["Office", "Evening out", "Special occasion"],
     price: 1799,
     tint: "#7A5532",
@@ -282,7 +284,7 @@ export const scents: Scent[] = [
     },
     description:
       "Cherry liqueur and almond sweetness — playful, slightly boozy and utterly delicious. The smooth vanilla base keeps it wearable all day.",
-    longevityHours: [7, 8],
+    longevityHours: [12, 24],
     occasions: ["Smart casual", "Daily wear", "Date night"],
     price: 1799,
     tint: "#9E1F33",
@@ -304,7 +306,7 @@ export const scents: Scent[] = [
     },
     description:
       "Opens with citrus and blooms into a bouquet of rose, jasmine and peony. A woody base adds warmth and lasting power. Timeless and refined.",
-    longevityHours: [7, 9],
+    longevityHours: [12, 24],
     occasions: ["Office", "Daily wear", "Smart casual"],
     price: 1799,
     tint: "#E3B5A4",
@@ -326,7 +328,7 @@ export const scents: Scent[] = [
     },
     description:
       "A warm, spiced amber with a Middle Eastern soul. A sharp, spicy opening, a smoky heart of tobacco and incense, and a deep amber base.",
-    longevityHours: [8, 10],
+    longevityHours: [12, 24],
     occasions: ["Evening out", "Special occasion", "Date night"],
     price: 1799,
     tint: "#C08A3E",
@@ -348,7 +350,7 @@ export const scents: Scent[] = [
     },
     description:
       "Delicate and feminine — a fruity opening, a rose-and-peony heart with a hint of strawberry, and a creamy vanilla base. Soft, romantic, everyday elegance.",
-    longevityHours: [6, 8],
+    longevityHours: [12, 24],
     occasions: ["Daily wear", "Smart casual", "Date night"],
     price: 1799,
     tint: "#E7A3B6",
@@ -370,7 +372,7 @@ export const scents: Scent[] = [
     },
     description:
       "The feminine counterpart to Royal Adventure. Fresh, energetic fruit up top, a romantic floral heart, and a woody base. Powerful and feminine.",
-    longevityHours: [8, 10],
+    longevityHours: [12, 24],
     occasions: ["Office", "Daily wear", "Special occasion"],
     price: 1799,
     tint: "#D7C27A",
@@ -392,7 +394,7 @@ export const scents: Scent[] = [
     },
     description:
       "Our own creation. A clean, green scent of newly cut grass and leaves, a watery floral heart, and a soft musk that sits close to the skin.",
-    longevityHours: [5, 7],
+    longevityHours: [12, 24],
     occasions: ["Sport", "Daily wear", "Smart casual"],
     price: 1699,
     tint: "#7FA36A",
@@ -418,34 +420,142 @@ export const formatPrice = (pence: number) =>
 export const inspiredLabel = (s: Scent) =>
   s.inspiredBy ? `${s.inspiredBy.brand} ${s.inspiredBy.name}` : "A GK original";
 
-/** Lightweight search: matches our name, the original's brand/name, notes and families. */
+/* ── Search: understands perfume names *and* plain-English likes ("woody, ouds, something sweet") ── */
+
+const STOP = new Set(
+  "i im i'm me my we a an the and or but with without of for to in on at it its is are be really very quite so some something anything kind sort like likes love loves loving want wants looking look smell smells smelling scent scents perfume perfumes fragrance fragrances note notes that this those these please more most bit little lot lots strong light ones one type types prefer into enjoy".split(" ")
+);
+
+/** A word someone types → the notes/families/tags it should match. */
+const SYN: Record<string, string[]> = {
+  wood: ["wood", "woody", "cedar", "cedarwood", "sandalwood", "vetiver", "oak", "oakmoss", "cypress", "birch"],
+  fresh: ["fresh", "citrus", "bergamot", "lemon", "lime", "grapefruit", "green", "calone", "aquatic", "petitgrain"],
+  clean: ["fresh", "musk", "musky", "calone", "green", "clean"],
+  citrus: ["citrus", "bergamot", "lemon", "lime", "grapefruit", "petitgrain"],
+  sweet: ["sweet", "vanilla", "caramel", "tonka", "gourmand", "cherry", "almond", "maraschino"],
+  gourmand: ["gourmand", "vanilla", "caramel", "tonka", "almond", "cherry"],
+  vanilla: ["vanilla", "tonka"],
+  floral: ["floral", "rose", "jasmine", "peony", "iris", "orchid", "lily", "freesia", "magnolia", "violet", "geranium", "ylang"],
+  flower: ["floral", "rose", "jasmine", "peony", "iris", "orchid", "lily", "freesia", "magnolia"],
+  rose: ["rose"],
+  spice: ["spicy", "spice", "spices", "cardamom", "pepper", "cinnamon", "clove", "nutmeg", "ginger", "saffron", "caraway"],
+  spicy: ["spicy", "spice", "spices", "cardamom", "pepper", "cinnamon", "clove", "nutmeg", "ginger", "saffron"],
+  fruit: ["fruity", "pineapple", "apple", "pear", "cherry", "blackcurrant", "strawberry"],
+  fruity: ["fruity", "pineapple", "apple", "pear", "cherry", "blackcurrant", "strawberry"],
+  oud: ["oud", "agarwood"],
+  agarwood: ["oud", "agarwood"],
+  musk: ["musk", "musky"],
+  smoky: ["smoky", "incense", "tobacco", "oud", "myrrh"],
+  smoke: ["smoky", "incense", "tobacco"],
+  tobacco: ["tobacco"],
+  leather: ["leather"],
+  amber: ["amber", "ambroxan"],
+  boozy: ["boozy", "cognac", "rum", "liqueur"],
+  cognac: ["cognac"],
+  warm: ["amber", "vanilla", "tonka", "cinnamon", "spicy", "tobacco"],
+  cosy: ["amber", "vanilla", "tonka", "cinnamon"],
+  cozy: ["amber", "vanilla", "tonka", "cinnamon"],
+  dark: ["dark", "oud", "leather", "tobacco", "truffle", "patchouli"],
+  green: ["green", "galbanum", "leaf", "grass"],
+  aquatic: ["aquatic", "calone"],
+  powdery: ["iris", "violet", "musk"],
+  cherry: ["cherry", "maraschino"],
+  coffee: ["coffee"],
+  aromatic: ["aromatic", "lavender", "juniper", "herbs", "geranium"],
+  lavender: ["lavender"],
+};
+
+const GENDER_WORDS: Record<string, Gender> = {
+  men: "men", man: "men", male: "men", him: "men", his: "men", masculine: "men", guy: "men", husband: "men", boyfriend: "men", dad: "men",
+  women: "women", woman: "women", female: "women", her: "women", feminine: "women", ladies: "women", wife: "women", girlfriend: "women", mum: "women",
+  unisex: "unisex", anyone: "unisex", everyone: "unisex",
+};
+
+const TIME_WORDS: Record<string, { mood?: Mood[]; time?: Scent["time"]; occasion?: Occasion[] }> = {
+  summer: { mood: ["fresh"] },
+  spring: { mood: ["fresh"] },
+  winter: { mood: ["warm", "dark", "sweet"] },
+  autumn: { mood: ["warm", "dark"] },
+  night: { time: "night", occasion: ["Evening out", "Date night"] },
+  evening: { time: "night", occasion: ["Evening out"] },
+  date: { occasion: ["Date night"] },
+  office: { occasion: ["Office"] },
+  work: { occasion: ["Office"] },
+  day: { time: "day", occasion: ["Daily wear"] },
+  daily: { occasion: ["Daily wear"] },
+  everyday: { occasion: ["Daily wear"] },
+  gym: { occasion: ["Sport"] },
+  sport: { occasion: ["Sport"] },
+  wedding: { occasion: ["Special occasion"] },
+  party: { occasion: ["Evening out"] },
+};
+
+const norm = (t: string) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+function stem(w: string) {
+  if (SYN[w] || GENDER_WORDS[w] || TIME_WORDS[w]) return w;
+  if (w.endsWith("ies")) return w.slice(0, -3) + "y";
+  if (w.endsWith("es") && SYN[w.slice(0, -2)]) return w.slice(0, -2);
+  if (w.endsWith("s") && w.length > 3) return w.slice(0, -1);
+  if (w.endsWith("y") && SYN[w.slice(0, -1)]) return w.slice(0, -1); // woody -> wood, smoky -> smoke(ish)
+  return w;
+}
+
+/** The meaningful words in a query — what we log for the shop owner. */
+export function queryKeywords(q: string): string[] {
+  return [
+    ...new Set(
+      norm(q)
+        .replace(/[^a-z0-9' ]+/g, " ")
+        .split(/\s+/)
+        .filter((w) => w && !STOP.has(w))
+        .map(stem)
+        .filter((w) => w.length > 1)
+    ),
+  ];
+}
+
 export function searchScents(q: string, list: Scent[] = scents): Scent[] {
-  const n = q.trim().toLowerCase();
-  if (!n) return [];
-  const words = n.split(/\s+/);
+  const words = queryKeywords(q);
+  if (!words.length) return [];
+  const full = norm(q).trim();
   return list
     .map((s) => {
-      const hay = [
-        s.name,
-        s.inspiredBy?.brand ?? "",
-        s.inspiredBy?.name ?? "",
-        ...s.families,
-        ...s.notes.top,
-        ...s.notes.heart,
-        ...s.notes.base,
-      ]
-        .join(" ")
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[̀-ͯ]/g, "");
-      const orig = `${s.inspiredBy?.brand ?? ""} ${s.inspiredBy?.name ?? ""}`.toLowerCase();
+      const notes = {
+        top: s.notes.top.map(norm),
+        heart: s.notes.heart.map(norm),
+        base: s.notes.base.map(norm),
+      };
+      const fam = [...s.families, ...(s.tags ?? [])].map(norm);
+      const orig = norm(`${s.inspiredBy?.brand ?? ""} ${s.inspiredBy?.name ?? ""}`);
+      const name = norm(s.name);
       let score = 0;
+      if (full.length > 3 && (orig.includes(full) || name.includes(full))) score += 12;
       for (const w of words) {
-        const ww = w.normalize("NFD").replace(/[̀-ͯ]/g, "");
-        if (orig.includes(ww)) score += 5;
-        else if (s.name.toLowerCase().includes(ww)) score += 4;
-        else if (hay.includes(ww)) score += 1;
-        else score -= 2;
+        const g = GENDER_WORDS[w];
+        if (g) {
+          score += s.gender === g ? 4 : s.gender === "unisex" ? 2 : -3;
+          continue;
+        }
+        const tw = TIME_WORDS[w];
+        if (tw) {
+          if (tw.mood?.includes(s.mood)) score += 2;
+          if (tw.time && (s.time === tw.time || s.time === "any")) score += 1;
+          if (tw.occasion?.some((o) => s.occasions.includes(o))) score += 2;
+          continue;
+        }
+        if (orig.includes(w)) { score += 6; continue; }
+        if (name.includes(w)) { score += 5; continue; }
+        const terms = SYN[w] ?? [w];
+        let hit = 0;
+        for (const t of terms) {
+          if (fam.some((f) => f.includes(t))) hit = Math.max(hit, 3);
+          if (notes.base.some((n) => n.includes(t))) hit = Math.max(hit, 2.5);
+          if (notes.heart.some((n) => n.includes(t))) hit = Math.max(hit, 2);
+          if (notes.top.some((n) => n.includes(t))) hit = Math.max(hit, 1.5);
+        }
+        if (hit === 0 && norm(s.description).includes(w)) hit = 0.5;
+        score += hit;
       }
       return { s, score };
     })
@@ -453,3 +563,12 @@ export function searchScents(q: string, list: Scent[] = scents): Scent[] {
     .sort((a, b) => b.score - a.score)
     .map((r) => r.s);
 }
+
+/** Default tags for the launch catalogue (the admin can add as many as it likes per product). */
+export function defaultTags(s: Scent): string[] {
+  const season = s.mood === "fresh" ? "Summer" : s.mood === "sweet" ? "All year" : "Winter";
+  const when = s.time === "night" ? "Night out" : s.time === "day" ? "Daytime" : "Day to night";
+  return [...new Set([...s.families, season, when])];
+}
+
+for (const s of scents) s.tags ??= defaultTags(s);

@@ -2,8 +2,9 @@
 const ROWS: [string, string, string][] = [
   ["Bottle size", "Usually 50–100 ml", "100 ml, always"],
   ["Strength", "Eau de parfum, 15–20% oil", "Extrait, 40% oil"],
-  ["Lasts on skin", "6–10 hours", "7–12 hours"],
-  ["Made in", "France, Italy, USA", "Hand-poured in the UK"],
+  ["Lasts on skin", "6–10 hours", "12+ hours"],
+  ["Made in", "France, Italy, USA", "Manufactured in the UK"],
+  ["Vegan friendly", "Not always", "Yes"],
   ["Price for 100 ml", "£85 – £380", "£16.99 – £17.99"],
 ];
 
@@ -14,17 +15,9 @@ export function Ledger() {
         <div>
           <h2 id="ledger-title" className="display-l max-w-[12ch]">Why it costs £17.99, not £300</h2>
           <p className="lede mt-5">
-            Designer prices pay for advertising, celebrity faces and department-store rent. Ours pay for the oil in the bottle.
+            Designer prices pay for advertising, celebrity faces and department-store rent. Ours pay for the oil in the bottle —
+            extrait strength that lasts 12 to 24 hours.
           </p>
-          <img
-            src="/brand/mockup-box-800.webp"
-            alt="A GK Parfum bottle in black glass with a gold crest label, resting in its blue presentation box"
-            width={800}
-            height={994}
-            loading="lazy"
-            decoding="async"
-            className="mt-10 w-full max-w-[420px] rounded-[var(--radius-m)] shadow-[0_40px_80px_-40px_rgba(0,0,0,.8)]"
-          />
         </div>
         <div className="overflow-hidden rounded-[var(--radius-m)] border border-[var(--line)]">
           <table className="w-full border-collapse text-left">

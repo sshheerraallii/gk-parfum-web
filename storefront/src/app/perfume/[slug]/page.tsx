@@ -7,6 +7,8 @@ import { ProductVisual } from "@/components/ProductVisual";
 import { SITE } from "@/lib/site";
 import { ScentCard } from "@/components/ScentCard";
 import { BuyBox } from "@/components/BuyBox";
+import { ProductReviews } from "@/components/Reviews";
+import { WishButton } from "@/components/ScentCard";
 
 export const revalidate = 60;
 
@@ -20,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!s) return {};
   const title = s.inspiredBy ? `${s.name} — ${s.inspiredBy.name} Inspired Perfume` : `${s.name} — Extrait de Parfum ${SIZE_ML}ml`;
   const description = s.inspiredBy
-    ? `${s.name} smells like ${inspiredLabel(s)}. ${SIZE_ML}ml extrait de parfum, ${OIL_PERCENT}% oil, lasts ${s.longevityHours[0]}–${s.longevityHours[1]} hours. ${formatPrice(s.price)}, made in the UK.`
+    ? `${s.name}, inspired by ${inspiredLabel(s)}. ${SIZE_ML}ml extrait de parfum, ${OIL_PERCENT}% oil, lasts ${s.longevityHours[0]}–${s.longevityHours[1]} hours. ${formatPrice(s.price)}, made in the UK.`
     : `${s.name}: ${s.oneLiner} ${SIZE_ML}ml extrait de parfum, ${formatPrice(s.price)}, made in the UK.`;
   return {
     title,
@@ -57,7 +59,7 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
         sku: s.sku,
         brand: { "@type": "Brand", name: "GK Parfum" },
         category: "Health & Beauty > Personal Care > Cosmetics > Perfume & Cologne",
-        image: s.images?.length ? s.images : [`${SITE.url}/brand/gk-mark-foil-transparent.svg`],
+        image: s.images?.length ? s.images : [`${SITE.url}/brand/gk-icon-512.png`],
         audience: { "@type": "PeopleAudience", suggestedGender: s.gender === "men" ? "male" : s.gender === "women" ? "female" : "unisex" },
         additionalProperty: [
           { "@type": "PropertyValue", name: "Volume", value: `${SIZE_ML} ml` },
@@ -103,7 +105,7 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
     ],
   };
 
-  const maxH = 12;
+  const maxH = 24;
 
   return (
     <>
@@ -120,7 +122,8 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
         <div className="md:sticky md:top-24 md:self-start">
           <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[var(--radius-m)] bg-ebony md:aspect-[4/5]">
             <div aria-hidden className="absolute inset-0" style={{ background: `radial-gradient(60% 50% at 50% 60%, ${s.tint}40, transparent 70%)` }} />
-            <ProductVisual s={s} priority sizes="(min-width: 768px) 50vw, 100vw" className="relative h-[78%] w-auto max-w-[85%] drop-shadow-[0_40px_50px_rgba(0,0,0,.55)]" />
+            <ProductVisual s={s} priority sizes="(min-width: 768px) 50vw, 100vw" className="relative h-[78%] w-auto max-w-[85%] drop-shadow-[0_40px_50px_rgba(4,11,36,.6)]" />
+            <WishButton slug={s.slug} name={s.name} className="absolute right-4 top-4" />
           </div>
         </div>
 
@@ -128,9 +131,20 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
           <p className="text-smoke">{genderLabel[s.gender]}</p>
           <h1 className="display-xl mt-2 text-ivory">{s.name}</h1>
           <p className="mt-4 text-[1.2rem] text-champagne">
-            {s.inspiredBy ? <>Smells like {inspiredLabel(s)}</> : <>A GK original</>}
+            {s.inspiredBy ? <>Inspired by {inspiredLabel(s)}</> : <>A GK original</>}
           </p>
+          {s.tags?.length ? (
+            <ul className="mt-4 flex flex-wrap gap-2" aria-label="Tags">
+              {s.tags.map((t) => (
+                <li key={t} className="rounded-full border border-[var(--line-soft)] px-3 py-1 text-[0.85rem] text-smoke">{t}</li>
+              ))}
+            </ul>
+          ) : null}
           <p className="lede mt-4">{s.description}</p>
+          <p className="small mt-3 flex items-center gap-2 text-champagne">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden><path d="M12 21c-4-3-7-6.5-7-11 3 0 5.5 1 7 3 1.5-2 4-3 7-3 0 4.5-3 8-7 11Zm0 0V10" strokeLinejoin="round" /></svg>
+            Vegan friendly · Manufactured in the UK
+          </p>
 
           <BuyBox slug={s.slug} price={s.price} name={s.name} />
 
@@ -145,7 +159,7 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
               <div className="absolute inset-y-0 rounded-full bg-champagne/30" style={{ left: `${(s.longevityHours[0] / maxH) * 100}%`, width: `${((s.longevityHours[1] - s.longevityHours[0]) / maxH) * 100}%` }} />
             </div>
             <div className="small mt-2 flex justify-between text-smoke" aria-hidden>
-              <span>Spray</span><span>6 hours</span><span>12 hours</span>
+              <span>Spray</span><span>12 hours</span><span>24 hours</span>
             </div>
           </div>
 
@@ -178,7 +192,7 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
               ["Size", `${SIZE_ML} ml`],
               ["Strength", `${CONCENTRATION}, ${OIL_PERCENT}% oil`],
               ["Scent family", s.families.join(", ")],
-              ["Made in", "United Kingdom"],
+              ["Made in", "Manufactured in the UK"],
             ].map(([k, v]) => (
               <div key={k} className="bg-velvet p-4">
                 <dt className="small text-smoke">{k}</dt>
@@ -188,6 +202,8 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
           </dl>
         </div>
       </section>
+
+      <ProductReviews handle={s.slug} name={s.name} />
 
       {related.length > 0 && (
         <section className="wrap pb-10" aria-labelledby="related-title">

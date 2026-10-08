@@ -8,6 +8,7 @@ import type { Stripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useCart } from "@/lib/cart";
 import { DemoCheckout } from "./DemoCheckout";
+import { useAccount } from "@/lib/account";
 import { useCatalog } from "../CatalogProvider";
 import { useOffers } from "@/lib/useOffers";
 import { formatPrice } from "@/lib/catalog";
@@ -22,6 +23,7 @@ import {
   shippingOptions,
   startPayment,
   syncCart,
+  attachCart,
   updateCart,
   type MCart,
   type ShippingOption,
@@ -90,7 +92,8 @@ export function Section({ n, title, children, muted }: { n: number; title: strin
 
 export function CheckoutClient() {
   const router = useRouter();
-  const { lines, giftBoxes, clear } = useCart();
+  const { lines, clear } = useCart();
+  const account = useAccount((st) => st.account);
   const scents = useCatalog();
   const offers = useOffers();
   const [mounted, setMounted] = useState(false);
@@ -114,6 +117,14 @@ export function CheckoutClient() {
 
   useEffect(() => setMounted(true), []);
 
+  const syncLines = useCallback(
+    () =>
+      lines
+        .map((l) => ({ variant_id: scents.find((s) => s.slug === l.slug)?.variantId ?? "", quantity: l.qty, subscribe: !!l.sub }))
+        .filter((l) => l.variant_id),
+    [lines, scents]
+  );
+
   // 1. make sure a server cart exists and holds exactly what's in the bag
   useEffect(() => {
     if (!mounted) return;
@@ -129,10 +140,8 @@ export function CheckoutClient() {
     (async () => {
       try {
         const c = await ensureCart();
-        const mapped = lines
-          .map((l) => ({ variant_id: scents.find((s) => s.slug === l.slug)?.variantId ?? "", quantity: l.qty }))
-          .filter((l) => l.variant_id);
-        const synced = await syncCart(c.id, mapped, giftBoxes);
+        await attachCart(c.id);
+        const synced = await syncCart(c.id, syncLines());
         if (!live) return;
         setCart(synced);
         if (synced.email) setEmail(synced.email);
@@ -151,7 +160,29 @@ export function CheckoutClient() {
     return () => {
       live = false;
     };
-  }, [mounted, lines, giftBoxes, scents]);
+  }, [mounted, lines, scents, syncLines]);
+
+  // signed-in customers: prefill from their account
+  useEffect(() => {
+    if (!account) return;
+    setEmail((e) => e || account.email);
+    setMarketing((m) => m || account.marketing);
+    const a = account.addresses[0];
+    setAddr((cur) =>
+      cur.address_1
+        ? cur
+        : {
+            ...cur,
+            first_name: cur.first_name || a?.first_name || account.first_name,
+            last_name: cur.last_name || a?.last_name || account.last_name,
+            address_1: a?.address_1 ?? "",
+            address_2: a?.address_2 ?? "",
+            city: a?.city ?? "",
+            postal_code: a?.postal_code ?? "",
+            phone: cur.phone || a?.phone || account.phone,
+          }
+    );
+  }, [account]);
 
   const errors = useMemo(() => {
     const e: Record<string, string> = {};
@@ -187,7 +218,9 @@ export function CheckoutClient() {
         setOptions(opts);
         const chosen = c.shipping_methods?.[0]?.shipping_option_id ?? opts[0]?.id;
         if (chosen && !c.shipping_methods?.length) {
-          setCart(await setShipping(cart.id, chosen));
+          await setShipping(cart.id, chosen);
+          // re-price now delivery is known, so a 3-bottle bundle gets its free delivery
+          setCart(await syncCart(cart.id, syncLines()));
         }
         setOptionId(chosen ?? null);
       } catch (e) {
@@ -196,7 +229,7 @@ export function CheckoutClient() {
       }
     }, 500);
     return () => clearTimeout(t);
-  }, [cart, addressOk, email, addr, marketing]);
+  }, [cart, addressOk, email, addr, marketing, syncLines]);
 
   const stripeOn = !!STRIPE_KEY && providers.includes("pp_stripe_stripe");
   const readyToPay = !!cart && addressOk && !!optionId && !!cart.shipping_methods?.length;
@@ -219,7 +252,8 @@ export function CheckoutClient() {
     if (!cart) return;
     setOptionId(id);
     try {
-      setCart(await setShipping(cart.id, id));
+      await setShipping(cart.id, id);
+      setCart(await syncCart(cart.id, syncLines()));
     } catch (e) {
       setPayError(e instanceof Error ? e.message : "Couldn't set delivery.");
     }
@@ -287,22 +321,30 @@ export function CheckoutClient() {
     return (
       <div className="wrap max-w-xl py-24">
         <h1 className="display-l text-ink">Your bag is empty</h1>
-        <p className="mt-4 text-ink-soft">Add a scent — or any three for {formatPrice(offers.bundle.price)} — and come back here to pay.</p>
+        <p className="mt-4 text-ink-soft">Pick 2 scents to save {offers.tiers.discountPct}%, or 3 for free delivery too — then come back here to pay.</p>
         <Link href="/shop" className="btn btn-ink mt-8">Shop all scents</Link>
       </div>
     );
   }
 
   const bundleSaving = cart.items.reduce((a, i) => {
-    if (!i.metadata?.gk_bundle) return a;
+    if (!i.metadata?.gk_discount) return a;
     const s = scents.find((x) => x.variantId === i.variant_id);
     return a + (s ? (s.price - pence(i.unit_price)) * i.quantity : 0);
   }, 0);
+  const bottles = cart.items.filter((i) => !i.metadata?.gk_gift_box);
+  const hasBox = cart.items.some((i) => i.metadata?.gk_gift_box);
+  const shippingBase = (cart.shipping_methods ?? []).reduce((a, m) => a + pence(m.amount), 0);
+  const shippingDiscount = Math.max(0, shippingBase - pence(cart.shipping_total));
+  const codeDiscount = Math.max(0, pence(cart.discount_total) - shippingDiscount);
+  const visibleCodes = (cart.promotions ?? []).filter((p) => p.code !== "GK-BUNDLE-DELIVERY");
+  const bottleCount = bottles.reduce((a, i) => a + i.quantity, 0);
+  const bundleFreeDelivery = offers.tiers.enabled && bottleCount >= offers.tiers.freeShipQty;
 
   const summary = (
     <div>
       <ul className="space-y-4">
-        {cart.items.map((i) => {
+        {bottles.map((i) => {
           const s = scents.find((x) => x.variantId === i.variant_id);
           return (
             <li key={i.id} className="flex items-center gap-4">
@@ -313,7 +355,7 @@ export function CheckoutClient() {
               <div className="min-w-0 flex-1">
                 <p className="truncate text-ink">{i.product_title}</p>
                 <p className="text-[0.85rem] text-ink-soft">
-                  {i.metadata?.gk_bundle ? String(i.metadata.gk_bundle) : i.metadata?.gk_gift_box ? "Gift box" : "100 ml"}
+                  {[i.metadata?.gk_subscription ? `Delivered ${String(i.metadata.gk_subscription).toLowerCase()}` : "100 ml", i.metadata?.gk_discount ? String(i.metadata.gk_discount) : null].filter(Boolean).join(" · ")}
                 </p>
               </div>
               <p className="text-ink">{formatPrice(pence(i.unit_price) * i.quantity)}</p>
@@ -321,6 +363,16 @@ export function CheckoutClient() {
           );
         })}
       </ul>
+
+      {hasBox && (
+        <div className="mt-5 flex items-center gap-3 rounded-[12px] border border-[#d9c18b] bg-[#fbf3df] p-3">
+          <img src="/brand/gk-crest-112.webp" alt="" aria-hidden className="h-11 w-auto" />
+          <p className="flex-1 text-[0.95rem] text-ink">
+            <span className="block font-medium">Congratulations — you&apos;ve won a free signature gift box</span>
+            <span className="text-[0.85rem] text-ink-soft">It&apos;s included with your order.</span>
+          </p>
+        </div>
+      )}
 
       <div className="mt-6 flex gap-2">
         <label htmlFor="promo" className="sr-only">Discount code</label>
@@ -337,9 +389,9 @@ export function CheckoutClient() {
         </button>
       </div>
       {promoMsg && <p className="mt-2 text-[0.85rem] text-[#b4432f]">{promoMsg}</p>}
-      {cart.promotions?.length > 0 && (
+      {visibleCodes.length > 0 && (
         <ul className="mt-3 flex flex-wrap gap-2">
-          {cart.promotions.map((p) => (
+          {visibleCodes.map((p) => (
             <li key={p.code} className="flex items-center gap-2 rounded-full bg-white px-3 py-1 text-[0.85rem] text-ink">
               {p.code}
               <button type="button" aria-label={`Remove ${p.code}`} className="text-ink-soft hover:text-ink" onClick={async () => setCart(await removePromo(cart.id, p.code))}>
@@ -353,10 +405,10 @@ export function CheckoutClient() {
       <dl className="mt-6 space-y-2 border-t border-[var(--paper-line)] pt-5 text-[0.98rem]">
         <div className="flex justify-between text-ink-soft"><dt>Subtotal</dt><dd>{formatPrice(pence(cart.item_subtotal) + bundleSaving)}</dd></div>
         {bundleSaving > 0 && (
-          <div className="flex justify-between text-[#6d5a2b]"><dt>{offers.bundle.label}</dt><dd>−{formatPrice(bundleSaving)}</dd></div>
+          <div className="flex justify-between text-[#7a5a1c]"><dt>Bundle &amp; subscription savings</dt><dd>−{formatPrice(bundleSaving)}</dd></div>
         )}
-        {pence(cart.discount_total) > 0 && (
-          <div className="flex justify-between text-[#6d5a2b]"><dt>Discount</dt><dd>−{formatPrice(pence(cart.discount_total))}</dd></div>
+        {codeDiscount > 0 && (
+          <div className="flex justify-between text-[#7a5a1c]"><dt>Discount code</dt><dd>−{formatPrice(codeDiscount)}</dd></div>
         )}
         <div className="flex justify-between text-ink-soft">
           <dt>Delivery</dt>
@@ -374,7 +426,7 @@ export function CheckoutClient() {
   return (
     <div className="grid min-h-[calc(100dvh-100px)] lg:grid-cols-[1.15fr_.85fr]">
       {/* mobile summary toggle */}
-      <div className="border-b border-[var(--paper-line)] bg-[#e8dfcc] lg:hidden">
+      <div className="border-b border-[var(--paper-line)] bg-[#e9e3d6] lg:hidden">
         <button type="button" className="wrap flex h-14 w-full items-center justify-between text-ink" onClick={() => setSummaryOpen((v) => !v)} aria-expanded={summaryOpen}>
           <span>{summaryOpen ? "Hide" : "Show"} order summary</span>
           <span className="font-display text-[1.3rem]">{formatPrice(pence(cart.total))}</span>
@@ -422,13 +474,15 @@ export function CheckoutClient() {
                 <legend className="sr-only">Delivery method</legend>
                 <div className="overflow-hidden rounded-[12px] border border-[var(--paper-line)] bg-white">
                   {options.map((o, i) => (
-                    <label key={o.id} className={`flex cursor-pointer items-center gap-4 px-5 py-4 ${i ? "border-t border-[var(--paper-line)]" : ""} ${optionId === o.id ? "bg-[#f7f2e7]" : ""}`}>
+                    <label key={o.id} className={`flex cursor-pointer items-center gap-4 px-5 py-4 ${i ? "border-t border-[var(--paper-line)]" : ""} ${optionId === o.id ? "bg-[#f6f1e6]" : ""}`}>
                       <input type="radio" name="shipping" className="h-5 w-5 accent-[var(--ink)]" checked={optionId === o.id} onChange={() => chooseOption(o.id)} />
                       <span className="flex-1">
                         <span className="block text-ink">{o.name}</span>
                         <span className="text-[0.88rem] text-ink-soft">{o.type?.description}</span>
                       </span>
-                      <span className="text-ink">{pence(o.amount) === 0 ? "Free" : formatPrice(pence(o.amount))}</span>
+                      <span className="text-ink">
+                        {pence(o.amount) === 0 || (bundleFreeDelivery && (o.type?.code === "tracked-48" || o.name.includes("48"))) ? "Free" : formatPrice(pence(o.amount))}
+                      </span>
                     </label>
                   ))}
                 </div>
@@ -483,7 +537,7 @@ export function CheckoutClient() {
         </ul>
       </div>
 
-      <aside className="hidden border-l border-[var(--paper-line)] bg-[#e8dfcc] lg:block" aria-label="Order summary">
+      <aside className="hidden border-l border-[var(--paper-line)] bg-[#e9e3d6] lg:block" aria-label="Order summary">
         <div className="sticky top-0 max-w-[480px] px-12 py-14">{summary}</div>
       </aside>
     </div>

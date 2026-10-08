@@ -4,10 +4,10 @@ import { formatPrice } from "@/lib/catalog";
 import { getScents } from "@/lib/medusa";
 
 export const metadata: Metadata = {
-  title: "Smells Like — Find the Inspired Version of Your Favourite Perfume",
+  title: "Inspired By — Find the GK Version of Your Favourite Perfume",
   description:
-    "The full list: which GK Parfum scent smells like Creed Aventus, Baccarat Rouge 540, Dior Sauvage Elixir, Tom Ford Black Orchid, Lost Cherry, Delina and more.",
-  alternates: { canonical: "/smells-like" },
+    "The full list: which GK Parfum scent is inspired by Creed Aventus, Baccarat Rouge 540, Dior Sauvage Elixir, Tom Ford Black Orchid, Lost Cherry, Delina and more.",
+  alternates: { canonical: "/inspired-by" },
 };
 
 export const revalidate = 60;
@@ -18,7 +18,7 @@ export default async function SmellsLike() {
   return (
     <section className="wrap py-14 md:py-20">
       <h1 className="display-xl max-w-[16ch]">If you love this, wear ours</h1>
-      <p className="lede mt-5">Every GK scent, listed next to the famous perfume it smells like.</p>
+      <p className="lede mt-5">Every GK scent, listed next to the famous perfume that inspired it.</p>
       <div className="mt-12 overflow-hidden rounded-[var(--radius-m)] border border-[var(--line)]">
         <table className="w-full border-collapse text-left">
           <caption className="sr-only">Original perfumes and their GK Parfum equivalents</caption>

@@ -2,21 +2,23 @@
 
 /* ── GK Parfum tokens ───────────────────────────────────────────── */
 :root {
-  --velvet: #14110e;      /* page */
-  --ebony: #1e1a16;       /* raised surfaces */
-  --ebony-2: #27221c;     /* hover / inputs */
-  --gilt: #c9a15b;        /* brand gold — matches logo */
-  --champagne: #e9d5a5;   /* highlights */
-  --ivory: #f3ecdf;       /* primary text on dark */
-  --smoke: #a39a8c;       /* secondary text on dark (AA on velvet) */
-  --line: rgba(201, 161, 91, 0.22);
-  --line-soft: rgba(243, 236, 223, 0.08);
+  /* royal blue — the colour of the GK presentation box */
+  --velvet: #0a1a48;      /* page: deep royal navy */
+  --ebony: #11286a;       /* raised surfaces */
+  --ebony-2: #183583;     /* hover / inputs */
+  --royal: #1f45a8;       /* the box blue, used for light and glow */
+  --gilt: #c9a15b;        /* brand gold — matches the crest */
+  --champagne: #ecd6a2;   /* highlights */
+  --ivory: #f5f1e8;       /* primary text on blue */
+  --smoke: #b3bedb;       /* secondary text on blue (AA on velvet) */
+  --line: rgba(201, 161, 91, 0.3);
+  --line-soft: rgba(214, 224, 255, 0.12);
 
   /* the ivory "atelier" room */
-  --paper: #f1e9da;
-  --ink: #1d1813;
-  --ink-soft: #5f5548;
-  --paper-line: rgba(29, 24, 19, 0.14);
+  --paper: #f5f0e6;
+  --ink: #0d1c47;
+  --ink-soft: #4b5677;
+  --paper-line: rgba(13, 28, 71, 0.14);
 
   --radius-s: 6px;
   --radius-m: 14px;
@@ -32,6 +34,7 @@
   --color-velvet: var(--velvet);
   --color-ebony: var(--ebony);
   --color-ebony-2: var(--ebony-2);
+  --color-royal: var(--royal);
   --color-gilt: var(--gilt);
   --color-champagne: var(--champagne);
   --color-ivory: var(--ivory);
@@ -56,7 +59,8 @@ body {
   font-size: 17px;
   line-height: 1.55;
   background:
-    radial-gradient(1200px 700px at 78% -10%, rgba(201, 161, 91, 0.07), transparent 60%),
+    radial-gradient(1400px 800px at 75% -10%, rgba(31, 69, 168, 0.55), transparent 62%),
+    radial-gradient(900px 600px at 0% 40%, rgba(31, 69, 168, 0.25), transparent 70%),
     var(--velvet);
   min-height: 100dvh;
 }
@@ -133,7 +137,7 @@ body {
 }
 .btn-gold {
   background: linear-gradient(180deg, #d9b56f, #b88c45);
-  color: #1a140c;
+  color: #0a1a48;
   box-shadow: inset 0 1px 0 rgba(255, 240, 200, 0.5), 0 10px 30px -12px rgba(201, 161, 91, 0.55);
 }
 .btn-gold:hover {
@@ -152,7 +156,7 @@ body {
   color: var(--paper);
 }
 .btn-ink:hover {
-  background: #352c22;
+  background: #1a3170;
 }
 .btn[disabled] {
   opacity: 0.45;

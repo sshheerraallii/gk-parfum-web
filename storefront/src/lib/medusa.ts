@@ -22,7 +22,16 @@ async function store<T>(path: string, revalidate = 60): Promise<T | null> {
 /** Offer switches from Admin → Offers. Defaults when the backend is unreachable. */
 export async function getOffers(): Promise<Offers> {
   const j = await store<{ offers: Offers }>("/store/gk/offers");
-  return j ? { ...defaultOffers, ...j.offers } : defaultOffers;
+  if (!j?.offers) return defaultOffers;
+  const o = j.offers;
+  return {
+    tiers: { ...defaultOffers.tiers, ...(o.tiers ?? {}) },
+    freeDelivery: { ...defaultOffers.freeDelivery, ...(o.freeDelivery ?? {}) },
+    giftBox: { ...defaultOffers.giftBox, ...(o.giftBox ?? {}) },
+    subscription: { ...defaultOffers.subscription, ...(o.subscription ?? {}) },
+    shipping: o.shipping?.length ? o.shipping : defaultOffers.shipping,
+    bestSellers: o.bestSellers?.length ? o.bestSellers : defaultOffers.bestSellers,
+  };
 }
 
 type MProduct = {
@@ -35,6 +44,7 @@ type MProduct = {
   images: { url: string }[] | null;
   metadata: Record<string, unknown> | null;
   variants: { id: string; sku: string | null; calculated_price?: { calculated_amount: number } | null }[] | null;
+  tags?: { value: string }[] | null;
 };
 
 const list = (v: unknown) =>
@@ -51,7 +61,7 @@ export async function getScents(): Promise<Scent[]> {
   const regions = await store<{ regions: { id: string }[] }>("/store/regions", 3600);
   const region = regions?.regions?.[0]?.id;
   const j = await store<{ products: MProduct[] }>(
-    `/store/products?limit=200${region ? `&region_id=${region}` : ""}&fields=id,handle,title,subtitle,description,thumbnail,images.url,metadata,variants.id,variants.sku,*variants.calculated_price`
+    `/store/products?limit=200${region ? `&region_id=${region}` : ""}&fields=id,handle,title,subtitle,description,thumbnail,images.url,metadata,tags.value,variants.id,variants.sku,*variants.calculated_price`
   );
   if (!j?.products?.length) return localScents;
 
@@ -89,6 +99,7 @@ export async function getScents(): Promise<Scent[]> {
       oneLiner: String(m.one_liner ?? fallback?.oneLiner ?? ""),
       variantId: v?.id,
       images: [...new Set(images)],
+      tags: p.tags?.length ? p.tags.map((t) => t.value) : fallback?.tags ?? [],
     });
   }
   // keep the launch order for known scents, new products at the end
@@ -97,3 +108,22 @@ export async function getScents(): Promise<Scent[]> {
 }
 
 export const backendConfigured = () => !!(MEDUSA_URL && PUBLISHABLE_KEY);
+
+export type PublicReview = {
+  id: string;
+  product_handle: string | null;
+  name: string;
+  rating: number;
+  title: string | null;
+  body: string;
+  verified: boolean;
+  created_at: string;
+};
+
+/** Approved reviews only (Admin → Reviews). Empty when the backend isn't connected. */
+export async function getReviews(product?: string): Promise<{ reviews: PublicReview[]; count: number; average: number | null }> {
+  const j = await store<{ reviews: PublicReview[]; count: number; average: number | null }>(
+    `/store/gk/reviews${product ? `?product=${encodeURIComponent(product)}` : ""}`
+  );
+  return j ?? { reviews: [], count: 0, average: null };
+}

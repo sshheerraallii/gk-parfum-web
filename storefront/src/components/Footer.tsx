@@ -8,7 +8,7 @@ const cols = [
       { href: "/shop/men", label: "For him" },
       { href: "/shop/women", label: "For her" },
       { href: "/shop/unisex", label: "Unisex" },
-      { href: "/gift-box", label: "Gift box" },
+      { href: "/bundle", label: "Build your bundle" },
     ],
   },
   {
@@ -17,6 +17,7 @@ const cols = [
       { href: "/delivery", label: "Delivery" },
       { href: "/returns", label: "Returns" },
       { href: "/faq", label: "Questions" },
+      { href: "/account", label: "My account" },
       { href: "/contact", label: "Contact us" },
       { href: "/track", label: "Track an order" },
     ],
@@ -24,7 +25,8 @@ const cols = [
   {
     title: "Discover",
     links: [
-      { href: "/smells-like", label: "Smells like…" },
+      { href: "/inspired-by", label: "Inspired by…" },
+      { href: "/reviews", label: "Reviews" },
       { href: "/guides", label: "Fragrance guides" },
       { href: "/about", label: "Our story" },
     ],
@@ -33,12 +35,12 @@ const cols = [
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-[var(--line-soft)] bg-[#0f0d0b]">
+    <footer className="mt-24 border-t border-[var(--line-soft)] bg-[#081440]">
       <div className="wrap grid gap-12 py-16 md:grid-cols-[1.3fr_repeat(3,1fr)]">
         <div>
-          <img src="/brand/gk-emblem-foil-transparent.svg" alt="" aria-hidden className="h-28 w-auto" width={109} height={112} />
+          <img src="/brand/gk-crest-240.webp" alt="" aria-hidden className="h-32 w-auto" width={240} height={254} loading="lazy" />
           <p className="mt-5 max-w-[30ch] text-smoke">
-            Extrait de parfum, inspired by the world&apos;s great houses and hand-poured in the UK.
+            Wear your aura. Vegan-friendly extrait de parfum, inspired by the world&apos;s great houses and made in the UK.
           </p>
         </div>
         {cols.map((c) => (

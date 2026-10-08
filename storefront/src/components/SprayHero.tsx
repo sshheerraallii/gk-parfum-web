@@ -305,7 +305,7 @@ export function SprayHero() {
     <section
       ref={sectionRef}
       className="relative isolate overflow-hidden"
-      style={{ minHeight: "max(640px, calc(100svh - 64px))" }}
+      style={{ minHeight: "max(680px, calc(100svh - 108px))" }}
       aria-labelledby="hero-title"
     >
       {/* room light */}
@@ -314,7 +314,7 @@ export function SprayHero() {
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(60% 55% at 74% 62%, rgba(201,161,91,.16), transparent 70%), radial-gradient(40% 40% at 20% 30%, rgba(233,213,165,.05), transparent 70%)",
+            "radial-gradient(55% 55% at 76% 60%, rgba(31,69,168,.75), transparent 70%), radial-gradient(35% 35% at 76% 62%, rgba(201,161,91,.18), transparent 70%)",
         }}
       />
       <canvas ref={canvasRef} aria-hidden className="pointer-events-none absolute inset-0 z-10" />
@@ -340,15 +340,28 @@ export function SprayHero() {
             />
           </div>
 
-          <h1 id="hero-title" className="display-xl hero-reveal mt-10 max-w-[13ch] text-ivory" style={{ ["--d" as string]: "1.1s" }}>
-            Luxury perfume, made in the UK
+          <h1 id="hero-title" className="display-xl hero-reveal mt-10 text-ivory" style={{ ["--d" as string]: "1.1s" }}>
+            Wear your aura.
           </h1>
-          <p className="lede hero-reveal mt-6" style={{ ["--d" as string]: "1.3s" }}>
-            100&nbsp;ml of 40% extrait for £17.99. The scents you already know, built to last all day.
+          <p className="lede hero-reveal mt-5" style={{ ["--d" as string]: "1.3s" }}>
+            Luxury extrait de parfum, made in the UK. 100&nbsp;ml at 40% oil, lasting 12–24 hours — from £16.99.
           </p>
-          <div className="hero-reveal mt-9 flex flex-wrap gap-3" style={{ ["--d" as string]: "1.5s" }}>
-            <Link href="/shop" className="btn btn-gold">Shop all 16 scents</Link>
-            <Link href="#find" className="btn btn-ghost">Find my scent</Link>
+          <ul className="hero-reveal mt-6 flex flex-wrap gap-2" style={{ ["--d" as string]: "1.4s" }} aria-label="Why GK Parfum">
+            {[
+              { t: "Vegan friendly", i: "M12 21c-4-3-7-6.5-7-11 3 0 5.5 1 7 3 1.5-2 4-3 7-3 0 4.5-3 8-7 11Zm0 0V10" },
+              { t: "Made in the UK", i: "M4 6h16v12H4zM4 6l16 12M20 6 4 18M12 6v12M4 12h16" },
+              { t: "Free gift box", i: "M4 10h16v10H4zM3 7h18v3H3zM12 7v13M12 7c-2-3-5-3-5-1s5 1 5 1Zm0 0c2-3 5-3 5-1s-5 1-5 1Z" },
+            ].map((b) => (
+              <li key={b.t} className="flex items-center gap-2 rounded-full border border-[var(--line)] bg-[#081440]/40 px-3.5 py-1.5 text-[0.88rem] text-champagne">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-hidden><path d={b.i} /></svg>
+                {b.t}
+              </li>
+            ))}
+          </ul>
+          <div className="hero-reveal mt-8 flex flex-wrap gap-3" style={{ ["--d" as string]: "1.55s" }}>
+            <Link href="/shop/men" className="btn btn-ghost">Shop for him</Link>
+            <Link href="/shop/women" className="btn btn-ghost">Shop for her</Link>
+            <Link href="/bundle" className="btn btn-gold">Build your bundle</Link>
           </div>
         </div>
 

@@ -5,15 +5,27 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How long do they last?",
-    a: "Each bottle is extrait de parfum with 40% fragrance oil — stronger than most eau de parfum. Most scents last 7 to 12 hours on skin, depending on the scent, your skin and the weather. Each product page shows its own range.",
+    a: "Every bottle is extrait de parfum with 40% fragrance oil — the strongest kind of perfume. Our scents last between 12 and 24 hours on skin, depending on the scent, your skin and the weather.",
   },
   {
-    q: "How does any 3 for £45 work?",
-    a: "Put any three bottles in your bag — any mix of scents — and the price drops to £45 automatically. Six bottles is two sets, and so on.",
+    q: "How does Build your bundle work?",
+    a: "Add scents to your bag — any mix of his, hers and unisex. With 2 bottles, every bottle is 10% off. With 3 or more, you keep the 10% off and delivery is free too. The savings appear in your bag automatically.",
+  },
+  {
+    q: "What is the free signature gift box?",
+    a: "Every order comes in our signature presentation box at no extra cost, so it's ready to give — or to keep.",
+  },
+  {
+    q: "Can I get my favourite delivered regularly?",
+    a: "Yes. On any scent, choose \"Deliver every 4 weeks\" to save 10% on that bottle. You can pause or cancel any time by getting in touch. Bundle and subscription savings don't add together — each bottle gets the better one.",
   },
   {
     q: "How fast is delivery?",
-    a: "Orders are packed by hand and sent with Royal Mail. Tracked 48 arrives in 2–3 working days and is free over £35. Tracked 24 arrives the next working day.",
+    a: "Orders are packed by hand and sent with Royal Mail. Tracked 48 arrives in 2–3 working days and is free on orders over £65, or on any 3 bottles. Tracked 24 arrives the next working day.",
+  },
+  {
+    q: "Are your perfumes vegan?",
+    a: "Yes. Our fragrances are vegan friendly and made in the UK.",
   },
   {
     q: "Can I return a perfume?",
@@ -21,6 +33,6 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How do I pay?",
-    a: "Card, Apple Pay, Google Pay or PayPal. Payments are handled securely by Stripe and PayPal — we never see your card number.",
+    a: "Card, Apple Pay, Google Pay, PayPal or Klarna. Payments are handled securely by Stripe — we never see your card number.",
   },
 ];

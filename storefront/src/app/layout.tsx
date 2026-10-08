@@ -7,6 +7,8 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { SITE } from "@/lib/site";
 import { CatalogProvider } from "@/components/CatalogProvider";
 import { getOffers, getScents } from "@/lib/medusa";
+import { AccountSync } from "@/components/AccountSync";
+import { NewsletterPopup } from "@/components/NewsletterPopup";
 
 const jost = localFont({
   src: "../fonts/jost.woff2",
@@ -28,7 +30,7 @@ const cormorant = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: "GK Parfum — Luxury Inspired Perfumes, Made in the UK",
+    default: "GK Parfum — Wear Your Aura | Luxury Inspired Perfumes, Made in the UK",
     template: "%s | GK Parfum",
   },
   description: SITE.description,
@@ -45,14 +47,17 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", images: ["/og.png"] },
   icons: {
-    icon: [{ url: "/brand/gk-favicon-foil-transparent.svg", type: "image/svg+xml" }],
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/brand/gk-icon-512.png", type: "image/png", sizes: "512x512" },
+    ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   robots: { index: true, follow: true, "max-image-preview": "large" } as Metadata["robots"],
 };
 
 export const viewport: Viewport = {
-  themeColor: "#14110e",
+  themeColor: "#0a1a48",
   colorScheme: "dark",
 };
 
@@ -64,7 +69,7 @@ const orgLd = {
       "@id": `${SITE.url}/#org`,
       name: SITE.name,
       url: SITE.url,
-      logo: `${SITE.url}/brand/gk-logo-foil-transparent.svg`,
+      logo: `${SITE.url}/brand/gk-icon-512.png`,
       email: SITE.email,
     },
     {
@@ -88,7 +93,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="en-GB" className={`${jost.variable} ${cormorant.variable}`}>
       <body>
-        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-gilt focus:px-4 focus:py-2 focus:text-[#1a140c]">
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-gilt focus:px-4 focus:py-2 focus:text-[#0a1a48]">
           Skip to content
         </a>
         <CatalogProvider scents={scents} offers={offers}>
@@ -97,6 +102,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <main id="main">{children}</main>
           <Footer />
           <CartDrawer />
+          <NewsletterPopup />
+          <AccountSync />
         </CatalogProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
       </body>

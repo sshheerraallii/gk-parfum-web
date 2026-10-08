@@ -9,6 +9,7 @@ import { useOffers } from "@/lib/useOffers";
 import { formatPrice } from "@/lib/catalog";
 import { priceCart, shippingFor } from "@/lib/offers";
 import { ProductVisual } from "../ProductVisual";
+import { recordDemoOrder, useAccount } from "@/lib/account";
 import { EMAIL, Field, Section, UK_POSTCODE } from "./CheckoutClient";
 
 /**
@@ -24,11 +25,23 @@ export const DEMO_ORDER_KEY = "gk-demo-order";
 
 export function DemoCheckout() {
   const router = useRouter();
-  const { lines, giftBoxes, clear } = useCart();
+  const { lines, clear } = useCart();
+  const account = useAccount((st) => st.account);
   const scents = useCatalog();
   const offers = useOffers();
-  const [email, setEmail] = useState("");
-  const [a, setA] = useState({ first_name: "", last_name: "", address_1: "", address_2: "", city: "", postal_code: "", phone: "" });
+  const [email, setEmail] = useState(account?.email ?? "");
+  const [a, setA] = useState(() => {
+    const d = account?.addresses[0];
+    return {
+      first_name: d?.first_name || account?.first_name || "",
+      last_name: d?.last_name || account?.last_name || "",
+      address_1: d?.address_1 ?? "",
+      address_2: d?.address_2 ?? "",
+      city: d?.city ?? "",
+      postal_code: d?.postal_code ?? "",
+      phone: d?.phone || account?.phone || "",
+    };
+  });
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [ship, setShip] = useState(offers.shipping[0]?.id ?? "");
   const [promo, setPromo] = useState("");
@@ -40,11 +53,11 @@ export function DemoCheckout() {
   const items = lines
     .map((l) => ({ l, s: scents.find((x) => x.slug === l.slug) }))
     .filter((x): x is { l: (typeof lines)[number]; s: NonNullable<(typeof x)["s"]> } => !!x.s);
-  const t = priceCart(items.map(({ l, s }) => ({ slug: l.slug, qty: l.qty, unit: s.price })), offers, giftBoxes);
+  const t = priceCart(items.map(({ l, s }) => ({ slug: l.slug, qty: l.qty, unit: s.price, sub: l.sub })), offers);
   const pct = codes.reduce((m, c) => Math.max(m, DEMO_CODES[c]?.pct ?? 0), 0);
   const discount = Math.round((t.goods * pct) / 100);
   const afterDiscount = t.goods - discount;
-  const shipping = shippingFor(t.goods, ship, offers);
+  const shipping = shippingFor(t, ship, offers);
   const shipCost = codes.some((c) => DEMO_CODES[c]?.freeShip) ? 0 : shipping.cost;
   const total = afterDiscount + shipCost;
 
@@ -67,7 +80,7 @@ export function DemoCheckout() {
     return (
       <div className="wrap max-w-xl py-24">
         <h1 className="display-l text-ink">Your bag is empty</h1>
-        <p className="mt-4 text-ink-soft">Add a scent — or any three for {formatPrice(offers.bundle.price)} — and come back here to pay.</p>
+        <p className="mt-4 text-ink-soft">Pick 2 scents to save {offers.tiers.discountPct}%, or 3 for free delivery too — then come back here to pay.</p>
         <Link href="/shop" className="btn btn-ink mt-8">Shop all scents</Link>
       </div>
     );
@@ -93,11 +106,9 @@ export function DemoCheckout() {
       display_id: Math.floor(1000 + Math.random() * 9000),
       email,
       first_name: a.first_name,
-      items: items.map(({ l, s }) => ({ title: s.name, qty: l.qty, unit: s.price })),
-      giftBoxes: offers.giftBox.enabled ? giftBoxes : 0,
-      giftBoxPrice: offers.giftBox.price,
-      bundleSaving: t.bundleSaving,
-      bundleLabel: offers.bundle.label,
+      items: items.map(({ l, s }) => ({ title: s.name, qty: l.qty, unit: s.price, sub: !!l.sub })),
+      giftBox: offers.giftBox.enabled,
+      saving: t.saving,
       discount,
       shipping: { name: shipping.option.name, cost: shipCost },
       total,
@@ -107,6 +118,13 @@ export function DemoCheckout() {
     } catch {
       /* storage blocked — the thank-you page shows a generic message */
     }
+    recordDemoOrder({
+      id: `demo_${order.display_id}`,
+      display_id: order.display_id,
+      created_at: new Date().toISOString(),
+      total: total / 100,
+      items: items.map(({ l, s }) => ({ product_title: s.name, quantity: l.qty })),
+    });
     clear();
     router.push("/order/demo");
   };
@@ -115,26 +133,29 @@ export function DemoCheckout() {
     <div>
       <ul className="space-y-4">
         {items.map(({ l, s }) => (
-          <li key={l.slug} className="flex items-center gap-4">
+          <li key={l.key} className="flex items-center gap-4">
             <div className="relative flex h-16 w-14 shrink-0 items-center justify-center rounded-[8px] border border-[var(--paper-line)] bg-ink">
               <ProductVisual s={s} className="h-14 w-auto max-w-[48px]" />
               <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-ink-soft px-1 text-[0.72rem] text-paper">{l.qty}</span>
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-ink">{s.name}</p>
-              <p className="text-[0.85rem] text-ink-soft">100 ml</p>
+              <p className="text-[0.85rem] text-ink-soft">{l.sub ? `Delivered every ${offers.subscription.weeks} weeks` : "100 ml"}</p>
             </div>
             <p className="text-ink">{formatPrice(s.price * l.qty)}</p>
           </li>
         ))}
-        {t.boxes > 0 && (
-          <li className="flex items-center gap-4">
-            <div className="flex h-16 w-14 shrink-0 items-center justify-center rounded-[8px] bg-[#1f3f8a] font-display text-champagne">GK</div>
-            <p className="flex-1 text-ink">{offers.giftBox.name}</p>
-            <p className="text-ink">{formatPrice(t.boxes)}</p>
-          </li>
-        )}
       </ul>
+
+      {offers.giftBox.enabled && (
+        <div className="mt-5 flex items-center gap-3 rounded-[12px] border border-[#d9c18b] bg-[#fbf3df] p-3">
+          <img src="/brand/gk-crest-112.webp" alt="" aria-hidden className="h-11 w-auto" />
+          <p className="flex-1 text-[0.95rem] text-ink">
+            <span className="block font-medium">Congratulations — you&apos;ve won a free signature gift box</span>
+            <span className="text-[0.85rem] text-ink-soft">It&apos;s included with your order.</span>
+          </p>
+        </div>
+      )}
 
       <div className="mt-6 flex gap-2">
         <label htmlFor="promo" className="sr-only">Discount code</label>
@@ -161,9 +182,9 @@ export function DemoCheckout() {
       )}
 
       <dl className="mt-6 space-y-2 border-t border-[var(--paper-line)] pt-5 text-[0.98rem]">
-        <div className="flex justify-between text-ink-soft"><dt>Subtotal</dt><dd>{formatPrice(t.subtotal + t.boxes)}</dd></div>
-        {t.bundleSaving > 0 && <div className="flex justify-between text-[#6d5a2b]"><dt>{offers.bundle.label}</dt><dd>−{formatPrice(t.bundleSaving)}</dd></div>}
-        {discount > 0 && <div className="flex justify-between text-[#6d5a2b]"><dt>Discount</dt><dd>−{formatPrice(discount)}</dd></div>}
+        <div className="flex justify-between text-ink-soft"><dt>Subtotal</dt><dd>{formatPrice(t.subtotal)}</dd></div>
+        {t.saving > 0 && <div className="flex justify-between text-[#7a5a1c]"><dt>Bundle &amp; subscription savings</dt><dd>−{formatPrice(t.saving)}</dd></div>}
+        {discount > 0 && <div className="flex justify-between text-[#7a5a1c]"><dt>Discount</dt><dd>−{formatPrice(discount)}</dd></div>}
         <div className="flex justify-between text-ink-soft"><dt>Delivery</dt><dd>{shipCost === 0 ? "Free" : formatPrice(shipCost)}</dd></div>
         <div className="flex items-baseline justify-between pt-2 text-ink">
           <dt className="text-[1.15rem]">Total</dt>
@@ -176,7 +197,7 @@ export function DemoCheckout() {
 
   return (
     <div className="grid min-h-[calc(100dvh-100px)] lg:grid-cols-[1.15fr_.85fr]">
-      <div className="border-b border-[var(--paper-line)] bg-[#e8dfcc] lg:hidden">
+      <div className="border-b border-[var(--paper-line)] bg-[#e9e3d6] lg:hidden">
         <button type="button" className="wrap flex h-14 w-full items-center justify-between text-ink" onClick={() => setSummaryOpen((v) => !v)} aria-expanded={summaryOpen}>
           <span>{summaryOpen ? "Hide" : "Show"} order summary</span>
           <span className="font-display text-[1.3rem]">{formatPrice(total)}</span>
@@ -186,7 +207,7 @@ export function DemoCheckout() {
 
       <div className="wrap max-w-[680px] py-10 lg:ml-auto lg:mr-0 lg:py-14 lg:pr-14">
         <h1 className="sr-only">Checkout</h1>
-        <p className="mb-8 rounded-[10px] bg-[#efe2c4] px-4 py-3 text-[0.9rem] text-[#6d5a2b]">
+        <p className="mb-8 rounded-[10px] bg-[#f1e6c8] px-4 py-3 text-[0.9rem] text-[#7a5a1c]">
           Preview checkout — orders here are pretend and no payment is taken.
         </p>
 
@@ -212,9 +233,9 @@ export function DemoCheckout() {
             <legend className="sr-only">Delivery method</legend>
             <div className="overflow-hidden rounded-[12px] border border-[var(--paper-line)] bg-white">
               {offers.shipping.map((o, i) => {
-                const c = shippingFor(t.goods, o.id, offers).cost;
+                const c = shippingFor(t, o.id, offers).cost;
                 return (
-                  <label key={o.id} className={`flex cursor-pointer items-center gap-4 px-5 py-4 ${i ? "border-t border-[var(--paper-line)]" : ""} ${ship === o.id ? "bg-[#f7f2e7]" : ""}`}>
+                  <label key={o.id} className={`flex cursor-pointer items-center gap-4 px-5 py-4 ${i ? "border-t border-[var(--paper-line)]" : ""} ${ship === o.id ? "bg-[#f6f1e6]" : ""}`}>
                     <input type="radio" name="shipping" className="h-5 w-5 accent-[var(--ink)]" checked={ship === o.id} onChange={() => setShip(o.id)} />
                     <span className="flex-1">
                       <span className="block text-ink">{o.name}</span>
@@ -242,7 +263,7 @@ export function DemoCheckout() {
         </Section>
       </div>
 
-      <aside className="hidden border-l border-[var(--paper-line)] bg-[#e8dfcc] lg:block" aria-label="Order summary">
+      <aside className="hidden border-l border-[var(--paper-line)] bg-[#e9e3d6] lg:block" aria-label="Order summary">
         <div className="sticky top-0 max-w-[480px] px-12 py-14">{summary}</div>
       </aside>
     </div>

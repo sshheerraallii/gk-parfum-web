@@ -39,7 +39,15 @@ curl -s "${H[@]}" -X POST "$API/store/carts/$CART/shipping-methods" -d "{\"optio
 echo "== 3 bottles after delivery chosen: free delivery code applied"
 OUT=$(sync $CART "$THREE" | items); echo "$OUT"
 [[ "$OUT" == *"GK-BUNDLE-DELIVERY"* ]] || fail "delivery code not applied"
-curl -s "${H[@]}" "$API/store/carts/$CART" | j "'shipping', d['cart']['shipping_total']"
+SHIP=$(curl -s "${H[@]}" "$API/store/carts/$CART?fields=+shipping_total" | j "d['cart']['shipping_total']"); echo "tracked 48 shipping: $SHIP"
+[[ "$SHIP" == "0" ]] || fail "tracked 48 not free"
+echo "== 3 bottles on Tracked 24: express is still charged (5.99)"
+SO24=$(curl -s "${H[@]}" "$API/store/shipping-options?cart_id=$CART" | j "[o['id'] for o in d['shipping_options'] if '24' in o['name']][0]")
+curl -s "${H[@]}" -X POST "$API/store/carts/$CART/shipping-methods" -d "{\"option_id\":\"$SO24\"}" > /dev/null
+sync $CART "$THREE" > /dev/null
+SHIP=$(curl -s "${H[@]}" "$API/store/carts/$CART?fields=+shipping_total" | j "d['cart']['shipping_total']"); echo "tracked 24 shipping: $SHIP"
+[[ "$SHIP" == "5.99" ]] || fail "express made free"
+curl -s "${H[@]}" -X POST "$API/store/carts/$CART/shipping-methods" -d "{\"option_id\":\"$SO\"}" > /dev/null
 
 echo "== back to 2: delivery code removed"
 OUT=$(sync $CART "{\"lines\":[{\"variant_id\":\"$RA\",\"quantity\":1},{\"variant_id\":\"$KC\",\"quantity\":1}]}" | items); echo "$OUT"

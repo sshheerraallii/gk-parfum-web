@@ -89,7 +89,7 @@ export function Bottle({
       {[ [72, 192], [168, 192], [72, 314], [168, 314] ].map(([x, y]) => (
         <circle key={`${x}${y}`} cx={x} cy={y} r="3.2" fill={`url(#gold${id})`} />
       ))}
-      <image href="/brand/gk-emblem-foil-transparent.svg" x="88" y="198" width="64" height="72" preserveAspectRatio="xMidYMid meet" />
+      <image href="/brand/gk-crest-240.webp" x="86" y="197" width="68" height="74" preserveAspectRatio="xMidYMid meet" />
       <text x="120" y="286" textAnchor="middle" fill={`url(#gold${id})`} fontFamily="Georgia, 'Times New Roman', serif" fontSize="11" fontWeight="700" letterSpacing="1.6">GK PARFUM</text>
       <text x="120" y="295" textAnchor="middle" fill="#b9975a" fontFamily="Georgia, serif" fontSize="4.6" letterSpacing="1.2">EXTRAIT DE PARFUM</text>
       {name ? (

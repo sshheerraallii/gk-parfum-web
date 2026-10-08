@@ -9,7 +9,7 @@ export const dynamic = "force-static";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const scents = await getScents();
-  const fixed = ["", "/shop", "/shop/men", "/shop/women", "/shop/unisex", "/gift-box", "/smells-like", "/guides", "/about", "/faq", "/delivery", "/returns", "/contact"];
+  const fixed = ["", "/shop", "/shop/men", "/shop/women", "/shop/unisex", "/bundle", "/inspired-by", "/reviews", "/guides", "/about", "/faq", "/delivery", "/returns", "/contact"];
   return [
     ...fixed.map((p) => ({ url: `${SITE.url}${p}`, lastModified: now, changeFrequency: "weekly" as const, priority: p === "" ? 1 : 0.7 })),
     ...scents.map((s) => ({

@@ -2,7 +2,7 @@ export const SITE = {
   name: "GK Parfum",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://gkparfum.co.uk",
   description:
-    "Luxury inspired perfumes made in the UK. 100ml extrait de parfum with 40% fragrance oil from £16.99 — scents inspired by Creed Aventus, Baccarat Rouge 540, Tom Ford and more.",
+    "Wear your aura. Luxury inspired perfumes made in the UK: 100ml extrait de parfum, 40% oil, lasting 12–24 hours, from £16.99. Vegan friendly, with a free gift box on every order.",
   locale: "en_GB",
   email: "hello@gkparfum.co.uk",
   instagram: "",
