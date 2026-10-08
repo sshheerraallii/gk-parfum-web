@@ -12,23 +12,29 @@ Luxury inspired-perfume store for the UK. Two apps in one repo:
 
 Log in at `https://admin.<your-domain>/app`.
 
-- **Products** — change names, descriptions, prices and stock. Upload photos: the first photo becomes the product image on the site (the drawn bottle is only a stand-in until then). The scent details shown on the site (inspired by, notes, longevity, mood, colour) live in each product's **Metadata** section and can be edited there. New products appear on the site within a minute.
-- **Offers** (left menu) — switch the bundle price ("Any 3 for £45") on or off and change the number of bottles or price; switch free delivery on/off and change the threshold; switch the gift box add-on on/off.
-- **Promotions** — discount codes. `WELCOME10` (10% off) and `FREESHIP` are set up but off — open one and set it to Active. Create as many as you like: percentage or fixed, minimum spend, start/end dates, usage limits.
-- **Orders** — every order with what each bottle was actually charged (bundle items are labelled), the address and delivery choice. Mark as fulfilled when posted.
-- **Inventory** — stock per scent. Opening stock is 50 each.
-- **Settings → Tax regions** — set the UK VAT rate once VAT-registered (prices are VAT-inclusive).
+- **Products** — names, descriptions, prices, stock and photos (the first photo becomes the product image on the site; the drawn bottle is only a stand-in until then). **Tags**: add as many as you like per product (e.g. Woody, Winter, Night out) — they show on the site and power the filters and the scent finder. The scent details (inspired by, notes, longevity, mood, colour) live in each product's **Metadata**.
+- **Offers** (left menu) — bundle tiers (2 bottles = 10% off, 3 bottles = 10% off + free delivery; change the numbers or switch off), free delivery over a spend (£65), subscribe & save (10% off, every 4 weeks), the free signature gift box, and **Best sellers**: tick the scents to feature. If none are ticked, the best-stocked scents are shown.
+- **Searches** — what shoppers type into "Which perfume do you love?" and the search page: most-searched words, searches that found nothing (ideas for new scents) and recent searches.
+- **Newsletter** — sign-ups from the "win a free bottle" pop-up, with phone numbers when given. Download as CSV for Mailchimp, Klaviyo etc.
+- **Reviews** — customer reviews wait here until you approve them; nothing appears on the site before that. "Verified buyer" is added automatically when the email has ordered that scent.
+- **Messages** — everything sent from the Contact us page. Reply from your email, then mark as replied.
+- **Promotions** — discount codes. `WELCOME10` (10% off) and `FREESHIP` are set up but off. Leave `GK-BUNDLE-DELIVERY` alone — the cart switches it on and off for 3-bottle bundles.
+- **Orders** — each order shows a **Packing notes** box: which bottles are repeat deliveries ("every 4 weeks"), which got bundle discounts, and the free gift box.
+- **Customers** — everyone who created an account (they can see their orders, wishlist, saved bag and addresses on the site).
+- **Inventory** — stock per scent.
 
-## How "any 3 for £45" is enforced
+### Subscriptions (deliver every 4 weeks)
 
-The bundle price is calculated **by the backend**, never trusted from the browser:
+Shoppers can choose "Deliver every 4 weeks" for 10% off. The first order is charged and flagged in the order's Packing notes. **Repeat orders are not charged automatically yet** — for now, re-send from the customer's details each 4 weeks (or we add Stripe recurring billing once Stripe is live).
 
-1. The site sends only *which* perfumes and *how many* (`POST /store/gk/carts/:id/sync`).
-2. The backend looks up real prices, applies the bundle to every complete set (dearest bottles first) and writes the line items with the charged price.
+## How the discounts are enforced
+
+All prices are calculated **by the backend**, never trusted from the browser:
+
+1. The site sends only *which* perfumes, *how many*, and whether each is a subscription (`POST /store/gk/carts/:id/sync`).
+2. The backend applies the tier or subscription discount (never both on one bottle), adds the free gift box at £0, and switches the bundle free-delivery code on or off. Bundle free delivery covers Tracked 48 only; express is still charged.
 3. Direct line-item edits through the normal store API are blocked (403).
-4. Before an order is created, the price is checked again; a cart that's cheaper than the rules allow is refused.
-
-Free delivery is a real shipping-price rule on Royal Mail Tracked 48 (free when goods total ≥ threshold), kept in sync with the Offers page.
+4. Before an order is created, the prices and the free-delivery code are checked again; a cart cheaper than the rules allow is refused.
 
 ## Run it locally
 
@@ -84,8 +90,8 @@ Stripe's Payment Element handles cards, **Apple Pay, Google Pay, PayPal and Klar
 - Per-product titles and descriptions ("Crimson Luxe — Baccarat Rouge 540 Inspired Perfume").
 - Structured data: Product (price, stock, shipping, returns), BreadcrumbList, Organization, WebSite search, FAQPage, Article.
 - `sitemap.xml` (includes product photos once uploaded) and `robots.txt`.
-- Landing pages for every audience (`/shop/men`, `/shop/women`, `/shop/unisex`), a "smells like" index of every original, and guides for long-tail searches.
-- Lighthouse (mobile, throttled): Accessibility 100, Best practices 100, SEO 100, Performance 84–90.
+- Landing pages for every audience (`/shop/men`, `/shop/women`, `/shop/unisex`), an "inspired by" index of every original, a bundle page, real-review schema (only when approved reviews exist), and guides for long-tail searches.
+- Lighthouse (mobile, throttled): Accessibility 100, Best practices 100, SEO 100, Performance 84–90 (measured before the October revisions).
 
 ## Still to do before launch
 

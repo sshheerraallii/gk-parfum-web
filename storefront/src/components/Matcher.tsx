@@ -81,7 +81,7 @@ export function Matcher() {
                         {i === 0 && <p className="small text-champagne">Best match</p>}
                         <Link href={`/perfume/${s.slug}`} className="font-display text-[1.6rem] leading-tight text-ivory hover:text-champagne">{s.name}</Link>
                         <p className="small mt-0.5 text-smoke">Inspired by {inspiredLabel(s)}</p>
-                        <p className="small mt-1 truncate text-smoke">{[...s.notes.top.slice(0, 1), ...s.notes.heart.slice(0, 1), ...s.notes.base.slice(0, 2)].join(" · ")}</p>
+                        <p className="small mt-1 truncate text-smoke">{[...new Set([...s.notes.top.slice(0, 2), ...s.notes.heart.slice(0, 2), ...s.notes.base.slice(0, 2)])].slice(0, 4).join(" · ")}</p>
                         <button type="button" onClick={() => add(s.slug)} className="small mt-3 h-9 rounded-full border border-[var(--line)] px-4 text-ivory hover:border-gilt hover:bg-gilt hover:text-[#0a1a48]">
                           Add to bag · {formatPrice(s.price)}
                         </button>

@@ -561,6 +561,8 @@ export function searchScents(q: string, list: Scent[] = scents): Scent[] {
     })
     .filter((r) => r.score > 0)
     .sort((a, b) => b.score - a.score)
+    // keep the strong matches: within 40% of the best score
+    .filter((r, _i, all) => r.score >= all[0].score * 0.4)
     .map((r) => r.s);
 }
 

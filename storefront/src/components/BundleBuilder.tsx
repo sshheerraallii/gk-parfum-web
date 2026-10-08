@@ -142,8 +142,8 @@ export function BundleBuilder() {
         </ol>
       </section>
 
-      <div className="wrap grid gap-10 pb-28 pt-4 lg:grid-cols-[1fr_400px] lg:pb-20">
-        <div>
+      <div className="wrap grid gap-10 pb-28 pt-4 lg:grid-cols-[minmax(0,1fr)_400px] lg:pb-20">
+        <div className="min-w-0">
           <div role="tablist" aria-label="Choose from" className="no-scrollbar -mx-[var(--gutter)] flex gap-2 overflow-x-auto px-[var(--gutter)]">
             {TABS.map((x) => (
               <button
@@ -158,7 +158,7 @@ export function BundleBuilder() {
               </button>
             ))}
           </div>
-          <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="mt-3 flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center">
             <label htmlFor="bq" className="sr-only">Search notes or perfumes</label>
             <input
               id="bq"
@@ -194,10 +194,10 @@ export function BundleBuilder() {
                 const n = picked[s.slug] ?? 0;
                 return (
                   <li key={s.slug} className={`flex flex-col rounded-[14px] border bg-white p-3 transition-colors ${n ? "border-ink" : "border-[var(--paper-line)]"}`}>
-                    <Link href={`/perfume/${s.slug}`} className="flex h-40 items-center justify-center rounded-[10px] bg-ink" aria-label={`${s.name} details`}>
-                      <ProductVisual s={s} className="h-36 w-auto max-w-[100px]" />
+                    <Link href={`/perfume/${s.slug}`} className="flex h-32 items-center justify-center rounded-[10px] bg-ink sm:h-40" aria-label={`${s.name} details`}>
+                      <ProductVisual s={s} className="h-28 w-auto max-w-[80px] sm:h-36 sm:max-w-[100px]" />
                     </Link>
-                    <p className="mt-3 font-display text-[1.3rem] leading-tight">{s.name}</p>
+                    <p className="mt-3 font-display text-[1.15rem] leading-tight sm:text-[1.3rem]">{s.name}</p>
                     <p className="text-[0.82rem] text-ink-soft">Inspired by {inspiredLabel(s)}</p>
                     <div className="mt-2 text-[0.85rem]">
                       <span className="text-ink-soft">Normal {formatPrice(s.price)}</span>
@@ -205,13 +205,13 @@ export function BundleBuilder() {
                     </div>
                     <div className="mt-auto pt-3">
                       {n === 0 ? (
-                        <button type="button" onClick={() => set(s.slug, 1)} className="h-10 w-full rounded-full bg-ink text-[0.92rem] text-paper hover:bg-[#1a3170]">
+                        <button type="button" onClick={() => set(s.slug, 1)} className="h-10 w-full rounded-full bg-ink text-[0.88rem] text-paper hover:bg-[#1a3170]">
                           Add to bundle
                         </button>
                       ) : (
                         <div className="flex h-10 items-center justify-between rounded-full border border-ink">
                           <button type="button" className="h-10 w-10 text-lg" onClick={() => set(s.slug, n - 1)} aria-label={`One less ${s.name}`}>−</button>
-                          <span className="tabular-nums" aria-live="polite">{n} in bundle</span>
+                          <span className="text-[0.9rem] tabular-nums" aria-live="polite">{n}<span className="hidden sm:inline"> in bundle</span></span>
                           <button type="button" className="h-10 w-10 text-lg" onClick={() => set(s.slug, n + 1)} aria-label={`One more ${s.name}`}>+</button>
                         </div>
                       )}
@@ -240,7 +240,14 @@ export function BundleBuilder() {
           ) : (
             <div className="flex items-center gap-3">
               <button type="button" onClick={() => setSheet(true)} className="min-w-0 flex-1 text-left" aria-expanded={sheet}>
-                <span className="block text-[0.85rem] text-ink-soft">{count} {count === 1 ? "bottle" : "bottles"} · {reward ?? "all savings unlocked"}</span>
+                <span className="block truncate text-[0.82rem] text-ink-soft">
+                  {count} {count === 1 ? "bottle" : "bottles"} ·{" "}
+                  {count < t.discountQty
+                    ? `+${t.discountQty - count} to save ${t.discountPct}%`
+                    : count < t.freeShipQty
+                      ? `+${t.freeShipQty - count} for free delivery`
+                      : "all savings on"}
+                </span>
                 <span className="font-display text-[1.5rem] leading-none text-ink">{formatPrice(totals.goods)}</span>
               </button>
               <button type="button" disabled={count === 0} onClick={addToBag} className="btn btn-ink min-h-[48px] px-5">Add to bag</button>
