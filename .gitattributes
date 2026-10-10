@@ -1,0 +1,2 @@
+# keep shell scripts Linux-style even when edited on Windows
+*.sh text eol=lf
