@@ -14,6 +14,10 @@ WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=build /app/apps/backend/.medusa/server ./
 RUN npm install --omit=dev --no-audit --no-fund
+COPY docker-start.sh ./docker-start.sh
+RUN chmod +x ./docker-start.sh
+# Keeps memory inside a 512 MB free server; raise on bigger machines.
+ENV NODE_OPTIONS=--max-old-space-size=320
 EXPOSE 9000
 # Migrations are idempotent; the GK seed only runs on the very first migrate.
-CMD ["sh", "-c", "npx medusa db:migrate && npx medusa start"]
+CMD ["./docker-start.sh"]

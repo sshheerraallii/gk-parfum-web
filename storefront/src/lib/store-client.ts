@@ -7,6 +7,16 @@ const CART_KEY = "gk-cart-id";
 
 export const backendReady = () => !!(URL_ && KEY);
 
+/** Nudges a sleeping free-tier server awake as soon as a visitor arrives, so checkout is ready by the time they are. */
+export function wakeBackend() {
+  if (!backendReady()) return;
+  try {
+    if (sessionStorage.getItem("gk-woke")) return;
+    sessionStorage.setItem("gk-woke", "1");
+  } catch {}
+  fetch(`${URL_}/health`, { cache: "no-store", mode: "no-cors" }).catch(() => {});
+}
+
 export class StoreError extends Error {
   constructor(message: string, public status: number) {
     super(message);
@@ -141,7 +151,9 @@ export async function updateCart(cartId: string, body: Record<string, unknown>) 
 export type ShippingOption = { id: string; name: string; amount: number; type?: { code: string; description: string } };
 
 export async function shippingOptions(cartId: string) {
-  return (await call<{ shipping_options: ShippingOption[] }>(`/store/shipping-options?cart_id=${cartId}`)).shipping_options;
+  const { shipping_options } = await call<{ shipping_options: ShippingOption[] }>(`/store/shipping-options?cart_id=${cartId}`);
+  // the database returns options in no fixed order; standard (cheapest) first so it's the default
+  return [...shipping_options].sort((a, b) => a.amount - b.amount || a.name.localeCompare(b.name));
 }
 
 export async function setShipping(cartId: string, optionId: string) {

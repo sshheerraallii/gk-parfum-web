@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useAccount } from "@/lib/account";
 import { useCart, type CartLine } from "@/lib/cart";
+import { wakeBackend } from "@/lib/store-client";
 
 /**
  * Loads the signed-in customer, brings their saved bag back on sign-in (merged with
@@ -15,6 +16,7 @@ export function AccountSync() {
   const merged = useRef<string | null>(null);
 
   useEffect(() => {
+    wakeBackend();
     init();
   }, [init]);
 

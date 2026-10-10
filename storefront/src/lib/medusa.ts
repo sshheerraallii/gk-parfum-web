@@ -11,6 +11,8 @@ async function store<T>(path: string, revalidate = 60): Promise<T | null> {
     const r = await fetch(`${MEDUSA_URL}${path}`, {
       headers: { "x-publishable-api-key": PUBLISHABLE_KEY },
       next: { revalidate, tags: ["catalog"] },
+      // A sleeping free server can take a minute to wake; show the built-in catalogue instead of hanging.
+      signal: AbortSignal.timeout(8000),
     });
     if (!r.ok) return null;
     return (await r.json()) as T;

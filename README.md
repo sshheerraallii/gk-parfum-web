@@ -61,6 +61,10 @@ End-to-end check of the cart rules: `PK=<publishable key> backend/apps/backend/i
 
 Without Stripe keys, checkout runs in **test mode**: orders are created in the admin and no payment is taken.
 
+## Free client preview
+
+Step-by-step in **[DEPLOY.md](DEPLOY.md)**: shop on Vercel, admin + API on Render (`render.yaml`), database on Supabase — £0, auto-deploys on `git push`.
+
 ## Go live on a server
 
 Any VPS with 2 GB RAM or more (Hetzner, DigitalOcean, etc.). Shared cPanel hosting can't run this.

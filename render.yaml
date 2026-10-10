@@ -1,0 +1,42 @@
+# Render Blueprint — the GK Parfum backend + admin panel on Render's free plan.
+# Render → New → Blueprint → pick this repo. It asks for the values marked sync: false.
+services:
+  - type: web
+    name: gk-parfum-backend
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /health
+    autoDeploy: true
+    # only rebuild when backend code changes (storefront pushes go to Vercel)
+    buildFilter:
+      paths:
+        - backend/**
+    envVars:
+      # Supabase → Connect → "Session pooler" connection string
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_SSL
+        value: "true"
+      # Your Vercel address, e.g. https://gk-parfum.vercel.app
+      - key: STORE_CORS
+        sync: false
+      # This backend's own address, e.g. https://gk-parfum-backend.onrender.com
+      - key: ADMIN_CORS
+        sync: false
+      # Both of the above, comma separated
+      - key: AUTH_CORS
+        sync: false
+      # First admin login (created on first boot)
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: COOKIE_SECRET
+        generateValue: true
+      - key: AUTH_MFA_ENCRYPTION_KEY
+        generateValue: true
