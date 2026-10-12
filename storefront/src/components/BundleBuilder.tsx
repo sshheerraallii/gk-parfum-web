@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { formatPrice, inspiredLabel, searchScents, type Scent } from "@/lib/catalog";
 import { useCart } from "@/lib/cart";
 import { useOffers } from "@/lib/useOffers";
@@ -62,6 +62,31 @@ export function BundleBuilder() {
   const bagCount = bag.reduce((a, l) => a + l.qty, 0);
 
   const set = (slug: string, n: number) => setPicked((p) => ({ ...p, [slug]: Math.max(0, Math.min(10, n)) }));
+
+  // Mister Fragrance-style: picking a scent takes you straight back up to the bundle, so you see it land
+  const top = useRef<HTMLDivElement>(null);
+  const [flash, setFlash] = useState<string | null>(null);
+  const pick = (slug: string, n: number) => {
+    set(slug, n);
+    setFlash(slug);
+    const el = top.current;
+    const wide = window.matchMedia("(min-width: 1024px)").matches; // the summary is always on screen there
+    if (el && !wide && el.getBoundingClientRect().top < 0) {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 84, behavior: reduce ? "auto" : "smooth" });
+    }
+  };
+  useEffect(() => {
+    if (!flash) return;
+    const t = setTimeout(() => setFlash(null), 900);
+    return () => clearTimeout(t);
+  }, [flash]);
+
+  // one slot per bottle, in the order picked; always at least the three that unlock the savings
+  const units = chosen.flatMap(({ s, n }) => Array.from({ length: n }, () => s));
+  const slotCount = Math.min(10, Math.max(t.freeShipQty, units.length + (units.length >= t.freeShipQty ? 1 : 0)));
+  const slotHint = (i: number) =>
+    i + 1 === t.discountQty && t.enabled ? `Save ${t.discountPct}%` : i + 1 === t.freeShipQty && t.enabled ? "Free delivery" : i === 0 ? "Pick a scent" : "Add more";
 
   const addToBag = () => {
     addMany(chosen.flatMap(({ s, n }) => Array.from({ length: n }, () => s.slug)));
@@ -128,18 +153,52 @@ export function BundleBuilder() {
       <section className="wrap pb-6 pt-12 md:pt-16" aria-labelledby="bundle-title">
         <h1 id="bundle-title" className="display-xl">Build your bundle</h1>
         <p className="mt-4 max-w-[46ch] text-[1.1rem] text-ink-soft">Mix his, hers and unisex. The more you pick, the more you save.</p>
-        <ol className="mt-8 grid gap-3 sm:grid-cols-3">
-          {[
-            { n: "1 bottle", d: "Full price", hit: count >= 1 },
-            { n: `${t.discountQty} bottles`, d: `Save ${t.discountPct}% on every bottle`, hit: count >= t.discountQty },
-            { n: `${t.freeShipQty} bottles`, d: `Save ${t.discountPct}% + free UK delivery`, hit: count >= t.freeShipQty },
-          ].map((x) => (
-            <li key={x.n} className={`rounded-[14px] border p-5 transition-colors ${x.hit ? "border-ink bg-ink text-paper" : "border-[var(--paper-line)] bg-white"}`}>
-              <p className="font-display text-[1.6rem] leading-none">{x.n}</p>
-              <p className={`mt-2 text-[0.95rem] ${x.hit ? "text-[#ecd6a2]" : "text-ink-soft"}`}>{x.d}</p>
-            </li>
-          ))}
-        </ol>
+        <div ref={top} className="mt-7 scroll-mt-24 rounded-[18px] border border-[var(--paper-line)] bg-white p-4 shadow-[0_24px_50px_-40px_rgba(13,28,71,.55)] sm:p-5">
+          <p className="text-[0.95rem] text-ink-soft" aria-live="polite">
+            {count === 0 ? "Pick your scents below — savings unlock as you go." : reward ?? "Bundle complete: you've unlocked every saving."}
+          </p>
+          <ol className="no-scrollbar -mx-1 mt-4 flex gap-2.5 overflow-x-auto px-1 pb-1" aria-label="Bottles in your bundle">
+            {Array.from({ length: slotCount }, (_, i) => {
+              const sc = units[i];
+              const prize = t.enabled && (i + 1 === t.discountQty || i + 1 === t.freeShipQty);
+              return (
+                <li key={i} className="w-[76px] shrink-0 sm:w-[92px]">
+                  {sc ? (
+                    <div className={`relative flex aspect-[4/5] items-center justify-center rounded-[10px] bg-ink ring-2 ring-[#c9a15b] ${flash === sc.slug && units[i + 1]?.slug !== sc.slug ? "gk-pop" : ""}`}>
+                      <ProductVisual s={sc} className="h-[84%] w-auto max-w-[70%]" />
+                      <button
+                        type="button"
+                        onClick={() => set(sc.slug, (picked[sc.slug] ?? 1) - 1)}
+                        aria-label={`Remove one ${sc.name}`}
+                        className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-white text-[0.8rem] text-ink shadow ring-1 ring-[var(--paper-line)]"
+                      >
+                        ✕
+                      </button>
+                      <span className="absolute bottom-1 left-1.5 text-[0.7rem] text-[#ecd6a2]">{i + 1}</span>
+                    </div>
+                  ) : (
+                    <div className={`flex aspect-[4/5] flex-col items-center justify-center rounded-[10px] border-2 border-dashed px-1 text-center ${prize ? "border-[#c9a15b] bg-[#fbf3e2]" : "border-[var(--paper-line)]"}`}>
+                      <span className={`text-[0.66rem] font-medium uppercase leading-tight tracking-[0.06em] ${prize ? "text-[#7a5a1c]" : "text-ink-soft"}`}>{slotHint(i)}</span>
+                      <span className="mt-1 font-display text-[1.2rem] leading-none text-ink/60">{i + 1}</span>
+                    </div>
+                  )}
+                  <p className="mt-1 truncate text-center text-[0.72rem] text-ink-soft">{sc ? sc.name : "\u00a0"}</p>
+                </li>
+              );
+            })}
+          </ol>
+          <div className="mt-3 flex items-center justify-between gap-3 border-t border-[var(--paper-line)] pt-3">
+            <div>
+              <p className="text-[0.8rem] text-ink-soft">
+                Bundle price{totals.saving ? <> · <s>{formatPrice(totals.subtotal)}</s></> : null}
+              </p>
+              <p className="font-display text-[1.7rem] leading-none text-ink">{formatPrice(totals.goods)}</p>
+            </div>
+            <button type="button" disabled={count === 0} onClick={addToBag} className="btn btn-ink min-h-[48px] px-5">
+              {count === 0 ? "Add to bag" : `Add ${count} to bag`}
+            </button>
+          </div>
+        </div>
       </section>
 
       <div className="wrap grid gap-10 pb-28 pt-4 lg:grid-cols-[minmax(0,1fr)_400px] lg:pb-20">
@@ -205,14 +264,14 @@ export function BundleBuilder() {
                     </div>
                     <div className="mt-auto pt-3">
                       {n === 0 ? (
-                        <button type="button" onClick={() => set(s.slug, 1)} className="h-10 w-full rounded-full bg-ink text-[0.88rem] text-paper hover:bg-[#1a3170]">
+                        <button type="button" onClick={() => pick(s.slug, 1)} className="h-10 w-full rounded-full bg-ink text-[0.88rem] text-paper hover:bg-[#1a3170]">
                           Add to bundle
                         </button>
                       ) : (
                         <div className="flex h-10 items-center justify-between rounded-full border border-ink">
                           <button type="button" className="h-10 w-10 text-lg" onClick={() => set(s.slug, n - 1)} aria-label={`One less ${s.name}`}>−</button>
                           <span className="text-[0.9rem] tabular-nums" aria-live="polite">{n}<span className="hidden sm:inline"> in bundle</span></span>
-                          <button type="button" className="h-10 w-10 text-lg" onClick={() => set(s.slug, n + 1)} aria-label={`One more ${s.name}`}>+</button>
+                          <button type="button" className="h-10 w-10 text-lg" onClick={() => pick(s.slug, n + 1)} aria-label={`One more ${s.name}`}>+</button>
                         </div>
                       )}
                     </div>

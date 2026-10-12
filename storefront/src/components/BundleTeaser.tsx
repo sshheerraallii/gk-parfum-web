@@ -10,8 +10,8 @@ export function BundleTeaser() {
   if (!t.enabled) return null;
   const tiers = [
     { n: "1", label: "bottle", d: "Full price" },
-    { n: String(t.discountQty), label: "bottles", d: `Save ${t.discountPct}% on every bottle` },
-    { n: String(t.freeShipQty), label: "bottles", d: `Save ${t.discountPct}% + free UK delivery` },
+    { n: String(t.discountQty), label: "bottles", d: `Save ${t.discountPct}%` },
+    { n: String(t.freeShipQty), label: "bottles", d: `Save ${t.discountPct}% + free delivery` },
   ];
   return (
     <section className="bg-paper text-ink" style={{ colorScheme: "light" }} aria-labelledby="bundle-teaser">
@@ -21,14 +21,12 @@ export function BundleTeaser() {
           <p className="mt-5 max-w-[40ch] text-[1.08rem] leading-relaxed text-ink-soft">
             Mix any scents — his, hers or unisex. Every order comes with our signature gift box, free.
           </p>
-          <ol className="mt-10 space-y-3">
+          <ol className="mt-8 grid grid-cols-3 gap-2.5 sm:gap-3">
             {tiers.map((x, i) => (
-              <li key={i} className="flex items-center gap-5 rounded-[14px] border border-[var(--paper-line)] bg-white px-5 py-4">
-                <span className="font-display text-[2.6rem] leading-none text-[#7a5a1c]">{x.n}</span>
-                <span>
-                  <span className="block text-ink">{x.label}</span>
-                  <span className="text-[0.95rem] text-ink-soft">{x.d}</span>
-                </span>
+              <li key={i} className="flex flex-col items-center rounded-[14px] border border-[var(--paper-line)] bg-white px-2 py-4 text-center">
+                <span className="font-display text-[2.4rem] leading-none text-[#7a5a1c]">{x.n}</span>
+                <span className="mt-1 text-[0.9rem] text-ink">{x.label}</span>
+                <span className="mt-1.5 text-[0.8rem] leading-snug text-ink-soft">{x.d}</span>
               </li>
             ))}
           </ol>

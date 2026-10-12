@@ -40,7 +40,7 @@ export const guides: Guide[] = [
       {
         p: "Not always. Concentration mostly affects how long a scent lasts. How far it projects depends on the notes: fresh citrus scents tend to stay closer to the skin, while amber, oud and spice carry further. If you're new to extrait, start with one spray on the neck and one on the wrist.",
       },
-      { scents: ["crimson-luxe", "oud-heritage", "royal-adventure"] },
+      { scents: ["baccara-rouge", "royal-oud", "eventus"] },
     ],
   },
   {
@@ -68,7 +68,7 @@ export const guides: Guide[] = [
       {
         p: "Base notes — woods, amber, musk, vanilla, oud — are the ones still on your skin at the end of the day. Scents built around them naturally last longer than bright citrus scents.",
       },
-      { scents: ["angels-cognac", "amber-levant-luxe", "desert-nectar-elixir"] },
+      { scents: ["angels-pour", "amber-levant", "midnight-elixir"] },
     ],
   },
   {
@@ -83,14 +83,14 @@ export const guides: Guide[] = [
       },
       { h: "For the office and every day" },
       {
-        p: "Royal Adventure is our take on Creed Aventus — pineapple and bergamot over oakmoss and woods. Altair Mystique, inspired by Parfums de Marly Althaïr, is a smoother, iris-and-bergamot option that suits a suit.",
+        p: "Eventus is our take on Creed Aventus — pineapple, bergamot and birch smoke over oakmoss. Imagine, inspired by Louis Vuitton Imagination, is lighter: citron, neroli and black tea that suits a suit.",
       },
-      { scents: ["royal-adventure", "altair-mystique"] },
+      { scents: ["eventus", "imagine"] },
       { h: "For evenings and cold weather" },
       {
-        p: "Desert Nectar Elixir, inspired by Dior Sauvage Elixir, is spicy and warm with tobacco and amber. Oud Heritage, inspired by Tom Ford Oud Wood, is smoky oud and sandalwood — rich without being heavy.",
+        p: "Midnight Elixir, inspired by Dior Sauvage Elixir, is spicy and warm with lavender, liquorice and amber. Royal Oud, inspired by Tom Ford Oud Wood, is smoky oud and sandalwood — rich without being heavy.",
       },
-      { scents: ["desert-nectar-elixir", "oud-heritage"] },
+      { scents: ["midnight-elixir", "royal-oud"] },
       { h: "Something different" },
       {
         p: "King's Code, inspired by Dolce & Gabbana K, opens with cardamom and ginger and dries down to leather and woods. It's bold, and it lasts.",

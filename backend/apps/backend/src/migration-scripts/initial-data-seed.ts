@@ -204,6 +204,7 @@ export default async function initial_data_seed({ container }: { container: Medu
       one_liner: s.oneLiner,
       seo_title: "",
       seo_description: "",
+      gk_catalog: "2026-10",
     },
     options: [{ title: "Size", values: ["100ml"] }],
     variants: [

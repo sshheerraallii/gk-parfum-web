@@ -4,36 +4,56 @@ import { useMemo, useState } from "react";
 import { type Gender, type Scent } from "@/lib/catalog";
 import { useCatalog } from "./CatalogProvider";
 import { ScentCard } from "./ScentCard";
+import { SwipeRow } from "./SwipeRow";
 
-const WHO: { id: Gender | "all"; label: string }[] = [
-  { id: "all", label: "Everyone" },
+const WHO: { id: Gender; label: string }[] = [
   { id: "men", label: "For him" },
   { id: "women", label: "For her" },
   { id: "unisex", label: "Unisex" },
 ];
 
-/** For him / for her show their own scents first, then the unisex ones under their own heading. */
-function forWho(scents: Scent[], who: Gender | "all") {
-  if (who === "all") return { main: scents, unisex: [] as Scent[] };
-  if (who === "unisex") return { main: scents.filter((s) => s.gender === "unisex"), unisex: [] as Scent[] };
-  return { main: scents.filter((s) => s.gender === who), unisex: scents.filter((s) => s.gender === "unisex") };
+/** Spreads b evenly through a, so unisex scents sit among his or hers instead of trailing at the end. */
+function blend<T>(a: T[], b: T[]): T[] {
+  if (!b.length) return a;
+  if (!a.length) return b;
+  const out: T[] = [];
+  const step = (a.length + b.length) / b.length;
+  let ai = 0;
+  let bi = 0;
+  for (let i = 0; i < a.length + b.length; i++) {
+    const wantB = bi < b.length && (ai >= a.length || i + 1 >= Math.round((bi + 1) * step));
+    out.push(wantB ? b[bi++] : a[ai++]);
+  }
+  return out;
+}
+
+/** For him / for her include the unisex scents, mixed in — one big collection each. */
+function forWho(scents: Scent[], who: Gender) {
+  if (who === "unisex") return scents.filter((s) => s.gender === "unisex");
+  return blend(
+    scents.filter((s) => s.gender === who),
+    scents.filter((s) => s.gender === "unisex"),
+  );
 }
 
 export function Collection({
-  initialWho = "all",
+  initialWho = "men",
   heading = "The collection",
   showFilters = true,
   as: H = "h2",
   intro = "Every bottle is 100 ml of extrait de parfum. Pick by who it’s for, then by the notes you like.",
+  slider = false,
 }: {
-  initialWho?: Gender | "all";
+  initialWho?: Gender;
+  /** On phones, show the scents as a sideways-swipe row (used on the home page) */
+  slider?: boolean;
   heading?: string;
   showFilters?: boolean;
   as?: "h1" | "h2";
   intro?: string;
 }) {
   const scents = useCatalog();
-  const [who, setWho] = useState<Gender | "all">(initialWho);
+  const [who, setWho] = useState<Gender>(initialWho);
   const [tag, setTag] = useState<string | null>(null);
 
   // the most-used tags become the filter chips
@@ -44,10 +64,8 @@ export function Collection({
   }, [scents]);
 
   const byTag = (l: Scent[]) => (tag ? l.filter((s) => s.tags?.includes(tag)) : l);
-  const { main, unisex } = forWho(scents, who);
-  const list = byTag(main);
-  const extra = byTag(unisex);
-  const total = list.length + extra.length;
+  const list = byTag(forWho(scents, who));
+  const total = list.length;
 
   return (
     <section className="wrap py-20 md:py-28" aria-labelledby="collection-title">
@@ -97,27 +115,23 @@ export function Collection({
       {total === 0 ? (
         <div className="mt-6 rounded-[var(--radius-m)] border border-dashed border-[var(--line)] p-10 text-center">
           <p className="display-m">Nothing in that mix yet.</p>
-          <button type="button" className="btn btn-ghost mt-5" onClick={() => { setTag(null); setWho("all"); }}>Show everything</button>
+          <button type="button" className="btn btn-ghost mt-5" onClick={() => setTag(null)}>Show all notes</button>
         </div>
-      ) : (
-        <>
-          <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
-            {list.map((s, i) => (
-              <ScentCard key={s.slug} s={s} priority={i < 4} />
-            ))}
-          </div>
-          {extra.length > 0 && (
-            <div className="mt-20">
-              <h3 className="display-m">Unisex — for anyone</h3>
-              <p className="small mt-2 text-smoke">Scents that work just as well {who === "women" ? "for her" : "for him"}.</p>
-              <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
-                {extra.map((s) => (
-                  <ScentCard key={s.slug} s={s} />
-                ))}
-              </div>
-            </div>
-          )}
-        </>
+      ) : slider ? (
+        <SwipeRow label={`${WHO.find((w) => w.id === who)?.label} scents`} className="mt-6 md:hidden">
+          {list.map((s, i) => (
+            <li key={s.slug} className="w-[68%] shrink-0 snap-start sm:w-[44%]">
+              <ScentCard s={s} priority={i < 2} showGender={false} />
+            </li>
+          ))}
+        </SwipeRow>
+      ) : null}
+      {total > 0 && (
+        <div className={`mt-6 grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6 ${slider ? "hidden md:grid" : "grid"}`}>
+          {list.map((s, i) => (
+            <ScentCard key={s.slug} s={s} priority={i < 4} showGender={false} />
+          ))}
+        </div>
       )}
     </section>
   );

@@ -45,7 +45,7 @@ type MProduct = {
   thumbnail: string | null;
   images: { url: string }[] | null;
   metadata: Record<string, unknown> | null;
-  variants: { id: string; sku: string | null; calculated_price?: { calculated_amount: number } | null }[] | null;
+  variants: { id: string; sku: string | null; calculated_price?: { calculated_amount: number; original_amount?: number | null } | null }[] | null;
   tags?: { value: string }[] | null;
 };
 
@@ -74,6 +74,7 @@ export async function getScents(): Promise<Scent[]> {
     const fallback = localScents.find((s) => s.slug === p.handle);
     const v = p.variants?.[0];
     const price = v?.calculated_price?.calculated_amount;
+    const original = v?.calculated_price?.original_amount;
     const brand = String(m.inspired_brand ?? fallback?.inspiredBy?.brand ?? "");
     const name = String(m.inspired_name ?? fallback?.inspiredBy?.name ?? "");
     const lmin = Number(m.longevity_min ?? fallback?.longevityHours[0] ?? 6);
@@ -97,6 +98,8 @@ export async function getScents(): Promise<Scent[]> {
       longevityHours: [lmin, lmax],
       occasions: (m.occasions ? list(m.occasions) : fallback?.occasions ?? []) as Occasion[],
       price: typeof price === "number" ? Math.round(price * 100) : fallback?.price ?? 1799,
+      // a sale price list in the admin → show the normal price struck through
+      compareAt: typeof price === "number" && typeof original === "number" && original > price ? Math.round(original * 100) : undefined,
       tint: String(m.tint ?? fallback?.tint ?? "#C9A15B"),
       oneLiner: String(m.one_liner ?? fallback?.oneLiner ?? ""),
       variantId: v?.id,

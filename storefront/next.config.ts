@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { RENAMED_SLUGS } from "./src/lib/catalog";
 
 const backend = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL;
 
@@ -13,8 +14,17 @@ const nextConfig: NextConfig = {
     // product photos uploaded in the admin are served by the backend
     remotePatterns: backend ? [{ protocol: new URL(backend).protocol.replace(":", "") as "http" | "https", hostname: new URL(backend).hostname }] : [],
   },
-  ...(demoStatic ? {} : { headers }),
+  ...(demoStatic ? {} : { headers, redirects }),
 };
+
+// scents renamed in October 2026: keep old links and search results working
+async function redirects() {
+  return Object.entries(RENAMED_SLUGS).map(([from, to]) => ({
+    source: `/perfume/${from}`,
+    destination: `/perfume/${to}`,
+    permanent: true,
+  }));
+}
 
 async function headers() {
     return [

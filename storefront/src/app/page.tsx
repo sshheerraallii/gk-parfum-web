@@ -12,10 +12,10 @@ export default function Home() {
       <SprayHero />
       <div className="gilt-rule" />
       <Matcher />
-      <BundleTeaser />
-      <Collection />
+      <Collection slider />
       <Ledger />
       <ReviewsStrip />
+      <BundleTeaser />
       <div className="gilt-rule" />
       <Faq />
     </>

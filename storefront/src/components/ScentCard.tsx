@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { type Scent, formatPrice, genderLabel, inspiredLabel } from "@/lib/catalog";
+import { type Scent, genderLabel, inspiredLabel } from "@/lib/catalog";
+import { Price } from "./Price";
 import { useCart } from "@/lib/cart";
 import { useAccount } from "@/lib/account";
 import { ProductVisual } from "./ProductVisual";
@@ -32,7 +33,7 @@ export function WishButton({ slug, name, className = "" }: { slug: string; name:
   );
 }
 
-export function ScentCard({ s, priority = false }: { s: Scent; priority?: boolean }) {
+export function ScentCard({ s, priority = false, showGender = true }: { s: Scent; priority?: boolean; showGender?: boolean }) {
   const add = useCart((st) => st.add);
   const [added, setAdded] = useState(false);
   return (
@@ -50,9 +51,11 @@ export function ScentCard({ s, priority = false }: { s: Scent; priority?: boolea
         <div className="absolute inset-0 flex items-center justify-center p-6">
           <ProductVisual s={s} priority={priority} className="h-[86%] w-auto max-w-full" />
         </div>
-        <span className="small absolute left-3 top-3 rounded-full bg-[#081440]/60 px-3 py-1 text-ivory backdrop-blur">
-          {genderLabel[s.gender]}
-        </span>
+        {showGender && (
+          <span className="small absolute left-3 top-3 rounded-full bg-[#081440]/60 px-3 py-1 text-ivory backdrop-blur">
+            {genderLabel[s.gender]}
+          </span>
+        )}
       </Link>
       <WishButton slug={s.slug} name={s.name} className="absolute right-3 top-3" />
       <div className="mt-4 flex flex-1 flex-col">
@@ -69,10 +72,8 @@ export function ScentCard({ s, priority = false }: { s: Scent; priority?: boolea
             ))}
           </ul>
         ) : null}
-        <div className="mt-auto flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:justify-between">
-          <span className="text-[1.05rem] text-ivory">
-            {formatPrice(s.price)} <span className="small text-smoke">/ 100 ml</span>
-          </span>
+        <div className="mt-auto flex flex-col gap-3 pt-4">
+          <Price s={s} />
           <button
             type="button"
             onClick={() => {
@@ -80,7 +81,7 @@ export function ScentCard({ s, priority = false }: { s: Scent; priority?: boolea
               setAdded(true);
               window.setTimeout(() => setAdded(false), 1400);
             }}
-            className="h-11 w-full rounded-full border border-[var(--line)] px-5 text-[0.95rem] text-ivory transition-colors hover:border-gilt hover:bg-gilt hover:text-[#0a1a48] sm:w-auto"
+            className="h-11 w-full rounded-full border border-[var(--line)] px-5 text-[0.95rem] text-ivory transition-colors hover:border-gilt hover:bg-gilt hover:text-[#0a1a48]"
           >
             {added ? "Added" : "Add to bag"}
           </button>

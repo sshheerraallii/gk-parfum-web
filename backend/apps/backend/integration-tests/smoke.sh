@@ -11,7 +11,7 @@ fail() { echo "FAIL: $1"; exit 1; }
 REGION=$(curl -s "${H[@]}" "$API/store/regions" | j "d['regions'][0]['id']")
 PRODUCTS=$(curl -s "${H[@]}" "$API/store/products?limit=50&fields=handle,variants.id&region_id=$REGION")
 v() { echo "$PRODUCTS" | j "[p['variants'][0]['id'] for p in d['products'] if p['handle']=='$1'][0]"; }
-RA=$(v royal-adventure); CL=$(v crimson-luxe); KC=$(v kings-code)
+RA=$(v eventus); CL=$(v baccara-rouge); KC=$(v kings-code)
 new_cart() { curl -s "${H[@]}" -X POST "$API/store/carts" -d "{\"region_id\":\"$REGION\"}" | j "d['cart']['id']"; }
 sync() { curl -s "${H[@]}" -X POST "$API/store/gk/carts/$1/sync" -d "$2"; }
 
@@ -84,12 +84,12 @@ echo "== engagement endpoints"
 for path in "search-log:{\"query\":\"I like woody scents and ouds\",\"results\":4,\"source\":\"matcher\"}" \
             "subscribe:{\"email\":\"fan@example.com\",\"phone\":\"07700900001\",\"source\":\"popup\"}" \
             "contact:{\"name\":\"Amelia\",\"email\":\"amelia@example.com\",\"message\":\"Where is my order please?\"}" \
-            "reviews:{\"product_handle\":\"royal-adventure\",\"name\":\"Test Buyer\",\"email\":\"test@example.com\",\"rating\":5,\"title\":\"Lovely\",\"body\":\"Lasts all day, great value.\"}"; do
+            "reviews:{\"product_handle\":\"eventus\",\"name\":\"Test Buyer\",\"email\":\"test@example.com\",\"rating\":5,\"title\":\"Lovely\",\"body\":\"Lasts all day, great value.\"}"; do
   P=${path%%:*}; B=${path#*:}
   CODE=$(curl -s -o /dev/null -w "%{http_code}" "${H[@]}" -X POST "$API/store/gk/$P" -d "$B"); echo "$P -> $CODE"
   [[ $CODE == 201 ]] || fail "$P"
 done
 CODE=$(curl -s -o /dev/null -w "%{http_code}" "${H[@]}" -X POST "$API/store/gk/subscribe" -d '{"email":"bot@example.com","website":"spam"}'); echo "honeypot -> $CODE"
 [[ $CODE == 400 ]] || fail "honeypot"
-curl -s "${H[@]}" "$API/store/gk/reviews?product=royal-adventure" | j "d['count'], d['average']"
+curl -s "${H[@]}" "$API/store/gk/reviews?product=eventus" | j "d['count'], d['average']"
 echo "ALL PASSED"

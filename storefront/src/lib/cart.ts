@@ -1,6 +1,7 @@
 "use client";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { RENAMED_SLUGS } from "./catalog";
 
 /** A bag line. The same scent can appear twice: once as a one-off, once as a 4-weekly subscription. */
 export interface CartLine {
@@ -74,13 +75,18 @@ export const useCart = create<CartState>()(
     }),
     {
       name: "gk-cart",
-      version: 2,
+      version: 3,
       storage: safeStorage,
       partialize: (s) => ({ lines: s.lines }),
-      // v1 lines had no key/sub
+      // v1 lines had no key/sub; v3 renamed the scents
       migrate: (persisted) => {
         const p = persisted as { lines?: { slug: string; qty: number; key?: string; sub?: boolean }[] };
-        return { lines: (p?.lines ?? []).map((l) => ({ key: l.key ?? lineKey(l.slug, l.sub), slug: l.slug, qty: l.qty, sub: !!l.sub })) } as never;
+        return {
+          lines: (p?.lines ?? []).map((l) => {
+            const slug = RENAMED_SLUGS[l.slug] ?? l.slug;
+            return { key: lineKey(slug, l.sub), slug, qty: l.qty, sub: !!l.sub };
+          }),
+        } as never;
       },
     }
   )

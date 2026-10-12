@@ -161,6 +161,9 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
             <div className="small mt-2 flex justify-between text-smoke" aria-hidden>
               <span>Spray</span><span>12 hours</span><span>24 hours</span>
             </div>
+            <p className="small mt-3 text-smoke">
+              <span className="text-champagne">Stronger projection</span> — 40% oil means it fills the room, not just your wrist.
+            </p>
           </div>
 
           <div className="mt-8">

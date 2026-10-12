@@ -14,7 +14,10 @@ import {
   type Customer,
   type OrderSummary,
 } from "./store-client";
-import type { CartLine } from "./cart";
+import { lineKey, type CartLine } from "./cart";
+import { RENAMED_SLUGS } from "./catalog";
+
+const renamed = (slug: string) => RENAMED_SLUGS[slug] ?? slug;
 
 /**
  * Customer accounts: profile, addresses, wishlist and a saved bag that follows you between devices.
@@ -71,8 +74,10 @@ function fromCustomer(c: Customer): Account {
       postal_code: a.postal_code ?? "",
       phone: a.phone ?? "",
     })),
-    wishlist: Array.isArray(m.gk_wishlist) ? (m.gk_wishlist as string[]) : [],
-    bag: Array.isArray(m.gk_bag) ? (m.gk_bag as CartLine[]) : [],
+    wishlist: Array.isArray(m.gk_wishlist) ? [...new Set((m.gk_wishlist as string[]).map(renamed))] : [],
+    bag: Array.isArray(m.gk_bag)
+      ? (m.gk_bag as CartLine[]).map((l) => (RENAMED_SLUGS[l.slug] ? { ...l, slug: renamed(l.slug), key: lineKey(renamed(l.slug), l.sub) } : l))
+      : [],
     marketing: !!m.marketing_opt_in,
   };
 }
@@ -107,7 +112,8 @@ export const useAccount = create<AccountState>()((set, get) => ({
   init: async () => {
     const demo = !backendReady();
     if (demo) {
-      set({ account: read<Account | null>(DEMO_KEY, null), ready: true, demo });
+      const a = read<Account | null>(DEMO_KEY, null);
+      set({ account: a ? { ...a, wishlist: [...new Set((a.wishlist ?? []).map(renamed))] } : null, ready: true, demo });
       return;
     }
     const c = await me();

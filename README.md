@@ -91,7 +91,7 @@ Stripe's Payment Element handles cards, **Apple Pay, Google Pay, PayPal and Klar
 ## SEO built in
 
 - Server-rendered pages, refreshed every 60 seconds from the admin.
-- Per-product titles and descriptions ("Crimson Luxe — Baccarat Rouge 540 Inspired Perfume").
+- Per-product titles and descriptions ("Baccara Rouge — Baccarat Rouge 540 Inspired Perfume").
 - Structured data: Product (price, stock, shipping, returns), BreadcrumbList, Organization, WebSite search, FAQPage, Article.
 - `sitemap.xml` (includes product photos once uploaded) and `robots.txt`.
 - Landing pages for every audience (`/shop/men`, `/shop/women`, `/shop/unisex`), an "inspired by" index of every original, a bundle page, real-review schema (only when approved reviews exist), and guides for long-tail searches.

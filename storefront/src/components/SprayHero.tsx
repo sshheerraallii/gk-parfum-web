@@ -17,7 +17,8 @@ type P = {
   size: number; hue: number; a: number; ambient: boolean;
 };
 
-const WORDMARK_SRC = "/brand/gk-wordmark-main-foil.svg";
+// the official lockup: GK PARFUM with the slogan WEAR YOUR AURA beneath, in the same letterforms
+const WORDMARK_SRC = "/brand/gk-lockup-slogan-foil.svg";
 // nozzle tip in Bottle viewBox (240 × 420)
 const NOZZLE = { x: 101, y: 80, vbW: 240, vbH: 420 };
 // timeline (seconds from press)
@@ -325,7 +326,7 @@ export function SprayHero() {
           <div
             ref={slotRef}
             className="relative w-full max-w-[640px]"
-            style={{ aspectRatio: "389.784 / 62" }}
+            style={{ aspectRatio: "389.784 / 79.9" }}
           >
             <img
               src={WORDMARK_SRC}
@@ -340,11 +341,9 @@ export function SprayHero() {
             />
           </div>
 
-          <h1 id="hero-title" className="display-xl hero-reveal mt-10 text-ivory" style={{ ["--d" as string]: "1.1s" }}>
-            Wear your aura.
-          </h1>
-          <p className="lede hero-reveal mt-5" style={{ ["--d" as string]: "1.3s" }}>
-            Luxury extrait de parfum, made in the UK. 100&nbsp;ml at 40% oil, lasting 12–24 hours — from £16.99.
+          <h1 id="hero-title" className="sr-only">GK Parfum — Wear your aura. Luxury inspired perfumes, made in the UK.</h1>
+          <p className="lede hero-reveal mt-9 max-w-[34ch] text-ivory/90" style={{ ["--d" as string]: "1.3s" }}>
+            Luxury extrait de parfum, made in the UK. 100&nbsp;ml at 40% oil for stronger projection, lasting 12–24 hours — from £16.99.
           </p>
           <ul className="hero-reveal mt-6 flex flex-wrap gap-2" style={{ ["--d" as string]: "1.4s" }} aria-label="Why GK Parfum">
             {[
@@ -373,7 +372,7 @@ export function SprayHero() {
             aria-label="Spray the bottle"
             className="group relative block h-[34svh] max-h-[560px] min-h-[240px] w-auto cursor-pointer md:h-[64svh] md:min-h-[420px]"
           >
-            <Bottle cap={false} pressed={pressed} tint="#C9A15B" name="Crimson Luxe" className="h-full w-auto drop-shadow-[0_40px_60px_rgba(0,0,0,.6)]" />
+            <Bottle cap={false} pressed={pressed} tint="#C9A15B" name="Baccara Rouge" className="h-full w-auto drop-shadow-[0_40px_60px_rgba(0,0,0,.6)]" />
             {!reduced && (
               <span className="hero-reveal small absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap text-smoke transition-colors group-hover:text-champagne" style={{ ["--d" as string]: "3.2s" }}>
                 Tap the bottle
