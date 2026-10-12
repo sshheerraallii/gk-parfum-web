@@ -668,27 +668,21 @@
     "time": "night",
     "notes": {
       "top": [
-        "Ginger",
-        "Pepper",
-        "Cinnamon",
-        "Cardamom"
+        "Mandarin",
+        "Cinnamon"
       ],
       "heart": [
-        "Amber",
-        "Incense",
-        "Clove",
-        "Myrrh",
-        "Tobacco"
+        "White incense",
+        "White pepper"
       ],
       "base": [
-        "Labdanum",
-        "Vetiver",
-        "Cedarwood",
-        "Sandalwood",
-        "Musk"
+        "Amber",
+        "Ambergris",
+        "Oud",
+        "Labdanum"
       ]
     },
-    "description": "A warm, spiced amber with a Middle Eastern soul. A sharp, spicy opening, a smoky heart of tobacco and incense, and a deep amber base.",
+    "description": "A rich, resinous amber with a Middle Eastern soul. Mandarin and cinnamon open onto white incense and pepper, settling into a deep base of amber, labdanum and a touch of oud.",
     "longevityHours": [
       12,
       24
@@ -700,7 +694,7 @@
     ],
     "price": 1799,
     "tint": "#C08A3E",
-    "oneLiner": "Incense, myrrh and golden amber.",
+    "oneLiner": "White incense, labdanum and golden amber.",
     "tags": [
       "Amber",
       "Spicy",

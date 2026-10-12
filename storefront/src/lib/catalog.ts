@@ -324,17 +324,17 @@ export const scents: Scent[] = [
     mood: "warm",
     time: "night",
     notes: {
-      top: ["Ginger", "Pepper", "Cinnamon", "Cardamom"],
-      heart: ["Amber", "Incense", "Clove", "Myrrh", "Tobacco"],
-      base: ["Labdanum", "Vetiver", "Cedarwood", "Sandalwood", "Musk"],
+      top: ["Mandarin", "Cinnamon"],
+      heart: ["White incense", "White pepper"],
+      base: ["Amber", "Ambergris", "Oud", "Labdanum"],
     },
     description:
-      "A warm, spiced amber with a Middle Eastern soul. A sharp, spicy opening, a smoky heart of tobacco and incense, and a deep amber base.",
+      "A rich, resinous amber with a Middle Eastern soul. Mandarin and cinnamon open onto white incense and pepper, settling into a deep base of amber, labdanum and a touch of oud.",
     longevityHours: [12, 24],
     occasions: ["Evening out", "Special occasion", "Date night"],
     price: 1799,
     tint: "#C08A3E",
-    oneLiner: "Incense, myrrh and golden amber.",
+    oneLiner: "White incense, labdanum and golden amber.",
   },
   {
     sku: "GKP-014F",
