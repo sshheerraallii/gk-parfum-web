@@ -1,0 +1,57 @@
+# Deploys the shop to Vercel on every push to main that touches the storefront.
+# Works with any Vercel account: it uses a token instead of Vercel's GitHub app.
+# Needs three repository secrets (GitHub → Settings → Secrets and variables → Actions):
+#   VERCEL_TOKEN       Vercel → Account Settings → Tokens → Create
+#   VERCEL_ORG_ID      Vercel → Team (or Account) Settings → General → Team ID
+#   VERCEL_PROJECT_ID  Vercel → the project → Settings → General → Project ID
+name: Deploy shop to Vercel
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "storefront/**"
+      - ".github/workflows/deploy-storefront.yml"
+  workflow_dispatch: # "Run workflow" button for a manual redeploy
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: true
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check the secrets are set
+        run: |
+          for s in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [ -z "${!s}" ]; then echo "::error::Missing repository secret $s (see the top of this file)"; exit 1; fi
+          done
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Install the Vercel CLI
+        run: npm install --global vercel@latest
+
+      # Runs from the repo root: Vercel already knows the project lives in storefront/ (Root Directory setting)
+      - name: Fetch project settings and environment variables
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy
+        run: |
+          url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "Live: $url" >> "$GITHUB_STEP_SUMMARY"
