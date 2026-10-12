@@ -9,7 +9,7 @@ export function Faq({ withSchema = true }: { withSchema?: boolean }) {
   return (
     <section className="wrap py-20 md:py-28" aria-labelledby="faq-title">
       <div className="grid gap-10 md:grid-cols-[.8fr_1.2fr]">
-        <h2 id="faq-title" className="display-l max-w-[10ch]">Good questions</h2>
+        <h2 id="faq-title" data-reveal className="display-l max-w-[10ch]">Good questions</h2>
         <div className="divide-y divide-[var(--line-soft)] border-y border-[var(--line-soft)]">
           {FAQ.map((f) => (
             <details key={f.q} className="group py-1">

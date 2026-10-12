@@ -144,6 +144,7 @@ export function Header() {
             <PersonIcon />
           </Link>
           <button
+            id="gk-bag"
             type="button"
             onClick={() => setOpen(true)}
             className="relative flex h-11 items-center gap-2 rounded-full px-3 text-ivory hover:text-champagne"

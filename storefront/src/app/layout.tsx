@@ -9,6 +9,7 @@ import { CatalogProvider } from "@/components/CatalogProvider";
 import { getOffers, getScents } from "@/lib/medusa";
 import { AccountSync } from "@/components/AccountSync";
 import { NewsletterPopup } from "@/components/NewsletterPopup";
+import { Motion } from "@/components/Motion";
 
 const jost = localFont({
   src: "../fonts/jost.woff2",
@@ -91,7 +92,11 @@ const orgLd = {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const [scents, offers] = await Promise.all([getScents(), getOffers()]);
   return (
-    <html lang="en-GB" className={`${jost.variable} ${cormorant.variable}`}>
+    <html lang="en-GB" className={`${jost.variable} ${cormorant.variable}`} suppressHydrationWarning>
+      <head>
+        {/* lets the scroll reveals hide content before first paint — without JS everything just shows */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
       <body>
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-gilt focus:px-4 focus:py-2 focus:text-[#0a1a48]">
           Skip to content
@@ -104,6 +109,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <CartDrawer />
           <NewsletterPopup />
           <AccountSync />
+          <Motion />
         </CatalogProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
       </body>

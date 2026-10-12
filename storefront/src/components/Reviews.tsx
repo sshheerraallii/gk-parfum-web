@@ -38,7 +38,7 @@ export async function ReviewsStrip() {
     <section className="wrap py-20" aria-labelledby="reviews-strip">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 id="reviews-strip" className="display-l">What customers say</h2>
+          <h2 id="reviews-strip" data-reveal className="display-l">What customers say</h2>
           <p className="mt-3 flex items-center gap-3 text-smoke">
             <Stars n={average ?? 0} /> {average} out of 5 from {count} {count === 1 ? "review" : "reviews"}
           </p>

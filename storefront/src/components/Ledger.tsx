@@ -13,7 +13,7 @@ export function Ledger() {
   return (
     <section className="wrap py-24 md:py-32" aria-labelledby="ledger-title">
       <div className="grid gap-12 md:grid-cols-[.8fr_1.2fr] md:items-center">
-        <div>
+        <div data-reveal>
           <h2 id="ledger-title" className="display-l max-w-[12ch]">Why it costs £17.99, not £300</h2>
           <p className="lede mt-5">
             Designer prices pay for advertising, celebrity faces and department-store rent. Ours pay for the oil in the bottle —
@@ -32,7 +32,7 @@ export function Ledger() {
             </thead>
             <tbody>
               {ROWS.map(([k, a, b], i) => (
-                <tr key={k} className={i % 2 ? "bg-ebony/40" : ""}>
+                <tr key={k} data-reveal className={i % 2 ? "bg-ebony/40" : ""} style={{ ["--rd" as string]: `${i * 0.09}s` }}>
                   <th scope="row" className="border-t border-[var(--line-soft)] px-5 py-4 font-normal text-smoke">{k}</th>
                   <td className="border-t border-[var(--line-soft)] px-5 py-4 text-smoke">{a}</td>
                   <td className="border-t border-[var(--line-soft)] px-5 py-4 text-ivory">{b}</td>

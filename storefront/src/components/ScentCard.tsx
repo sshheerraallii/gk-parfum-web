@@ -8,6 +8,7 @@ import { Price } from "./Price";
 import { useCart } from "@/lib/cart";
 import { useAccount } from "@/lib/account";
 import { ProductVisual } from "./ProductVisual";
+import { tiltHandlers, useUncapOnView } from "@/lib/useUncap";
 
 export function WishButton({ slug, name, className = "" }: { slug: string; name: string; className?: string }) {
   const account = useAccount((s) => s.account);
@@ -33,14 +34,21 @@ export function WishButton({ slug, name, className = "" }: { slug: string; name:
   );
 }
 
-export function ScentCard({ s, priority = false, showGender = true }: { s: Scent; priority?: boolean; showGender?: boolean }) {
+export function ScentCard({ s, priority = false, showGender = true, index }: { s: Scent; priority?: boolean; showGender?: boolean; index?: number }) {
   const add = useCart((st) => st.add);
   const [added, setAdded] = useState(false);
+  const ref = useUncapOnView<HTMLElement>();
   return (
-    <article className="group relative flex flex-col">
+    <article
+      ref={ref}
+      data-fly
+      {...(index !== undefined ? { "data-reveal": "", style: { ["--rd" as string]: `${(index % 4) * 0.08}s` } } : {})}
+      className="gk-uncap group relative flex flex-col"
+    >
       <Link
         href={`/perfume/${s.slug}`}
-        className="relative block aspect-[4/5] overflow-hidden rounded-[var(--radius-m)] bg-ebony"
+        {...tiltHandlers}
+        className="gk-tilt relative block aspect-[4/5] overflow-hidden rounded-[var(--radius-m)] bg-ebony"
         aria-label={`${s.name}, inspired by ${inspiredLabel(s)}`}
       >
         <div

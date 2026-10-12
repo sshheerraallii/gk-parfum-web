@@ -18,16 +18,16 @@ export function TierProgress({ count, offers, tone = "dark" }: { count: number; 
     <div>
       <div className="relative mx-3 h-1.5 rounded-full" style={{ background: light ? "rgba(13,28,71,.12)" : "rgba(8,20,64,.6)" }}>
         <div
-          className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#b88c45] to-[#ecd6a2] transition-[width] duration-700"
+          className="gk-liquid absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#b88c45] to-[#ecd6a2] transition-[width] duration-700"
           style={{ width: `${count < 1 ? 0 : pct}%` }}
         />
         {steps.map((s, i) => {
           const done = count >= s.at;
           return (
             <span
-              key={i}
+              key={`${i}-${done}`}
               aria-hidden
-              className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 transition-colors"
+              className={`absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 transition-colors ${done && i > 0 ? "gk-ping" : ""}`}
               style={{
                 left: `${(i / (steps.length - 1)) * 100}%`,
                 background: done ? "#c9a15b" : light ? "#fff" : "#11286a",

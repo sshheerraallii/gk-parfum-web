@@ -76,6 +76,27 @@ export function BundleBuilder() {
       window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 84, behavior: reduce ? "auto" : "smooth" });
     }
   };
+  // reaching 2 or 3 bottles: a burst of gold and a note of what just unlocked
+  const prevCount = useRef(count);
+  const [unlock, setUnlock] = useState<{ id: number; text: string } | null>(null);
+  useEffect(() => {
+    const was = prevCount.current;
+    prevCount.current = count;
+    if (!t.enabled || count <= was) return;
+    const text =
+      was < t.freeShipQty && count >= t.freeShipQty
+        ? "Free delivery unlocked"
+        : was < t.discountQty && count >= t.discountQty
+          ? `${t.discountPct}% off unlocked`
+          : null;
+    if (text) setUnlock({ id: Date.now(), text });
+  }, [count, t]);
+  useEffect(() => {
+    if (!unlock) return;
+    const x = setTimeout(() => setUnlock(null), 2500);
+    return () => clearTimeout(x);
+  }, [unlock]);
+
   useEffect(() => {
     if (!flash) return;
     const t = setTimeout(() => setFlash(null), 900);
@@ -153,7 +174,19 @@ export function BundleBuilder() {
       <section className="wrap pb-6 pt-12 md:pt-16" aria-labelledby="bundle-title">
         <h1 id="bundle-title" className="display-xl">Build your bundle</h1>
         <p className="mt-4 max-w-[46ch] text-[1.1rem] text-ink-soft">Mix his, hers and unisex. The more you pick, the more you save.</p>
-        <div ref={top} className="mt-7 scroll-mt-24 rounded-[18px] border border-[var(--paper-line)] bg-white p-4 shadow-[0_24px_50px_-40px_rgba(13,28,71,.55)] sm:p-5">
+        <div ref={top} data-fly className="relative mt-7 scroll-mt-24 rounded-[18px] border border-[var(--paper-line)] bg-white p-4 shadow-[0_24px_50px_-40px_rgba(13,28,71,.55)] sm:p-5">
+          {unlock && (
+            <div key={unlock.id} aria-hidden className="pointer-events-none absolute inset-x-0 top-0 z-10 flex justify-center">
+              <div className="gk-burst absolute left-1/2 top-16 h-0 w-0">
+                {Array.from({ length: 18 }, (_, i) => {
+                  const a = (i / 18) * Math.PI * 2;
+                  const d = 70 + (i % 3) * 30;
+                  return <span key={i} style={{ ["--x" as string]: `${Math.cos(a) * d}px`, ["--y" as string]: `${Math.sin(a) * d * 0.7}px`, animationDelay: `${(i % 4) * 0.03}s` }} />;
+                })}
+              </div>
+              <p className="gk-toast mt-[-14px] rounded-full bg-ink px-4 py-1.5 text-[0.85rem] text-[#ecd6a2] shadow-lg">✦ {unlock.text}</p>
+            </div>
+          )}
           <p className="text-[0.95rem] text-ink-soft" aria-live="polite">
             {count === 0 ? "Pick your scents below — savings unlock as you go." : reward ?? "Bundle complete: you've unlocked every saving."}
           </p>
@@ -252,7 +285,7 @@ export function BundleBuilder() {
               {list.map((s) => {
                 const n = picked[s.slug] ?? 0;
                 return (
-                  <li key={s.slug} className={`flex flex-col rounded-[14px] border bg-white p-3 transition-colors ${n ? "border-ink" : "border-[var(--paper-line)]"}`}>
+                  <li key={s.slug} className={`gk-uncap flex flex-col rounded-[14px] border bg-white p-3 transition-colors ${n ? "border-ink" : "border-[var(--paper-line)]"}`}>
                     <Link href={`/perfume/${s.slug}`} className="flex h-32 items-center justify-center rounded-[10px] bg-ink sm:h-40" aria-label={`${s.name} details`}>
                       <ProductVisual s={s} className="h-28 w-auto max-w-[80px] sm:h-36 sm:max-w-[100px]" />
                     </Link>

@@ -1,3 +1,4 @@
+import { ScentMotes } from "./ScentMotes";
 import Link from "next/link";
 
 const cols = [
@@ -35,7 +36,8 @@ const cols = [
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-[var(--line-soft)] bg-[#081440]">
+    <footer className="relative isolate mt-24 border-t border-[var(--line-soft)] bg-[#081440]">
+      <ScentMotes count={22} className="-z-10 opacity-70" />
       <div className="wrap grid gap-12 py-16 md:grid-cols-[1.3fr_repeat(3,1fr)]">
         <div>
           <img src="/brand/gk-crest-240.webp" alt="" aria-hidden className="h-32 w-auto" width={240} height={254} loading="lazy" />

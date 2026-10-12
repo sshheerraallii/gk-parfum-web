@@ -17,6 +17,8 @@ interface CartState {
   lines: CartLine[];
   open: boolean;
   lastAdded: string | null;
+  /** When something was last added — <BagFlight> flies it into the bag, then opens the drawer */
+  addedAt: number;
   add: (slug: string, qty?: number, sub?: boolean) => void;
   addMany: (slugs: string[]) => void;
   setQty: (key: string, qty: number) => void;
@@ -57,12 +59,13 @@ export const useCart = create<CartState>()(
       lines: [],
       open: false,
       lastAdded: null,
-      add: (slug, qty = 1, sub = false) => set((s) => ({ lines: addTo(s.lines, slug, qty, sub), open: true, lastAdded: slug })),
+      addedAt: 0,
+      add: (slug, qty = 1, sub = false) => set((s) => ({ lines: addTo(s.lines, slug, qty, sub), lastAdded: slug, addedAt: Date.now() })),
       addMany: (slugs) =>
         set((s) => {
           let lines = s.lines;
           for (const slug of slugs) lines = addTo(lines, slug, 1);
-          return { lines, open: true, lastAdded: slugs[0] ?? null };
+          return { lines, lastAdded: slugs[0] ?? null, addedAt: Date.now() };
         }),
       setQty: (key, qty) =>
         set((s) => ({

@@ -1,5 +1,17 @@
 import { useId } from "react";
 
+// mist particles: size, drift and delay — they bloom up and to the left of the nozzle
+const MIST = [
+  { r: 7, dx: -46, dy: -18, d: 0.32 },
+  { r: 10, dx: -72, dy: -34, d: 0.38 },
+  { r: 6, dx: -58, dy: 6, d: 0.42 },
+  { r: 12, dx: -96, dy: -52, d: 0.46 },
+  { r: 8, dx: -84, dy: -8, d: 0.5 },
+  { r: 14, dx: -120, dy: -30, d: 0.56 },
+  { r: 9, dx: -40, dy: -46, d: 0.6 },
+  { r: 11, dx: -110, dy: -70, d: 0.66 },
+];
+
 /**
  * Drawn stand-in for the real bottle: black glass, faceted silver cap, gold crest plate.
  * Replaced by the product photo as soon as one is uploaded in the admin (see ProductVisual).
@@ -19,7 +31,7 @@ export function Bottle({
 }) {
   const id = useId().replace(/:/g, "");
   return (
-    <svg viewBox="0 0 240 420" className={className} aria-hidden="true">
+    <svg viewBox="0 0 240 420" className={`gk-bottle ${className ?? ""}`} aria-hidden="true" style={{ overflow: "visible" }}>
       <defs>
         <linearGradient id={`gold${id}`} x1="0" x2="1" y1="0" y2="1">
           <stop offset="0" stopColor="#8A5A1F" />
@@ -48,6 +60,9 @@ export function Bottle({
           <stop offset=".93" stopColor="#2c2c32" />
           <stop offset="1" stopColor="#111114" />
         </linearGradient>
+        <filter id={`mist${id}`} x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="6" />
+        </filter>
         <radialGradient id={`glow${id}`} cx=".5" cy=".6" r=".5">
           <stop offset="0" stopColor={tint} stopOpacity=".35" />
           <stop offset="1" stopColor={tint} stopOpacity="0" />
@@ -56,25 +71,32 @@ export function Bottle({
 
       <ellipse cx="120" cy="290" rx="120" ry="120" fill={`url(#glow${id})`} />
 
-      {cap ? (
-        /* faceted silver cap */
-        <g>
-          <path d="M66 52 L84 22 H156 L174 52 V100 Q174 112 162 112 H78 Q66 112 66 100 Z" fill={`url(#silver${id})`} />
-          <path d="M84 22 H156 L174 52 H66 Z" fill={`url(#silverTop${id})`} opacity=".9" />
-          <path d="M98 30 H142 L152 46 H88 Z" fill="#fff" opacity=".35" />
-          <path d="M66 52 H174" stroke="#2b2e33" strokeOpacity=".5" />
-          <rect x="84" y="112" width="72" height="16" fill="#0b0b0d" />
-          <rect x="84" y="112" width="72" height="3" fill="#fff" opacity=".12" />
-        </g>
-      ) : (
-        /* silver atomiser */
-        <g style={{ transform: pressed ? "translateY(6px)" : "none", transition: "transform .12s ease" }}>
+      {/* silver atomiser — always there, hidden under the cap until it lifts */}
+        <g className="gk-pump" style={{ transform: pressed ? "translateY(6px)" : "none", transition: "transform .12s ease" }}>
           <rect x="102" y="66" width="36" height="32" rx="5" fill={`url(#silver${id})`} />
           <rect x="111" y="54" width="18" height="16" rx="3" fill={`url(#silver${id})`} />
           <circle cx="102" cy="80" r="2.4" fill="#16181b" />
           <rect x="84" y="98" width="72" height="30" rx="3" fill={`url(#silver${id})`} />
           <path d="M84 104 H156" stroke="#fff" strokeOpacity=".35" />
         </g>
+      {cap && (
+        <>
+          {/* a puff of scent from the nozzle when the cap comes off (see .gk-open in globals.css) */}
+          <g className="gk-mist" filter={`url(#mist${id})`}>
+            {MIST.map((m, i) => (
+              <circle key={i} cx="98" cy="80" r={m.r} fill={i % 2 ? "#f5f1e8" : tint} style={{ ["--dx" as string]: `${m.dx}px`, ["--dy" as string]: `${m.dy}px`, ["--d" as string]: `${m.d}s` }} />
+            ))}
+          </g>
+          {/* faceted silver cap */}
+          <g className="gk-cap">
+            <path d="M66 52 L84 22 H156 L174 52 V100 Q174 112 162 112 H78 Q66 112 66 100 Z" fill={`url(#silver${id})`} />
+            <path d="M84 22 H156 L174 52 H66 Z" fill={`url(#silverTop${id})`} opacity=".9" />
+            <path d="M98 30 H142 L152 46 H88 Z" fill="#fff" opacity=".35" />
+            <path d="M66 52 H174" stroke="#2b2e33" strokeOpacity=".5" />
+            <rect x="84" y="112" width="72" height="16" fill="#0b0b0d" />
+            <rect x="84" y="112" width="72" height="3" fill="#fff" opacity=".12" />
+          </g>
+        </>
       )}
 
       {/* shoulders + body: square black glass */}

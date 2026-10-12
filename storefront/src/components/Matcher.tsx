@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { formatPrice, inspiredLabel, searchScents, type Scent } from "@/lib/catalog";
 import { SwipeRow } from "./SwipeRow";
+import { ScentMotes } from "./ScentMotes";
 import { useBestSellers, useCatalog } from "./CatalogProvider";
 import { ProductVisual } from "./ProductVisual";
 import { useCart } from "@/lib/cart";
@@ -33,9 +34,11 @@ export function Matcher() {
   }, [q, results.length]);
 
   return (
-    <section id="find" className="wrap scroll-mt-24 py-24 md:py-32" aria-labelledby="find-title">
+    <section id="find" className="relative isolate scroll-mt-24" aria-labelledby="find-title">
+      <ScentMotes className="-z-10" />
+      <div className="wrap py-24 md:py-32">
       <div className="grid gap-12 lg:grid-cols-[.9fr_1.1fr] lg:items-start">
-        <div>
+        <div data-reveal>
           <h2 id="find-title" className="display-l max-w-[14ch]">Which perfume do you love?</h2>
           <p className="lede mt-5">Tell us what you like — woody, oud, something sweet for date night — and we&apos;ll find your scents.</p>
 
@@ -72,7 +75,7 @@ export function Matcher() {
               </p>
               <ul className="space-y-3">
                 {top.map((s, i) => (
-                  <li key={s.slug} className="relative overflow-hidden rounded-[var(--radius-m)] border border-[var(--line)] bg-ebony">
+                  <li key={s.slug} data-fly className="gk-uncap relative overflow-hidden rounded-[var(--radius-m)] border border-[var(--line)] bg-ebony">
                     <div aria-hidden className="absolute inset-0" style={{ background: `radial-gradient(60% 90% at 90% 50%, ${s.tint}2e, transparent 70%)` }} />
                     <div className="relative grid grid-cols-[auto_1fr] items-center gap-4 p-4 sm:gap-6 sm:p-5">
                       <Link href={`/perfume/${s.slug}`} className="flex h-28 w-20 items-center justify-center" aria-label={s.name}>
@@ -124,6 +127,7 @@ export function Matcher() {
           )}
         </div>
       </div>
+      </div>
     </section>
   );
 }
@@ -132,7 +136,7 @@ function BestCard({ s }: { s: Scent }) {
   return (
     <Link
       href={`/perfume/${s.slug}`}
-      className="flex h-full flex-col items-center rounded-[var(--radius-m)] border border-[var(--line-soft)] bg-ebony p-4 text-center transition-colors hover:border-[var(--line)]"
+      className="gk-uncap flex h-full flex-col items-center rounded-[var(--radius-m)] border border-[var(--line-soft)] bg-ebony p-4 text-center transition-colors hover:border-[var(--line)]"
     >
       <ProductVisual s={s} className="h-24 w-auto max-w-[70px]" />
       <span className="mt-2 font-display text-[1.2rem] leading-tight text-ivory">{s.name}</span>

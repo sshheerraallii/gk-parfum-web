@@ -69,8 +69,10 @@ export function Collection({
 
   return (
     <section className="wrap py-20 md:py-28" aria-labelledby="collection-title">
-      <H id="collection-title" className={H === "h1" ? "display-xl" : "display-l"}>{heading}</H>
-      <p className="lede mt-3">{intro}</p>
+      <div data-reveal>
+        <H id="collection-title" className={H === "h1" ? "display-xl" : "display-l"}>{heading}</H>
+        <p className="lede mt-3">{intro}</p>
+      </div>
 
       {showFilters && (
         <div className="mt-10 flex flex-col gap-3">
@@ -129,7 +131,7 @@ export function Collection({
       {total > 0 && (
         <div className={`mt-6 grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6 ${slider ? "hidden md:grid" : "grid"}`}>
           {list.map((s, i) => (
-            <ScentCard key={s.slug} s={s} priority={i < 4} showGender={false} />
+            <ScentCard key={s.slug} s={s} priority={i < 4} showGender={false} index={i} />
           ))}
         </div>
       )}

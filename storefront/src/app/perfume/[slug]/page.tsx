@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CONCENTRATION, OIL_PERCENT, SIZE_ML, bySlug, formatPrice, genderLabel, inspiredLabel } from "@/lib/catalog";
 import { getScents } from "@/lib/medusa";
-import { ProductVisual } from "@/components/ProductVisual";
+import { ProductStage } from "@/components/ProductStage";
 import { SITE } from "@/lib/site";
 import { ScentCard } from "@/components/ScentCard";
 import { BuyBox } from "@/components/BuyBox";
@@ -117,12 +117,12 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
         </ol>
       </nav>
 
-      <section className="wrap grid gap-10 pb-20 pt-6 md:grid-cols-2 md:gap-16 md:pt-10">
+      <section data-fly className="wrap grid gap-10 pb-20 pt-6 md:grid-cols-2 md:gap-16 md:pt-10">
         {/* stage */}
         <div className="md:sticky md:top-24 md:self-start">
           <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[var(--radius-m)] bg-ebony md:aspect-[4/5]">
             <div aria-hidden className="absolute inset-0" style={{ background: `radial-gradient(60% 50% at 50% 60%, ${s.tint}40, transparent 70%)` }} />
-            <ProductVisual s={s} priority sizes="(min-width: 768px) 50vw, 100vw" className="relative h-[78%] w-auto max-w-[85%] drop-shadow-[0_40px_50px_rgba(4,11,36,.6)]" />
+            <ProductStage s={s} />
             <WishButton slug={s.slug} name={s.name} className="absolute right-4 top-4" />
           </div>
         </div>
@@ -154,8 +154,8 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
               <h2 className="text-ivory">How long it lasts</h2>
               <span className="text-champagne">{s.longevityHours[0]}–{s.longevityHours[1]} hours</span>
             </div>
-            <div className="relative mt-3 h-2 rounded-full bg-ebony" aria-hidden>
-              <div className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#8a5a1f] to-champagne" style={{ width: `${(s.longevityHours[1] / maxH) * 100}%` }} />
+            <div data-inview className="relative mt-3 h-2 rounded-full bg-ebony" aria-hidden>
+              <div className="gk-fill gk-liquid absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#8a5a1f] to-champagne" style={{ ["--w" as string]: `${(s.longevityHours[1] / maxH) * 100}%` }} />
               <div className="absolute inset-y-0 rounded-full bg-champagne/30" style={{ left: `${(s.longevityHours[0] / maxH) * 100}%`, width: `${((s.longevityHours[1] - s.longevityHours[0]) / maxH) * 100}%` }} />
             </div>
             <div className="small mt-2 flex justify-between text-smoke" aria-hidden>
@@ -178,15 +178,26 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
           {/* notes as the scent unfolds — a real sequence */}
           <div className="mt-12">
             <h2 className="display-m">How it changes on your skin</h2>
-            <ol className="relative mt-6 space-y-8 border-l border-[var(--line)] pl-7">
-              {STAGES.map((st) => (
-                <li key={st.key} className="relative">
-                  <span aria-hidden className="absolute -left-[33px] top-1.5 h-3 w-3 rounded-full border border-gilt bg-velvet" />
-                  <p className="text-champagne">{st.when}</p>
-                  <p className="small text-smoke">{st.hint}</p>
-                  <p className="mt-2 font-display text-[1.45rem] leading-snug text-ivory">{s.notes[st.key].join(", ")}</p>
-                </li>
-              ))}
+            {/* the line draws down, each stage lights up, and the notes rise in word by word */}
+            <ol data-inview className="gk-trail mt-6 space-y-8 pl-7">
+              {STAGES.map((st, si) => {
+                const before = STAGES.slice(0, si).reduce((n, x) => n + s.notes[x.key].length, 0);
+                return (
+                  <li key={st.key} className={`relative ${si === 0 ? "gk-float" : ""}`}>
+                    <span aria-hidden className="gk-dot absolute -left-[33px] top-1.5 h-3 w-3 rounded-full border border-gilt bg-velvet" style={{ ["--sd" as string]: `${0.3 + si * 0.55}s` }} />
+                    <p className="text-champagne">{st.when}</p>
+                    <p className="small text-smoke">{st.hint}</p>
+                    <p className="mt-2 font-display text-[1.45rem] leading-snug text-ivory">
+                      {s.notes[st.key].map((n, i, a) => (
+                        <span key={n} className="gk-word" style={{ ["--wd" as string]: `${0.35 + si * 0.45 + (before + i) * 0.07}s` }}>
+                          {n}
+                          {i < a.length - 1 ? ",\u00a0" : ""}
+                        </span>
+                      ))}
+                    </p>
+                  </li>
+                );
+              })}
             </ol>
           </div>
 
