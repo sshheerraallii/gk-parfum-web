@@ -24,13 +24,14 @@ export const syncGkCartWorkflow = createWorkflow("sync-gk-cart", (input: PlanGkC
     addToCartWorkflow.runAsStep({ input: add })
   })
 
-  when("gk-add-delivery-code", { plan }, ({ plan }) => plan.addDeliveryCode).then(() => {
-    const inp = transform({ input }, ({ input }) => ({
+  // shopper's own codes, plus the bundle free-delivery code when earned
+  when("gk-apply-codes", { plan }, ({ plan }) => plan.applyCodes.length > 0).then(() => {
+    const inp = transform({ input, plan }, ({ input, plan }) => ({
       cart_id: input.cart_id,
-      promo_codes: [BUNDLE_DELIVERY_CODE],
+      promo_codes: plan.applyCodes,
       action: PromotionActions.ADD,
     }))
-    updateCartPromotionsWorkflow.runAsStep({ input: inp }).config({ name: "gk-add-bundle-delivery" })
+    updateCartPromotionsWorkflow.runAsStep({ input: inp }).config({ name: "gk-apply-codes" })
   })
 
   when("gk-remove-delivery-code", { plan }, ({ plan }) => plan.removeDeliveryCode).then(() => {

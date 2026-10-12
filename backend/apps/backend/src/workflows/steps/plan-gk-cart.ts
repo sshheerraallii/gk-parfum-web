@@ -31,7 +31,7 @@ export const planGkCartStep = createStep("plan-gk-cart", async (input: PlanGkCar
     data: [cart],
   } = await query.graph({
     entity: "cart",
-    fields: ["id", "region_id", "currency_code", "completed_at", "items.id", "promotions.code", "shipping_methods.id"],
+    fields: ["id", "region_id", "currency_code", "completed_at", "items.id", "promotions.code", "promotions.is_automatic", "promotions.status", "shipping_methods.id"],
     filters: { id: input.cart_id },
   })
   if (!cart) {
@@ -118,10 +118,17 @@ export const planGkCartStep = createStep("plan-gk-cart", async (input: PlanGkCar
   // A delivery promotion only sticks once the cart has a delivery method, so the storefront
   // syncs again straight after delivery is chosen.
   const hasShipping = (cart.shipping_methods ?? []).length > 0
+  // Codes the shopper typed in (WELCOME10 and so on). Emptying the bag to refill it makes Medusa
+  // drop them, so they are put back once the new items are in. Automatic offers come back on their own.
+  const keepCodes = (cart.promotions ?? [])
+    .filter((p) => p?.code && p.code !== BUNDLE_DELIVERY_CODE && !p.is_automatic && p.status === "active")
+    .map((p) => p!.code!)
+  const addDeliveryCode = plan.freeShip && hasShipping
   return new StepResponse({
     remove: (cart.items ?? []).map((i) => i!.id),
     items,
-    addDeliveryCode: plan.freeShip && !hasCode && hasShipping,
+    // everything that should be on the cart after the refill
+    applyCodes: items.length ? [...keepCodes, ...(addDeliveryCode ? [BUNDLE_DELIVERY_CODE] : [])] : [],
     removeDeliveryCode: !plan.freeShip && hasCode,
   })
 })
