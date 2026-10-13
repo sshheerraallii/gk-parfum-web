@@ -53,7 +53,9 @@ jobs:
           set -o pipefail
           if ! vercel build --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tee build.log; then
             # surface the end of the build log as annotations so it shows on the run page
-            tail -n 40 build.log | sed 's/%/%25/g' | while IFS= read -r line; do echo "::error title=vercel build::$line"; done
+            # GitHub keeps only 10 annotations per step, so send the tail as one message (newlines encoded)
+            msg=$(tail -n 60 build.log | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+            echo "::error title=vercel build::$msg"
             exit 1
           fi
 
