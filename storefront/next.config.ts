@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 import { RENAMED_SLUGS } from "./src/lib/catalog";
 
-const backend = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL;
+const backendRaw = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL;
+const backend = backendRaw && /^https?:\/\//.test(backendRaw) ? backendRaw : undefined;
 
 // DEMO_STATIC=1 builds a plain static site (no server) for free hosts like Netlify Drop.
 const demoStatic = process.env.DEMO_STATIC === "1";

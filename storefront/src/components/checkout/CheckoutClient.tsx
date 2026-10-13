@@ -30,7 +30,7 @@ import {
 } from "@/lib/store-client";
 import { ProductVisual } from "../ProductVisual";
 
-const STRIPE_KEY = process.env.NEXT_PUBLIC_STRIPE_KEY ?? "";
+const STRIPE_KEY = process.env.NEXT_PUBLIC_STRIPE_KEY || "";
 let stripePromise: Promise<Stripe | null> | null = null;
 const getStripe = () => (STRIPE_KEY ? (stripePromise ??= loadStripe(STRIPE_KEY)) : null);
 

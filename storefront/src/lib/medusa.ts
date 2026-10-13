@@ -2,8 +2,8 @@ import "server-only";
 import { defaultOffers, type Offers } from "./offers";
 import { scents as localScents, type Gender, type Mood, type Occasion, type Scent } from "./catalog";
 
-export const MEDUSA_URL = process.env.MEDUSA_BACKEND_URL ?? process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL ?? "";
-export const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY ?? "";
+export const MEDUSA_URL = process.env.MEDUSA_BACKEND_URL || process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "";
+export const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "";
 
 async function store<T>(path: string, revalidate = 60): Promise<T | null> {
   if (!MEDUSA_URL || !PUBLISHABLE_KEY) return null;
