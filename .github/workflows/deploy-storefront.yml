@@ -51,13 +51,13 @@ jobs:
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
       # Vercel never hands "Sensitive" variables to outside builds, so they arrive empty.
-      # Any of these set as GitHub secrets fill the gap.
+      # Any of these set as GitHub secrets (or Actions variables) fill the gap.
       - name: Fill in the shop's settings
         env:
-          SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
-          BACKEND_URL: ${{ secrets.NEXT_PUBLIC_MEDUSA_BACKEND_URL }}
-          PUB_KEY: ${{ secrets.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY }}
-          STRIPE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_KEY }}
+          SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || vars.NEXT_PUBLIC_SITE_URL }}
+          BACKEND_URL: ${{ secrets.NEXT_PUBLIC_MEDUSA_BACKEND_URL || vars.NEXT_PUBLIC_MEDUSA_BACKEND_URL }}
+          PUB_KEY: ${{ secrets.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || vars.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY }}
+          STRIPE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_KEY || vars.NEXT_PUBLIC_STRIPE_KEY }}
         run: |
           f=.vercel/.env.production.local
           touch "$f"
