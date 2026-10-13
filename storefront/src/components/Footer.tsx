@@ -36,7 +36,7 @@ const cols = [
 
 export function Footer() {
   return (
-    <footer className="relative isolate mt-24 border-t border-[var(--line-soft)] bg-[#081440]">
+    <footer className="relative isolate mt-24 border-t border-[var(--line-soft)] bg-[#0f0c0a]">
       <ScentMotes count={22} className="-z-10 opacity-70" />
       <div className="wrap grid gap-12 py-16 md:grid-cols-[1.3fr_repeat(3,1fr)]">
         <div>

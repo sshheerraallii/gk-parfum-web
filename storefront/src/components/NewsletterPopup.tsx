@@ -95,7 +95,7 @@ export function NewsletterPopup() {
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end justify-center p-0 sm:items-center sm:p-6">
-      <div className="absolute inset-0 bg-[#040b24]/75" onClick={close} aria-hidden />
+      <div className="absolute inset-0 bg-[#0a0806]/75" onClick={close} aria-hidden />
       <div
         ref={dialog}
         role="dialog"
@@ -103,7 +103,7 @@ export function NewsletterPopup() {
         aria-labelledby="nl-title"
         className="relative grid w-full max-w-[820px] animate-[rise_.5s_cubic-bezier(.16,1,.3,1)_both] overflow-hidden rounded-t-[18px] border border-[var(--line)] bg-ebony shadow-2xl sm:grid-cols-[.9fr_1.1fr] sm:rounded-[18px]"
       >
-        <button type="button" onClick={close} className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-[#081440]/70 text-ivory hover:text-champagne" aria-label="Close">
+        <button type="button" onClick={close} className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-[#0f0c0a]/70 text-ivory hover:text-champagne" aria-label="Close">
           <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" strokeWidth="1.8" /></svg>
         </button>
         <img src="/brand/mockup-box-800.webp" alt="A GK Parfum bottle in its blue signature box" className="hidden h-full w-full object-cover sm:block" width={800} height={994} />
@@ -134,7 +134,7 @@ export function NewsletterPopup() {
                   placeholder="Your email"
                   aria-invalid={!!err}
                   aria-describedby={err ? "nl-err" : undefined}
-                  className="h-12 w-full rounded-full border border-[var(--line)] bg-[#081440]/60 px-5 text-ivory placeholder:text-[#8d98bb] focus:border-gilt focus:outline-none"
+                  className="h-12 w-full rounded-full border border-[var(--line)] bg-[#0f0c0a]/60 px-5 text-ivory placeholder:text-[#8a8072] focus:border-gilt focus:outline-none"
                 />
                 <label htmlFor="nl-phone" className="sr-only">Phone (optional)</label>
                 <input
@@ -145,7 +145,7 @@ export function NewsletterPopup() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="Phone (optional)"
-                  className="h-12 w-full rounded-full border border-[var(--line)] bg-[#081440]/60 px-5 text-ivory placeholder:text-[#8d98bb] focus:border-gilt focus:outline-none"
+                  className="h-12 w-full rounded-full border border-[var(--line)] bg-[#0f0c0a]/60 px-5 text-ivory placeholder:text-[#8a8072] focus:border-gilt focus:outline-none"
                 />
                 {err && <p id="nl-err" className="text-[0.85rem] text-[#ffb4a6]">{err}</p>}
                 <button type="submit" disabled={state === "sending"} className="btn btn-gold w-full">

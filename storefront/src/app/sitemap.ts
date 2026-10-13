@@ -1,3 +1,4 @@
+import { bottlePhoto } from "@/lib/bottles";
 import type { MetadataRoute } from "next";
 import { getScents } from "@/lib/medusa";
 import { guides } from "@/lib/guides";
@@ -17,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       changeFrequency: "weekly" as const,
       priority: 0.9,
-      images: s.images?.length ? s.images.slice(0, 3) : undefined,
+      images: s.images?.length ? s.images.slice(0, 3) : bottlePhoto(s.slug) ? [`${SITE.url}${bottlePhoto(s.slug)!.scene}`] : undefined,
     })),
     ...guides.map((g) => ({ url: `${SITE.url}/guides/${g.slug}`, lastModified: new Date(g.published), changeFrequency: "monthly" as const, priority: 0.6 })),
   ];

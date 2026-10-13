@@ -2,14 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Scent } from "@/lib/catalog";
-import { ProductVisual } from "./ProductVisual";
+import { ProductScene } from "./ProductScene";
+import { bottlePhoto } from "@/lib/bottles";
 
 /** Product page bottle: the cap lifts and it sprays once on arrival, then again whenever you tap it. */
 export function ProductStage({ s }: { s: Scent }) {
   const ref = useRef<HTMLButtonElement>(null);
   const [hint, setHint] = useState(true);
   const timers = useRef<number[]>([]);
+  // the cap only comes off our own renders / drawings, not an uploaded photo
   const drawn = !s.images?.length;
+  const photo = !!bottlePhoto(s.slug);
 
   const spray = (delay = 0) => {
     const el = ref.current;
@@ -41,8 +44,8 @@ export function ProductStage({ s }: { s: Scent }) {
       aria-label={`${s.name} — tap to open the bottle`}
       className="relative flex h-full w-full cursor-pointer items-center justify-center"
     >
-      <ProductVisual s={s} priority sizes="(min-width: 768px) 50vw, 100vw" className="relative h-[78%] w-auto max-w-[85%] drop-shadow-[0_40px_50px_rgba(4,11,36,.6)]" />
-      {drawn && hint && <span className="small absolute bottom-4 left-1/2 -translate-x-1/2 text-smoke">Tap the bottle</span>}
+      <ProductScene s={s} priority className="absolute inset-0" />
+      {drawn && hint && <span className="small absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/35 px-3 py-1 text-ivory backdrop-blur">{photo ? "Tap to open" : "Tap the bottle"}</span>}
     </button>
   );
 }

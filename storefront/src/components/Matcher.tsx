@@ -7,6 +7,7 @@ import { SwipeRow } from "./SwipeRow";
 import { ScentMotes } from "./ScentMotes";
 import { useBestSellers, useCatalog } from "./CatalogProvider";
 import { ProductVisual } from "./ProductVisual";
+import { ProductScene } from "./ProductScene";
 import { useCart } from "@/lib/cart";
 import { logSearch } from "@/lib/store-client";
 
@@ -50,7 +51,7 @@ export function Matcher() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="e.g. I like woody scents and oud"
-            className="mt-8 h-16 w-full rounded-full border border-[var(--line)] bg-ebony px-6 text-[1.1rem] text-ivory placeholder:text-[#8d98bb] focus:border-gilt focus:outline-none"
+            className="mt-8 h-16 w-full rounded-full border border-[var(--line)] bg-ebony px-6 text-[1.1rem] text-ivory placeholder:text-[#8a8072] focus:border-gilt focus:outline-none"
           />
           <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Quick picks">
             {QUICK.map((t) => (
@@ -59,7 +60,7 @@ export function Matcher() {
                 type="button"
                 aria-pressed={q === t}
                 onClick={() => setQ(q === t ? "" : t)}
-                className={`small h-9 rounded-full border px-4 transition-colors ${q === t ? "border-gilt bg-gilt text-[#0a1a48]" : "border-[var(--line)] text-smoke hover:text-ivory"}`}
+                className={`small h-9 rounded-full border px-4 transition-colors ${q === t ? "border-gilt bg-gilt text-[#14110e]" : "border-[var(--line)] text-smoke hover:text-ivory"}`}
               >
                 {t}
               </button>
@@ -86,7 +87,7 @@ export function Matcher() {
                         <Link href={`/perfume/${s.slug}`} className="font-display text-[1.6rem] leading-tight text-ivory hover:text-champagne">{s.name}</Link>
                         <p className="small mt-0.5 text-smoke">Inspired by {inspiredLabel(s)}</p>
                         <p className="small mt-1 truncate text-smoke">{[...new Set([...s.notes.top.slice(0, 2), ...s.notes.heart.slice(0, 2), ...s.notes.base.slice(0, 2)])].slice(0, 4).join(" · ")}</p>
-                        <button type="button" onClick={() => add(s.slug)} className="small mt-3 h-9 rounded-full border border-[var(--line)] px-4 text-ivory hover:border-gilt hover:bg-gilt hover:text-[#0a1a48]">
+                        <button type="button" onClick={() => add(s.slug)} className="small mt-3 h-9 rounded-full border border-[var(--line)] px-4 text-ivory hover:border-gilt hover:bg-gilt hover:text-[#14110e]">
                           Add to bag · {formatPrice(s.price)}
                         </button>
                       </div>
@@ -108,7 +109,7 @@ export function Matcher() {
             </div>
           ) : (
             <>
-              <p className="small mb-3 text-smoke">Or start with our best sellers</p>
+              <h3 className="mb-4 text-[1.15rem] font-bold uppercase leading-none tracking-[0.06em] text-ivory md:text-[1.3rem]">Best Sellers</h3>
               <SwipeRow label="Best sellers" className="sm:hidden">
                 {best.slice(0, 6).map((s) => (
                   <li key={s.slug} className="w-[42%] shrink-0 snap-start">
@@ -136,11 +137,11 @@ function BestCard({ s }: { s: Scent }) {
   return (
     <Link
       href={`/perfume/${s.slug}`}
-      className="gk-uncap flex h-full flex-col items-center rounded-[var(--radius-m)] border border-[var(--line-soft)] bg-ebony p-4 text-center transition-colors hover:border-[var(--line)]"
+      className="gk-uncap group flex h-full flex-col items-center overflow-hidden rounded-[var(--radius-m)] border border-[var(--line-soft)] bg-ebony pb-4 text-center transition-colors hover:border-[var(--line)]"
     >
-      <ProductVisual s={s} className="h-24 w-auto max-w-[70px]" />
-      <span className="mt-2 font-display text-[1.2rem] leading-tight text-ivory">{s.name}</span>
-      <span className="small mt-0.5 text-smoke">{s.inspiredBy ? s.inspiredBy.name : "GK original"}</span>
+      <ProductScene s={s} className="aspect-[4/5] w-full" />
+      <span className="mt-3 px-2 font-display text-[1.2rem] leading-tight text-ivory">{s.name}</span>
+      <span className="small mt-0.5 px-2 text-smoke">{s.inspiredBy ? <>Inspired by {s.inspiredBy.name}</> : "A GK original"}</span>
       <span className="small mt-2 text-champagne">{formatPrice(s.price)}</span>
     </Link>
   );

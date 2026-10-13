@@ -7,7 +7,7 @@ import { type Scent, genderLabel, inspiredLabel } from "@/lib/catalog";
 import { Price } from "./Price";
 import { useCart } from "@/lib/cart";
 import { useAccount } from "@/lib/account";
-import { ProductVisual } from "./ProductVisual";
+import { ProductScene } from "./ProductScene";
 import { tiltHandlers, useUncapOnView } from "@/lib/useUncap";
 
 export function WishButton({ slug, name, className = "" }: { slug: string; name: string; className?: string }) {
@@ -25,7 +25,7 @@ export function WishButton({ slug, name, className = "" }: { slug: string; name:
         if (!account) router.push(`/account?next=${encodeURIComponent(location.pathname)}`);
         else toggle(slug);
       }}
-      className={`flex h-10 w-10 items-center justify-center rounded-full bg-[#081440]/60 backdrop-blur transition-colors hover:text-champagne ${on ? "text-champagne" : "text-ivory"} ${className}`}
+      className={`flex h-10 w-10 items-center justify-center rounded-full bg-[#0f0c0a]/60 backdrop-blur transition-colors hover:text-champagne ${on ? "text-champagne" : "text-ivory"} ${className}`}
     >
       <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden fill={on ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6">
         <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z" strokeLinejoin="round" />
@@ -51,16 +51,9 @@ export function ScentCard({ s, priority = false, showGender = true, index }: { s
         className="gk-tilt relative block aspect-[4/5] overflow-hidden rounded-[var(--radius-m)] bg-ebony"
         aria-label={`${s.name}, inspired by ${inspiredLabel(s)}`}
       >
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-60 transition-opacity duration-500 group-hover:opacity-100"
-          style={{ background: `radial-gradient(70% 55% at 50% 62%, ${s.tint}33, transparent 70%)` }}
-        />
-        <div className="absolute inset-0 flex items-center justify-center p-6">
-          <ProductVisual s={s} priority={priority} className="h-[86%] w-auto max-w-full" />
-        </div>
+        <ProductScene s={s} priority={priority} className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.03]" />
         {showGender && (
-          <span className="small absolute left-3 top-3 rounded-full bg-[#081440]/60 px-3 py-1 text-ivory backdrop-blur">
+          <span className="small absolute left-3 top-3 rounded-full bg-[#0f0c0a]/60 px-3 py-1 text-ivory backdrop-blur">
             {genderLabel[s.gender]}
           </span>
         )}
@@ -89,7 +82,7 @@ export function ScentCard({ s, priority = false, showGender = true, index }: { s
               setAdded(true);
               window.setTimeout(() => setAdded(false), 1400);
             }}
-            className="h-11 w-full rounded-full border border-[var(--line)] px-5 text-[0.95rem] text-ivory transition-colors hover:border-gilt hover:bg-gilt hover:text-[#0a1a48]"
+            className="h-11 w-full rounded-full border border-[var(--line)] px-5 text-[0.95rem] text-ivory transition-colors hover:border-gilt hover:bg-gilt hover:text-[#14110e]"
           >
             {added ? "Added" : "Add to bag"}
           </button>

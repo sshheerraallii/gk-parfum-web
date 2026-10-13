@@ -51,22 +51,25 @@ export function Announcement() {
     offers.tiers.enabled ? `Save ${offers.tiers.discountPct}% on ${offers.tiers.discountQty}+ bottles` : null,
     "Vegan friendly · Made in the UK",
   ].filter(Boolean) as string[];
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setI((x) => (x + 1) % items.length), 3800);
-    return () => clearInterval(t);
-  }, [items.length]);
+  // a continuous marquee, like Mister Fragrance: two copies side by side, sliding left forever
+  const row = (hidden?: boolean) => (
+    <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
+      {items.map((t) => (
+        <li key={t} className="flex items-center whitespace-nowrap px-6">
+          <span aria-hidden className="mr-6 text-[0.6rem] text-gilt">✦</span>
+          {t}
+        </li>
+      ))}
+    </ul>
+  );
   return (
-    <div className="border-b border-[var(--line-soft)] bg-[#081440] text-center">
-      {/* phones: one message at a time; wider screens: all of them */}
-      <div className="wrap flex h-9 items-center justify-center text-[0.82rem] tracking-[0.02em] text-champagne md:hidden" aria-live="off">
-        <span key={i} className="animate-[rise_.5s_ease_both]">{items[i]}</span>
+    <div className="gk-ticker overflow-hidden border-b border-[var(--line-soft)] bg-[#0f0c0a]" role="region" aria-label="Offers">
+      <div className="gk-ticker-track flex h-9 w-max items-center text-[0.82rem] uppercase tracking-[0.08em] text-champagne" style={{ ["--n" as string]: items.length }}>
+        {row()}
+        {row(true)}
+        {row(true)}
+        {row(true)}
       </div>
-      <ul className="wrap hidden h-9 items-center justify-center gap-10 text-[0.82rem] tracking-[0.02em] text-champagne md:flex">
-        {items.map((t) => (
-          <li key={t}>{t}</li>
-        ))}
-      </ul>
     </div>
   );
 }
@@ -93,7 +96,7 @@ export function Header() {
     <header
       className="sticky top-0 z-40 transition-[background-color,border-color] duration-300"
       style={{
-        background: scrolled ? "rgba(10,26,72,.9)" : "rgba(10,26,72,0)",
+        background: scrolled ? "rgba(20,17,14,.9)" : "rgba(20,17,14,0)",
         backdropFilter: scrolled ? "blur(14px) saturate(1.2)" : "none",
         borderBottom: `1px solid ${scrolled ? "var(--line-soft)" : "transparent"}`,
       }}
@@ -153,7 +156,7 @@ export function Header() {
             <BagIcon />
             <span className="hidden text-[0.95rem] sm:inline">Bag</span>
             {mounted && count > 0 && (
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-gilt px-1.5 text-[0.72rem] font-semibold text-[#0a1a48]">
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-gilt px-1.5 text-[0.72rem] font-semibold text-[#14110e]">
                 {count}
               </span>
             )}

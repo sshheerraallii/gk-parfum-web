@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CONCENTRATION, OIL_PERCENT, SIZE_ML, bySlug, formatPrice, genderLabel, inspiredLabel } from "@/lib/catalog";
 import { getScents } from "@/lib/medusa";
 import { ProductStage } from "@/components/ProductStage";
+import { bottlePhoto } from "@/lib/bottles";
 import { SITE } from "@/lib/site";
 import { ScentCard } from "@/components/ScentCard";
 import { BuyBox } from "@/components/BuyBox";
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title,
     description,
     alternates: { canonical: `/perfume/${s.slug}` },
-    openGraph: { title, description, url: `/perfume/${s.slug}`, type: "website" },
+    openGraph: { title, description, url: `/perfume/${s.slug}`, type: "website", ...(bottlePhoto(s.slug) && !s.images?.length ? { images: [{ url: bottlePhoto(s.slug)!.scene, width: 800, height: 1000, alt: s.name }] } : {}) },
   };
 }
 
@@ -59,7 +60,7 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
         sku: s.sku,
         brand: { "@type": "Brand", name: "GK Parfum" },
         category: "Health & Beauty > Personal Care > Cosmetics > Perfume & Cologne",
-        image: s.images?.length ? s.images : [`${SITE.url}/brand/gk-icon-512.png`],
+        image: s.images?.length ? s.images : bottlePhoto(s.slug) ? [`${SITE.url}${bottlePhoto(s.slug)!.scene}`] : [`${SITE.url}/brand/gk-icon-512.png`],
         audience: { "@type": "PeopleAudience", suggestedGender: s.gender === "men" ? "male" : s.gender === "women" ? "female" : "unisex" },
         additionalProperty: [
           { "@type": "PropertyValue", name: "Volume", value: `${SIZE_ML} ml` },
@@ -120,8 +121,7 @@ export default async function PerfumePage({ params }: { params: Promise<{ slug: 
       <section data-fly className="wrap grid gap-10 pb-20 pt-6 md:grid-cols-2 md:gap-16 md:pt-10">
         {/* stage */}
         <div className="md:sticky md:top-24 md:self-start">
-          <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[var(--radius-m)] bg-ebony md:aspect-[4/5]">
-            <div aria-hidden className="absolute inset-0" style={{ background: `radial-gradient(60% 50% at 50% 60%, ${s.tint}40, transparent 70%)` }} />
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-m)] bg-ebony">
             <ProductStage s={s} />
             <WishButton slug={s.slug} name={s.name} className="absolute right-4 top-4" />
           </div>

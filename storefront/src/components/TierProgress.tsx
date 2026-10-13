@@ -16,7 +16,7 @@ export function TierProgress({ count, offers, tone = "dark" }: { count: number; 
   const light = tone === "light";
   return (
     <div>
-      <div className="relative mx-3 h-1.5 rounded-full" style={{ background: light ? "rgba(13,28,71,.12)" : "rgba(8,20,64,.6)" }}>
+      <div className="relative mx-3 h-1.5 rounded-full" style={{ background: light ? "rgba(29, 24, 19,.12)" : "rgba(15, 12, 10,.6)" }}>
         <div
           className="gk-liquid absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#b88c45] to-[#ecd6a2] transition-[width] duration-700"
           style={{ width: `${count < 1 ? 0 : pct}%` }}
@@ -30,8 +30,8 @@ export function TierProgress({ count, offers, tone = "dark" }: { count: number; 
               className={`absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 transition-colors ${done && i > 0 ? "gk-ping" : ""}`}
               style={{
                 left: `${(i / (steps.length - 1)) * 100}%`,
-                background: done ? "#c9a15b" : light ? "#fff" : "#11286a",
-                borderColor: done ? "#ecd6a2" : light ? "rgba(13,28,71,.25)" : "rgba(214,224,255,.3)",
+                background: done ? "#c9a15b" : light ? "#fff" : "#1e1a16",
+                borderColor: done ? "#ecd6a2" : light ? "rgba(29, 24, 19,.25)" : "rgba(243, 236, 223,.3)",
               }}
             />
           );

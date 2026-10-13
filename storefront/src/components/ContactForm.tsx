@@ -5,7 +5,7 @@ import { backendReady, sendContact } from "@/lib/store-client";
 import { useAccount } from "@/lib/account";
 
 const input =
-  "h-12 w-full rounded-[10px] border border-[var(--line)] bg-[#081440]/50 px-4 text-ivory placeholder:text-[#8d98bb] focus:border-gilt focus:outline-none";
+  "h-12 w-full rounded-[10px] border border-[var(--line)] bg-[#0f0c0a]/50 px-4 text-ivory placeholder:text-[#8a8072] focus:border-gilt focus:outline-none";
 
 export function ContactForm() {
   const account = useAccount((s) => s.account);

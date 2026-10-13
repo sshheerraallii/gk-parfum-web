@@ -27,7 +27,7 @@ export function Price({ s, tone = "dark", className = "" }: { s: Scent; tone?: "
           {formatPrice(s.price)}
         </span>
         {sale > 0 ? (
-          <span className="rounded-full bg-gilt px-2 py-0.5 text-[0.72rem] font-medium text-[#0a1a48]">−{sale}%</span>
+          <span className="rounded-full bg-gilt px-2 py-0.5 text-[0.72rem] font-medium text-[#14110e]">−{sale}%</span>
         ) : (
           <span className={`small ${muted}`}>/ 100 ml</span>
         )}

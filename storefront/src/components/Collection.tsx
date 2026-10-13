@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { type Gender, type Scent } from "@/lib/catalog";
+import { useState } from "react";
+import { COLLECTIONS, collectionsOf, type Gender, type Scent } from "@/lib/catalog";
 import { useCatalog } from "./CatalogProvider";
 import { ScentCard } from "./ScentCard";
 import { SwipeRow } from "./SwipeRow";
@@ -12,28 +12,10 @@ const WHO: { id: Gender; label: string }[] = [
   { id: "unisex", label: "Unisex" },
 ];
 
-/** Spreads b evenly through a, so unisex scents sit among his or hers instead of trailing at the end. */
-function blend<T>(a: T[], b: T[]): T[] {
-  if (!b.length) return a;
-  if (!a.length) return b;
-  const out: T[] = [];
-  const step = (a.length + b.length) / b.length;
-  let ai = 0;
-  let bi = 0;
-  for (let i = 0; i < a.length + b.length; i++) {
-    const wantB = bi < b.length && (ai >= a.length || i + 1 >= Math.round((bi + 1) * step));
-    out.push(wantB ? b[bi++] : a[ai++]);
-  }
-  return out;
-}
-
-/** For him / for her include the unisex scents, mixed in — one big collection each. */
+/** For him / For her: their own scents first, then every unisex scent after them — one big collection each. */
 function forWho(scents: Scent[], who: Gender) {
   if (who === "unisex") return scents.filter((s) => s.gender === "unisex");
-  return blend(
-    scents.filter((s) => s.gender === who),
-    scents.filter((s) => s.gender === "unisex"),
-  );
+  return [...scents.filter((s) => s.gender === who), ...scents.filter((s) => s.gender === "unisex")];
 }
 
 export function Collection({
@@ -56,14 +38,10 @@ export function Collection({
   const [who, setWho] = useState<Gender>(initialWho);
   const [tag, setTag] = useState<string | null>(null);
 
-  // the most-used tags become the filter chips
-  const tags = useMemo(() => {
-    const n = new Map<string, number>();
-    scents.forEach((s) => (s.tags ?? []).forEach((t) => n.set(t, (n.get(t) ?? 0) + 1)));
-    return [...n.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([t]) => t);
-  }, [scents]);
+  // the shop's collections are the filter chips
+  const tags: string[] = [...COLLECTIONS];
 
-  const byTag = (l: Scent[]) => (tag ? l.filter((s) => s.tags?.includes(tag)) : l);
+  const byTag = (l: Scent[]) => (tag ? l.filter((s) => collectionsOf(s).includes(tag)) : l);
   const list = byTag(forWho(scents, who));
   const total = list.length;
 
@@ -89,14 +67,14 @@ export function Collection({
               </button>
             ))}
           </div>
-          <div role="group" aria-label="Filter by tag" className="no-scrollbar -mx-[var(--gutter)] flex gap-2 overflow-x-auto px-[var(--gutter)]">
+          <div role="group" aria-label="Collections" className="no-scrollbar -mx-[var(--gutter)] flex gap-2 overflow-x-auto px-[var(--gutter)]">
             <button
               type="button"
               aria-pressed={tag === null}
               onClick={() => setTag(null)}
               className={`small h-9 shrink-0 rounded-full px-4 transition-colors ${tag === null ? "bg-[var(--ebony-2)] text-champagne ring-1 ring-gilt" : "text-smoke hover:text-ivory"}`}
             >
-              Any notes
+              All
             </button>
             {tags.map((t) => (
               <button

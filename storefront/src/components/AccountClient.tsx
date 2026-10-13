@@ -12,7 +12,7 @@ import { ScentCard } from "./ScentCard";
 import { ProductVisual } from "./ProductVisual";
 
 const input =
-  "h-12 w-full rounded-[10px] border border-[var(--line)] bg-[#081440]/50 px-4 text-ivory placeholder:text-[#8d98bb] focus:border-gilt focus:outline-none";
+  "h-12 w-full rounded-[10px] border border-[var(--line)] bg-[#0f0c0a]/50 px-4 text-ivory placeholder:text-[#8a8072] focus:border-gilt focus:outline-none";
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function Field(p: React.InputHTMLAttributes<HTMLInputElement> & { label: string; id: string }) {
@@ -80,7 +80,7 @@ function SignIn() {
           ))}
         </ul>
         {demo && (
-          <p className="small mt-8 max-w-[46ch] rounded-[10px] bg-[#081440]/50 p-4 text-champagne">
+          <p className="small mt-8 max-w-[46ch] rounded-[10px] bg-[#0f0c0a]/50 p-4 text-champagne">
             Preview site: accounts here are saved in this browser only, so you can try every screen. On the live shop they&apos;re real accounts.
           </p>
         )}
@@ -88,7 +88,7 @@ function SignIn() {
 
       <div className="rounded-[var(--radius-m)] border border-[var(--line)] bg-ebony/60 p-6 md:p-8">
         {mode !== "reset" && (
-          <div role="tablist" className="mb-6 grid grid-cols-2 rounded-full bg-[#081440]/60 p-1">
+          <div role="tablist" className="mb-6 grid grid-cols-2 rounded-full bg-[#0f0c0a]/60 p-1">
             {(["in", "up"] as const).map((m) => (
               <button
                 key={m}

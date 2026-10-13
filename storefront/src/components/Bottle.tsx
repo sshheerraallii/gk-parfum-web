@@ -84,7 +84,7 @@ export function Bottle({
           {/* a puff of scent from the nozzle when the cap comes off (see .gk-open in globals.css) */}
           <g className="gk-mist" filter={`url(#mist${id})`}>
             {MIST.map((m, i) => (
-              <circle key={i} cx="98" cy="80" r={m.r} fill={i % 2 ? "#f5f1e8" : tint} style={{ ["--dx" as string]: `${m.dx}px`, ["--dy" as string]: `${m.dy}px`, ["--d" as string]: `${m.d}s` }} />
+              <circle key={i} cx="98" cy="80" r={m.r} fill={i % 2 ? "#f3ecdf" : tint} style={{ ["--dx" as string]: `${m.dx}px`, ["--dy" as string]: `${m.dy}px`, ["--d" as string]: `${m.d}s` }} />
             ))}
           </g>
           {/* faceted silver cap */}

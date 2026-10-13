@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { formatPrice, inspiredLabel, searchScents, type Scent } from "@/lib/catalog";
+import { COLLECTIONS, collectionsOf, formatPrice, inspiredLabel, searchScents, type Scent } from "@/lib/catalog";
 import { useCart } from "@/lib/cart";
 import { useOffers } from "@/lib/useOffers";
 import { nextReward, priceCart } from "@/lib/offers";
 import { useBestSellers, useCatalog } from "./CatalogProvider";
 import { ProductVisual } from "./ProductVisual";
+import { ProductScene } from "./ProductScene";
 import { TierProgress } from "./TierProgress";
 
 type Tab = "best" | "men" | "women" | "unisex" | "all";
@@ -35,16 +36,12 @@ export function BundleBuilder() {
   const [picked, setPicked] = useState<Record<string, number>>({});
   const [sheet, setSheet] = useState(false);
 
-  const tags = useMemo(() => {
-    const n = new Map<string, number>();
-    scents.forEach((s) => (s.tags ?? []).forEach((x) => n.set(x, (n.get(x) ?? 0) + 1)));
-    return [...n.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10).map(([x]) => x);
-  }, [scents]);
+  const tags: string[] = [...COLLECTIONS];
 
   const list = useMemo(() => {
     let l: Scent[] = tab === "best" ? best : tab === "all" ? scents : scents.filter((s) => s.gender === tab);
     if (tab === "women" || tab === "men") l = [...l, ...scents.filter((s) => s.gender === "unisex")];
-    if (tag) l = l.filter((s) => s.tags?.includes(tag));
+    if (tag) l = l.filter((s) => collectionsOf(s).includes(tag));
     if (q.trim()) {
       const hits = new Set(searchScents(q, scents).map((s) => s.slug));
       l = l.filter((s) => hits.has(s.slug));
@@ -174,7 +171,7 @@ export function BundleBuilder() {
       <section className="wrap pb-6 pt-12 md:pt-16" aria-labelledby="bundle-title">
         <h1 id="bundle-title" className="display-xl">Build your bundle</h1>
         <p className="mt-4 max-w-[46ch] text-[1.1rem] text-ink-soft">Mix his, hers and unisex. The more you pick, the more you save.</p>
-        <div ref={top} data-fly className="relative mt-7 scroll-mt-24 rounded-[18px] border border-[var(--paper-line)] bg-white p-4 shadow-[0_24px_50px_-40px_rgba(13,28,71,.55)] sm:p-5">
+        <div ref={top} data-fly className="relative mt-7 scroll-mt-24 rounded-[18px] border border-[var(--paper-line)] bg-white p-4 shadow-[0_24px_50px_-40px_rgba(29, 24, 19,.55)] sm:p-5">
           {unlock && (
             <div key={unlock.id} aria-hidden className="pointer-events-none absolute inset-x-0 top-0 z-10 flex justify-center">
               <div className="gk-burst absolute left-1/2 top-16 h-0 w-0">
@@ -197,8 +194,8 @@ export function BundleBuilder() {
               return (
                 <li key={i} className="w-[76px] shrink-0 sm:w-[92px]">
                   {sc ? (
-                    <div className={`relative flex aspect-[4/5] items-center justify-center rounded-[10px] bg-ink ring-2 ring-[#c9a15b] ${flash === sc.slug && units[i + 1]?.slug !== sc.slug ? "gk-pop" : ""}`}>
-                      <ProductVisual s={sc} className="h-[84%] w-auto max-w-[70%]" />
+                    <div className={`relative aspect-[4/5] rounded-[10px] bg-ink ring-2 ring-[#c9a15b] ${flash === sc.slug && units[i + 1]?.slug !== sc.slug ? "gk-pop" : ""}`}>
+                      <ProductScene s={sc} className="absolute inset-0 rounded-[10px]" />
                       <button
                         type="button"
                         onClick={() => set(sc.slug, (picked[sc.slug] ?? 1) - 1)}
@@ -258,9 +255,9 @@ export function BundleBuilder() {
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search a note or a perfume you love"
-              className="h-11 w-full rounded-full border border-[var(--paper-line)] bg-white px-5 text-ink outline-none placeholder:text-[#8b93ab] focus:border-ink sm:max-w-[320px]"
+              className="h-11 w-full rounded-full border border-[var(--paper-line)] bg-white px-5 text-ink outline-none placeholder:text-[#8a8072] focus:border-ink sm:max-w-[320px]"
             />
-            <div className="no-scrollbar -mx-[var(--gutter)] flex gap-2 overflow-x-auto px-[var(--gutter)] sm:mx-0 sm:px-0" role="group" aria-label="Filter by tag">
+            <div className="no-scrollbar -mx-[var(--gutter)] flex gap-2 overflow-x-auto px-[var(--gutter)] sm:mx-0 sm:px-0" role="group" aria-label="Collections">
               {tags.map((x) => (
                 <button
                   key={x}
@@ -286,8 +283,8 @@ export function BundleBuilder() {
                 const n = picked[s.slug] ?? 0;
                 return (
                   <li key={s.slug} className={`gk-uncap flex flex-col rounded-[14px] border bg-white p-3 transition-colors ${n ? "border-ink" : "border-[var(--paper-line)]"}`}>
-                    <Link href={`/perfume/${s.slug}`} className="flex h-32 items-center justify-center rounded-[10px] bg-ink sm:h-40" aria-label={`${s.name} details`}>
-                      <ProductVisual s={s} className="h-28 w-auto max-w-[80px] sm:h-36 sm:max-w-[100px]" />
+                    <Link href={`/perfume/${s.slug}`} className="block overflow-hidden rounded-[10px] bg-ink" aria-label={`${s.name} details`}>
+                      <ProductScene s={s} className="aspect-[4/5] w-full" />
                     </Link>
                     <p className="mt-3 font-display text-[1.15rem] leading-tight sm:text-[1.3rem]">{s.name}</p>
                     <p className="text-[0.82rem] text-ink-soft">Inspired by {inspiredLabel(s)}</p>
@@ -297,7 +294,7 @@ export function BundleBuilder() {
                     </div>
                     <div className="mt-auto pt-3">
                       {n === 0 ? (
-                        <button type="button" onClick={() => pick(s.slug, 1)} className="h-10 w-full rounded-full bg-ink text-[0.88rem] text-paper hover:bg-[#1a3170]">
+                        <button type="button" onClick={() => pick(s.slug, 1)} className="h-10 w-full rounded-full bg-ink text-[0.88rem] text-paper hover:bg-[#2e261d]">
                           Add to bundle
                         </button>
                       ) : (
@@ -316,14 +313,14 @@ export function BundleBuilder() {
         </div>
 
         <aside className="hidden lg:block" aria-label="Your bundle">
-          <div className="sticky top-24 rounded-[18px] border border-[var(--paper-line)] bg-[#fbf8f2] p-6 shadow-[0_30px_60px_-40px_rgba(13,28,71,.5)]">{summary}</div>
+          <div className="sticky top-24 rounded-[18px] border border-[var(--paper-line)] bg-[#fbf8f2] p-6 shadow-[0_30px_60px_-40px_rgba(29, 24, 19,.5)]">{summary}</div>
         </aside>
       </div>
 
       {/* phones: summary as a bottom sheet */}
       <div className="fixed inset-x-0 bottom-0 z-30 lg:hidden">
-        {sheet && <div className="fixed inset-0 bg-[#040b24]/50" onClick={() => setSheet(false)} aria-hidden />}
-        <div className="relative rounded-t-[18px] border-t border-[var(--paper-line)] bg-[#fbf8f2] px-[var(--gutter)] pb-4 pt-3 shadow-[0_-20px_40px_-20px_rgba(13,28,71,.35)]">
+        {sheet && <div className="fixed inset-0 bg-[#0a0806]/50" onClick={() => setSheet(false)} aria-hidden />}
+        <div className="relative rounded-t-[18px] border-t border-[var(--paper-line)] bg-[#fbf8f2] px-[var(--gutter)] pb-4 pt-3 shadow-[0_-20px_40px_-20px_rgba(29, 24, 19,.35)]">
           {sheet ? (
             <div className="max-h-[75vh] overflow-y-auto pb-2">
               <button type="button" onClick={() => setSheet(false)} className="mx-auto mb-3 block h-1.5 w-12 rounded-full bg-ink/20" aria-label="Close summary" />

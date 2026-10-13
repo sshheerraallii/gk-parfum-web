@@ -46,7 +46,7 @@ export function CartDrawer() {
   return (
     <div className={`fixed inset-0 z-50 ${open ? "" : "pointer-events-none"}`} aria-hidden={!open} inert={!open}>
       <div
-        className={`absolute inset-0 bg-[#040b24]/70 transition-opacity duration-300 ${open ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 bg-[#0a0806]/70 transition-opacity duration-300 ${open ? "opacity-100" : "opacity-0"}`}
         onClick={() => setOpen(false)}
       />
       <div
@@ -86,7 +86,7 @@ export function CartDrawer() {
                 const each = linePrice(s.price, l.sub);
                 return (
                   <li key={l.key} className="flex gap-4 py-4">
-                    <Link href={`/perfume/${s.slug}`} onClick={() => setOpen(false)} className="flex h-24 w-16 shrink-0 items-center justify-center rounded-[var(--radius-s)] bg-[#081440]/50">
+                    <Link href={`/perfume/${s.slug}`} onClick={() => setOpen(false)} className="flex h-24 w-16 shrink-0 items-center justify-center rounded-[var(--radius-s)] bg-[#0f0c0a]/50">
                       <ProductVisual s={s} className="h-20 w-auto max-w-[56px]" />
                     </Link>
                     <div className="min-w-0 flex-1">
@@ -137,7 +137,7 @@ export function CartDrawer() {
                   <li key={s.slug} className="w-[150px] shrink-0 rounded-[var(--radius-m)] bg-[var(--ebony-2)] p-3">
                     <div className="flex h-24 items-center justify-center"><ProductVisual s={s} className="h-24 w-auto max-w-[110px]" /></div>
                     <p className="mt-2 font-display text-[1.05rem] leading-tight">{s.name}</p>
-                    <p className="small truncate text-smoke">{inspiredLabel(s)}</p>
+                    <p className="small truncate text-smoke">Inspired by {inspiredLabel(s)}</p>
                     <button type="button" onClick={() => add(s.slug)} className="small mt-2 h-9 w-full rounded-full border border-[var(--line)] text-ivory hover:border-gilt hover:text-champagne">
                       Add · {formatPrice(s.price)}
                     </button>

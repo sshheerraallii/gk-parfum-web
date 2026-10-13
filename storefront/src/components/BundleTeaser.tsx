@@ -40,7 +40,7 @@ export function BundleTeaser() {
           height={994}
           loading="lazy"
           decoding="async"
-          className="w-full max-w-[460px] justify-self-center rounded-[18px] shadow-[0_40px_80px_-40px_rgba(13,28,71,.6)]"
+          className="w-full max-w-[460px] justify-self-center rounded-[18px] shadow-[0_40px_80px_-40px_rgba(29, 24, 19,.6)]"
         />
       </div>
     </section>

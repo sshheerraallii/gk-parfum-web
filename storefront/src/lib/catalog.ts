@@ -593,11 +593,38 @@ export function searchScents(q: string, list: Scent[] = scents): Scent[] {
     .map((r) => r.s);
 }
 
+/** The shop's collections (filter chips). A scent joins one by having that tag in Admin → Products. */
+export const COLLECTIONS = ["Date Night", "Office Wear", "Casual", "Winter", "Summer"] as const;
+
+/** Launch membership — generous on purpose, so every collection has plenty to choose from. */
+const LAUNCH_COLLECTIONS: Record<string, string[]> = {
+  eventus: ["Office Wear", "Casual", "Summer", "Date Night"],
+  imagine: ["Office Wear", "Casual", "Summer"],
+  "kings-code": ["Office Wear", "Casual", "Summer", "Winter"],
+  "midnight-elixir": ["Date Night", "Winter", "Casual"],
+  "angels-pour": ["Date Night", "Winter"],
+  althaire: ["Date Night", "Winter", "Office Wear", "Casual"],
+  "baccara-rouge": ["Date Night", "Winter", "Office Wear", "Casual"],
+  nomad: ["Date Night", "Winter", "Casual"],
+  "noir-orchid": ["Date Night", "Winter"],
+  "royal-oud": ["Office Wear", "Winter", "Date Night"],
+  "lost-berry": ["Date Night", "Casual", "Winter"],
+  symphonie: ["Summer", "Office Wear", "Casual"],
+  "amber-levant": ["Winter", "Date Night"],
+  "delina-rose": ["Casual", "Summer", "Date Night", "Office Wear"],
+  "empress-bloom": ["Office Wear", "Summer", "Casual", "Date Night"],
+  "royal-musk": ["Summer", "Casual", "Office Wear"],
+};
+
+/** Which collections a scent is in: its admin tags if it has any collection tags, otherwise the launch list. */
+export function collectionsOf(s: Scent): string[] {
+  const fromTags = (s.tags ?? []).filter((t) => (COLLECTIONS as readonly string[]).includes(t));
+  return fromTags.length ? fromTags : LAUNCH_COLLECTIONS[s.slug] ?? [];
+}
+
 /** Default tags for the launch catalogue (the admin can add as many as it likes per product). */
 export function defaultTags(s: Scent): string[] {
-  const season = s.mood === "fresh" ? "Summer" : s.mood === "sweet" ? "All year" : "Winter";
-  const when = s.time === "night" ? "Night out" : s.time === "day" ? "Daytime" : "Day to night";
-  return [...new Set([...s.families, season, when])];
+  return [...new Set([...s.families, ...(LAUNCH_COLLECTIONS[s.slug] ?? [])])];
 }
 
 for (const s of scents) s.tags ??= defaultTags(s);

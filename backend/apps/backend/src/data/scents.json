@@ -53,8 +53,10 @@
       "Fruity",
       "Citrus",
       "Woody",
+      "Office Wear",
+      "Casual",
       "Summer",
-      "Day to night"
+      "Date Night"
     ]
   },
   {
@@ -108,8 +110,9 @@
       "Citrus",
       "Fresh",
       "Woody",
-      "Summer",
-      "Daytime"
+      "Office Wear",
+      "Casual",
+      "Summer"
     ]
   },
   {
@@ -162,8 +165,10 @@
       "Citrus",
       "Aromatic",
       "Woody",
+      "Office Wear",
+      "Casual",
       "Summer",
-      "Day to night"
+      "Winter"
     ]
   },
   {
@@ -217,8 +222,9 @@
       "Spicy",
       "Amber",
       "Aromatic",
+      "Date Night",
       "Winter",
-      "Night out"
+      "Casual"
     ]
   },
   {
@@ -269,8 +275,8 @@
       "Gourmand",
       "Boozy",
       "Sweet",
-      "All year",
-      "Night out"
+      "Date Night",
+      "Winter"
     ]
   },
   {
@@ -324,8 +330,10 @@
       "Sweet",
       "Spicy",
       "Amber",
+      "Date Night",
       "Winter",
-      "Day to night"
+      "Office Wear",
+      "Casual"
     ]
   },
   {
@@ -375,8 +383,10 @@
       "Amber",
       "Woody",
       "Sweet",
-      "All year",
-      "Day to night"
+      "Date Night",
+      "Winter",
+      "Office Wear",
+      "Casual"
     ]
   },
   {
@@ -429,8 +439,9 @@
       "Oud",
       "Smoky",
       "Woody",
+      "Date Night",
       "Winter",
-      "Night out"
+      "Casual"
     ]
   },
   {
@@ -486,8 +497,8 @@
       "Floral",
       "Dark",
       "Spicy",
-      "Winter",
-      "Night out"
+      "Date Night",
+      "Winter"
     ]
   },
   {
@@ -540,8 +551,9 @@
       "Oud",
       "Woody",
       "Spicy",
+      "Office Wear",
       "Winter",
-      "Day to night"
+      "Date Night"
     ]
   },
   {
@@ -595,8 +607,9 @@
       "Gourmand",
       "Fruity",
       "Sweet",
-      "All year",
-      "Day to night"
+      "Date Night",
+      "Casual",
+      "Winter"
     ]
   },
   {
@@ -647,7 +660,8 @@
       "Fresh",
       "Spicy",
       "Summer",
-      "Daytime"
+      "Office Wear",
+      "Casual"
     ]
   },
   {
@@ -700,7 +714,7 @@
       "Spicy",
       "Smoky",
       "Winter",
-      "Night out"
+      "Date Night"
     ]
   },
   {
@@ -755,8 +769,10 @@
       "Floral",
       "Fruity",
       "Sweet",
-      "All year",
-      "Daytime"
+      "Casual",
+      "Summer",
+      "Date Night",
+      "Office Wear"
     ]
   },
   {
@@ -812,8 +828,10 @@
       "Fruity",
       "Floral",
       "Fresh",
+      "Office Wear",
       "Summer",
-      "Day to night"
+      "Casual",
+      "Date Night"
     ]
   },
   {
@@ -869,7 +887,8 @@
       "Fresh",
       "Musky",
       "Summer",
-      "Daytime"
+      "Casual",
+      "Office Wear"
     ]
   }
 ]

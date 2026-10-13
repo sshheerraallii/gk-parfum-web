@@ -33,8 +33,8 @@ export default async function SmellsLike() {
             {list.map((s) => (
               <tr key={s.slug} className="border-t border-[var(--line-soft)]">
                 <td className="px-5 py-4">
-                  <span className="small block text-smoke">{s.inspiredBy!.brand}</span>
-                  <span className="text-ivory">{s.inspiredBy!.name}</span>
+                  <span className="small block text-smoke">Inspired by</span>
+                  <span className="text-ivory">{s.inspiredBy!.brand} {s.inspiredBy!.name}</span>
                 </td>
                 <td className="px-5 py-4">
                   <Link href={`/perfume/${s.slug}`} className="font-display text-[1.35rem] text-champagne hover:text-ivory">{s.name}</Link>

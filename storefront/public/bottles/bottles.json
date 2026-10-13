@@ -1,0 +1,130 @@
+{
+ "eventus": {
+  "w": 404,
+  "h": 900,
+  "capBottom": 0.184,
+  "neckX": 0.4901,
+  "neckW": 0.4605,
+  "shoulders": 0.2565
+ },
+ "imagine": {
+  "w": 404,
+  "h": 900,
+  "capBottom": 0.1834,
+  "neckX": 0.4893,
+  "neckW": 0.4598,
+  "shoulders": 0.2577
+ },
+ "kings-code": {
+  "w": 404,
+  "h": 900,
+  "capBottom": 0.1836,
+  "neckX": 0.4893,
+  "neckW": 0.4598,
+  "shoulders": 0.2581
+ },
+ "midnight-elixir": {
+  "w": 405,
+  "h": 900,
+  "capBottom": 0.1831,
+  "neckX": 0.4869,
+  "neckW": 0.4575,
+  "shoulders": 0.2574
+ },
+ "angels-pour": {
+  "w": 398,
+  "h": 900,
+  "capBottom": 0.1843,
+  "neckX": 0.4899,
+  "neckW": 0.473,
+  "shoulders": 0.259
+ },
+ "althaire": {
+  "w": 405,
+  "h": 900,
+  "capBottom": 0.1832,
+  "neckX": 0.4869,
+  "neckW": 0.4575,
+  "shoulders": 0.2568
+ },
+ "baccara-rouge": {
+  "w": 398,
+  "h": 900,
+  "capBottom": 0.1845,
+  "neckX": 0.4916,
+  "neckW": 0.4714,
+  "shoulders": 0.2574
+ },
+ "nomad": {
+  "w": 407,
+  "h": 900,
+  "capBottom": 0.1831,
+  "neckX": 0.4846,
+  "neckW": 0.4553,
+  "shoulders": 0.2581
+ },
+ "noir-orchid": {
+  "w": 398,
+  "h": 900,
+  "capBottom": 0.1854,
+  "neckX": 0.4924,
+  "neckW": 0.4738,
+  "shoulders": 0.2586
+ },
+ "royal-oud": {
+  "w": 396,
+  "h": 900,
+  "capBottom": 0.1844,
+  "neckX": 0.4899,
+  "neckW": 0.473,
+  "shoulders": 0.261
+ },
+ "lost-berry": {
+  "w": 395,
+  "h": 900,
+  "capBottom": 0.1838,
+  "neckX": 0.4899,
+  "neckW": 0.473,
+  "shoulders": 0.2587
+ },
+ "symphonie": {
+  "w": 394,
+  "h": 900,
+  "capBottom": 0.1838,
+  "neckX": 0.4907,
+  "neckW": 0.4738,
+  "shoulders": 0.2602
+ },
+ "amber-levant": {
+  "w": 393,
+  "h": 900,
+  "capBottom": 0.184,
+  "neckX": 0.4958,
+  "neckW": 0.4754,
+  "shoulders": 0.2589
+ },
+ "delina-rose": {
+  "w": 395,
+  "h": 900,
+  "capBottom": 0.1841,
+  "neckX": 0.4907,
+  "neckW": 0.4738,
+  "shoulders": 0.2606
+ },
+ "empress-bloom": {
+  "w": 393,
+  "h": 900,
+  "capBottom": 0.1841,
+  "neckX": 0.4898,
+  "neckW": 0.4762,
+  "shoulders": 0.2606
+ },
+ "royal-musk": {
+  "w": 399,
+  "h": 900,
+  "capBottom": 0.1753,
+  "neckX": 0.4899,
+  "neckW": 0.4463,
+  "shoulders": 0.2526
+ }
+}

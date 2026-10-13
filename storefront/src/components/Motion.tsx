@@ -85,7 +85,7 @@ function useBagFlight() {
 /** Clones the bottle nearest the tap and arcs it into the bag icon. */
 function fly(from: { x: number; y: number; el: Element | null }, bag: HTMLElement): Promise<void> {
   const card = from.el?.closest("[data-fly]");
-  const src = card?.querySelector("svg.gk-bottle, img") as HTMLElement | SVGElement | null;
+  const src = card?.querySelector("[data-fly-src], svg.gk-bottle, img") as HTMLElement | SVGElement | null;
   const r = src?.getBoundingClientRect();
   const start = r && r.width > 0 && r.bottom > 0 && r.top < innerHeight
     ? { x: r.left + r.width / 2, y: r.top + r.height / 2, h: Math.min(r.height, 160) }
@@ -104,9 +104,15 @@ function fly(from: { x: number; y: number; el: Element | null }, bag: HTMLElemen
     height: `${h}px`,
     zIndex: "80",
     pointerEvents: "none",
-    filter: "drop-shadow(0 12px 20px rgba(4,11,36,.55))",
+    filter: "drop-shadow(0 12px 20px rgba(10, 8, 6,.55))",
   });
-  if (src) {
+  const photo = src?.getAttribute("data-fly-src");
+  if (photo) {
+    const im = document.createElement("img");
+    im.src = photo;
+    im.setAttribute("style", "width:100%;height:100%;object-fit:contain");
+    node.appendChild(im);
+  } else if (src) {
     const clone = src.cloneNode(true) as HTMLElement;
     clone.removeAttribute("class");
     clone.setAttribute("style", "width:100%;height:100%;object-fit:contain;overflow:visible");

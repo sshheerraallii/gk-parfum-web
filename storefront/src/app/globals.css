@@ -2,23 +2,23 @@
 
 /* ── GK Parfum tokens ───────────────────────────────────────────── */
 :root {
-  /* royal blue — the colour of the GK presentation box */
-  --velvet: #0a1a48;      /* page: deep royal navy */
-  --ebony: #11286a;       /* raised surfaces */
-  --ebony-2: #183583;     /* hover / inputs */
-  --royal: #1f45a8;       /* the box blue, used for light and glow */
+  /* warm ebony & gold — the original GK Parfum look */
+  --velvet: #14110e;      /* page */
+  --ebony: #1e1a16;       /* raised surfaces */
+  --ebony-2: #27221c;     /* hover / inputs */
+  --royal: #6b4a24;       /* warm amber, used for light and glow */
   --gilt: #c9a15b;        /* brand gold — matches the crest */
-  --champagne: #ecd6a2;   /* highlights */
-  --ivory: #f5f1e8;       /* primary text on blue */
-  --smoke: #b3bedb;       /* secondary text on blue (AA on velvet) */
-  --line: rgba(201, 161, 91, 0.3);
-  --line-soft: rgba(214, 224, 255, 0.12);
+  --champagne: #e9d5a5;   /* highlights */
+  --ivory: #f3ecdf;       /* primary text on dark */
+  --smoke: #a39a8c;       /* secondary text on dark (AA on velvet) */
+  --line: rgba(201, 161, 91, 0.24);
+  --line-soft: rgba(243, 236, 223, 0.09);
 
   /* the ivory "atelier" room */
-  --paper: #f5f0e6;
-  --ink: #0d1c47;
-  --ink-soft: #4b5677;
-  --paper-line: rgba(13, 28, 71, 0.14);
+  --paper: #f1e9da;
+  --ink: #1d1813;
+  --ink-soft: #5f5548;
+  --paper-line: rgba(29, 24, 19, 0.14);
 
   --radius-s: 6px;
   --radius-m: 14px;
@@ -59,8 +59,8 @@ body {
   font-size: 17px;
   line-height: 1.55;
   background:
-    radial-gradient(1400px 800px at 75% -10%, rgba(31, 69, 168, 0.55), transparent 62%),
-    radial-gradient(900px 600px at 0% 40%, rgba(31, 69, 168, 0.25), transparent 70%),
+    radial-gradient(1400px 800px at 75% -10%, rgba(120, 80, 35, 0.55), transparent 62%),
+    radial-gradient(900px 600px at 0% 40%, rgba(120, 80, 35, 0.25), transparent 70%),
     var(--velvet);
   min-height: 100dvh;
 }
@@ -137,7 +137,7 @@ body {
 }
 .btn-gold {
   background: linear-gradient(180deg, #d9b56f, #b88c45);
-  color: #0a1a48;
+  color: #14110e;
   box-shadow: inset 0 1px 0 rgba(255, 240, 200, 0.5), 0 10px 30px -12px rgba(201, 161, 91, 0.55);
 }
 .btn-gold:hover {
@@ -156,7 +156,7 @@ body {
   color: var(--paper);
 }
 .btn-ink:hover {
-  background: #1a3170;
+  background: #2e261d;
 }
 .btn[disabled] {
   opacity: 0.45;
@@ -279,6 +279,14 @@ body {
 .gk-open .gk-cap {
   transform: translate(34px, -44px) rotate(18deg);
 }
+/* the real bottle's cap (an image layer the size of the whole bottle) */
+.gk-cap-photo {
+  transform-origin: 78% 14%;
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.gk-open .gk-cap-photo {
+  transform: translate(16%, -13%) rotate(17deg);
+}
 .gk-open .gk-mist circle {
   animation: gk-puff 1.9s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0.4s) both;
 }
@@ -288,6 +296,9 @@ body {
 @media (hover: hover) {
   .gk-uncap:hover .gk-cap {
     transform: translate(34px, -44px) rotate(18deg);
+  }
+  .gk-uncap:hover .gk-cap-photo {
+    transform: translate(16%, -13%) rotate(17deg);
   }
   .gk-uncap:hover .gk-mist circle {
     animation: gk-puff 1.9s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0.4s) both;
@@ -486,4 +497,75 @@ body {
   .gk-trail::before { transform: none; }
   .gk-fill { width: var(--w); }
   .gk-liquid::after, .btn-gold::after, .gk-mist { display: none; }
+}
+
+/* ── Hero set: marble, drifting light, travelling ribbons, film grain ─────── */
+.gk-hero-stone {
+  background: url("/brand/hero-stone.webp") center / cover no-repeat;
+  opacity: 0.9;
+  animation: gk-stone 40s ease-in-out infinite alternate;
+}
+@keyframes gk-stone {
+  to { transform: scale(1.08) translate(-1.5%, 1%); }
+}
+.gk-hero-glow {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform;
+}
+.gk-hero-glow-a {
+  width: 60vmax; height: 60vmax; left: 38%; top: 5%;
+  background: radial-gradient(circle, rgba(201, 140, 60, 0.38), rgba(201, 140, 60, 0.12) 40%, transparent 68%);
+  animation: gk-drift-a 18s ease-in-out infinite alternate;
+}
+.gk-hero-glow-b {
+  width: 46vmax; height: 46vmax; left: -12%; top: 35%;
+  background: radial-gradient(circle, rgba(170, 60, 50, 0.3), rgba(170, 60, 50, 0.1) 40%, transparent 68%);
+  animation: gk-drift-b 23s ease-in-out infinite alternate;
+}
+.gk-hero-glow-c {
+  width: 34vmax; height: 34vmax; left: 62%; top: 55%;
+  background: radial-gradient(circle, rgba(40, 130, 120, 0.2), rgba(40, 130, 120, 0.06) 40%, transparent 68%);
+  animation: gk-drift-c 27s ease-in-out infinite alternate;
+}
+@keyframes gk-drift-a { to { transform: translate(-14vw, 8vh) scale(1.15); } }
+@keyframes gk-drift-b { to { transform: translate(18vw, -10vh) scale(0.9); } }
+@keyframes gk-drift-c { to { transform: translate(-22vw, -18vh) scale(1.2); } }
+.gk-ribbon path {
+  stroke-dasharray: 34 66;
+  stroke-dashoffset: 100;
+  animation: gk-run var(--rt, 10s) linear var(--rd, 0s) infinite;
+}
+@keyframes gk-run {
+  to { stroke-dashoffset: -100; }
+}
+.gk-hero-grain {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 .9  0 0 0 0 .8  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: 0.12;
+  animation: gk-grain 0.9s steps(4) infinite;
+}
+@keyframes gk-grain {
+  25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -3%); }
+  75% { transform: translate(-1%, 3%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gk-hero-stone, .gk-hero-glow, .gk-ribbon path, .gk-hero-grain { animation: none !important; }
+}
+
+/* ── Top ticker: never stops, pauses when you hover or focus it ───────────── */
+.gk-ticker-track {
+  animation: gk-marquee calc(var(--n, 4) * 7s) linear infinite;
+}
+.gk-ticker:hover .gk-ticker-track,
+.gk-ticker:focus-within .gk-ticker-track {
+  animation-play-state: paused;
+}
+@keyframes gk-marquee {
+  to { transform: translateX(-25%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* people who've asked for less motion get a still row they can swipe */
+  .gk-ticker { overflow-x: auto; }
+  .gk-ticker-track { animation: none !important; }
 }

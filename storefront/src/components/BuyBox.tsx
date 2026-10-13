@@ -27,7 +27,7 @@ export function BuyBox({ slug, price, name }: { slug: string; price: number; nam
       role="radio"
       aria-checked={on}
       onClick={onClick}
-      className={`flex w-full items-center gap-3 rounded-[12px] border px-4 py-3 text-left transition-colors ${on ? "border-gilt bg-[#081440]/50" : "border-[var(--line-soft)] hover:border-[var(--line)]"}`}
+      className={`flex w-full items-center gap-3 rounded-[12px] border px-4 py-3 text-left transition-colors ${on ? "border-gilt bg-[#0f0c0a]/50" : "border-[var(--line-soft)] hover:border-[var(--line)]"}`}
     >
       <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${on ? "border-gilt" : "border-smoke/60"}`} aria-hidden>
         {on && <span className="h-2.5 w-2.5 rounded-full bg-gilt" />}
@@ -77,7 +77,7 @@ export function BuyBox({ slug, price, name }: { slug: string; price: number; nam
               role="radio"
               aria-checked={mode === m}
               onClick={() => setMode(m)}
-              className={`rounded-[12px] border px-4 py-3 text-left transition-colors ${mode === m ? "border-gilt bg-[#081440]/50" : "border-[var(--line-soft)] hover:border-[var(--line)]"}`}
+              className={`rounded-[12px] border px-4 py-3 text-left transition-colors ${mode === m ? "border-gilt bg-[#0f0c0a]/50" : "border-[var(--line-soft)] hover:border-[var(--line)]"}`}
             >
               <span className="block text-ivory">{m === "once" ? "One-off purchase" : `Deliver every ${sub.weeks} weeks`}</span>
               <span className="small text-smoke">

@@ -3,6 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Bottle } from "./Bottle";
+import { PhotoBottle } from "./PhotoBottle";
+import { HeroBackdrop } from "./HeroBackdrop";
+import { bottlePhoto } from "@/lib/bottles";
+
+const HERO = bottlePhoto("baccara-rouge");
 
 /**
  * The hero: an atomiser fires, the mist billows across the room and gathers into the
@@ -84,8 +89,15 @@ export function SprayHero() {
   }, []);
 
   const nozzlePoint = useCallback(() => {
-    const b = bottleRef.current?.querySelector("svg");
     const sec = sectionRef.current;
+    // the real bottle marks its nozzle; the drawn one uses fixed coordinates
+    const mark = bottleRef.current?.querySelector("[data-nozzle]");
+    if (mark && sec) {
+      const m = mark.getBoundingClientRect();
+      const hr = sec.getBoundingClientRect();
+      return { x: m.left + m.width / 2 - hr.left, y: m.top + m.height / 2 - hr.top };
+    }
+    const b = bottleRef.current?.querySelector("svg");
     if (!b || !sec) return { x: 0, y: 0 };
     const br = b.getBoundingClientRect();
     const hr = sec.getBoundingClientRect();
@@ -208,10 +220,12 @@ export function SprayHero() {
     let last = performance.now();
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
-      const dt = Math.min(0.033, (now - last) / 1000);
+      const real = Math.min(0.1, (now - last) / 1000);
+      const dt = Math.min(0.033, real); // physics step stays small and stable
       last = now;
       if (!s.running) return;
-      s.t += dt;
+      // the timeline follows the clock, so the wordmark always lands on time even on a slow phone
+      s.t += real;
       const since = s.pressAt >= 0 ? s.t - s.pressAt : -1;
 
       if (since > T_HOLD && !s.holdFired) {
@@ -309,15 +323,7 @@ export function SprayHero() {
       style={{ minHeight: "max(680px, calc(100svh - 108px))" }}
       aria-labelledby="hero-title"
     >
-      {/* room light */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
-        style={{
-          background:
-            "radial-gradient(55% 55% at 76% 60%, rgba(31,69,168,.75), transparent 70%), radial-gradient(35% 35% at 76% 62%, rgba(201,161,91,.18), transparent 70%)",
-        }}
-      />
+      <HeroBackdrop />
       <canvas ref={canvasRef} aria-hidden className="pointer-events-none absolute inset-0 z-10" />
 
       <div className="wrap relative grid min-h-[inherit] grid-cols-1 items-center gap-6 pb-10 pt-8 md:grid-cols-[1.15fr_.85fr] md:pb-16 md:pt-10">
@@ -351,7 +357,7 @@ export function SprayHero() {
               { t: "Made in the UK", i: "M4 6h16v12H4zM4 6l16 12M20 6 4 18M12 6v12M4 12h16" },
               { t: "Free gift box", i: "M4 10h16v10H4zM3 7h18v3H3zM12 7v13M12 7c-2-3-5-3-5-1s5 1 5 1Zm0 0c2-3 5-3 5-1s-5 1-5 1Z" },
             ].map((b) => (
-              <li key={b.t} className="flex items-center gap-2 rounded-full border border-[var(--line)] bg-[#081440]/40 px-3.5 py-1.5 text-[0.88rem] text-champagne">
+              <li key={b.t} className="flex items-center gap-2 rounded-full border border-[var(--line)] bg-[#0f0c0a]/40 px-3.5 py-1.5 text-[0.88rem] text-champagne">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-hidden><path d={b.i} /></svg>
                 {b.t}
               </li>
@@ -372,7 +378,11 @@ export function SprayHero() {
             aria-label="Spray the bottle"
             className="group relative block h-[34svh] max-h-[560px] min-h-[240px] w-auto cursor-pointer md:h-[64svh] md:min-h-[420px]"
           >
-            <Bottle cap={false} pressed={pressed} tint="#C9A15B" name="Baccara Rouge" className="h-full w-auto drop-shadow-[0_40px_60px_rgba(0,0,0,.6)]" />
+            {HERO ? (
+              <PhotoBottle p={HERO} capOff pressed={pressed} priority alt="" className="h-full drop-shadow-[0_40px_60px_rgba(0,0,0,.6)]" />
+            ) : (
+              <Bottle cap={false} pressed={pressed} tint="#C9A15B" name="Baccara Rouge" className="h-full w-auto drop-shadow-[0_40px_60px_rgba(0,0,0,.6)]" />
+            )}
             {!reduced && (
               <span className="hero-reveal small absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap text-smoke transition-colors group-hover:text-champagne" style={{ ["--d" as string]: "3.2s" }}>
                 Tap the bottle
