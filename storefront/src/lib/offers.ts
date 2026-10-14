@@ -29,7 +29,7 @@ export const defaultOffers: Offers = {
     { id: "tracked-48", name: "Royal Mail Tracked 48", eta: "2–3 working days", price: 399 },
     { id: "tracked-24", name: "Royal Mail Tracked 24", eta: "Next working day", price: 599 },
   ],
-  bestSellers: ["eventus", "nomad", "imagine"],
+  bestSellers: ["nomad", "imagine", "eventus"],
 };
 
 /** "3 months" / "month" — for "Deliver every …" */
