@@ -1,6 +1,6 @@
 """
 Textures for the water hero (public/brand):
-  hero-water.webp     deep, cool water with soft light shafts
+  hero-water.webp     deep sapphire water with soft light shafts
   hero-caustics.webp  tileable dancing-light pattern (transparent) — slides slowly over the water
   hero-drops.webp     condensation droplets on glass (transparent) — sits in front of everything
 Usage: python3 tools/hero_water.py
@@ -20,8 +20,8 @@ r = rng(11)
 # ── 1. the water ─────────────────────────────────────────────────────────────
 W, H = 1600, 1000
 yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
-top = np.array([24, 92, 88], np.float32)
-bottom = np.array([4, 22, 24], np.float32)
+top = np.array([18, 52, 120], np.float32)
+bottom = np.array([3, 8, 26], np.float32)
 t = (yy / H)[..., None] ** 0.8
 img = top * (1 - t) + bottom * t
 # soft depth variation
@@ -34,11 +34,11 @@ for k in range(7):
     slope = 0.35
     d = np.abs((xx - x0) - (yy * slope))
     shaft = np.exp(-(d / wdt) ** 2) * np.clip(1 - yy / (H * 0.95), 0, 1) ** 1.5
-    img += shaft[..., None] * np.array([60, 120, 110]) * r.uniform(0.25, 0.55)
+    img += shaft[..., None] * np.array([60, 110, 170]) * r.uniform(0.25, 0.55)
 # a warm glow where the bottle stands (ties it to the gold brand)
 gx, gy = W * 0.72, H * 0.55
 g = np.exp(-(((xx - gx) / (W * 0.28)) ** 2 + ((yy - gy) / (H * 0.4)) ** 2))[..., None]
-img += g * np.array([70, 55, 25])
+img += g * np.array([40, 30, 70])
 # vignette
 v = np.sqrt(((xx - W / 2) / (W * 0.65)) ** 2 + ((yy - H * 0.45) / (H * 0.7)) ** 2)
 img *= np.clip(1.05 - 0.55 * v**2, 0.25, 1)[..., None]
@@ -58,7 +58,7 @@ for fx, fy, ph in [(4, 3, 0.3), (-3, 5, 1.7), (7, -2, 2.9), (2, 7, 4.1), (-6, -4
 lines = (1 - np.abs(np.tanh(acc * 0.6))) ** 12
 lines = np.asarray(Image.fromarray((np.clip(lines, 0, 1) * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(1.1)), np.float32) / 255
 rgba = np.zeros((S, S, 4), np.uint8)
-rgba[..., 0], rgba[..., 1], rgba[..., 2] = 200, 255, 240
+rgba[..., 0], rgba[..., 1], rgba[..., 2] = 190, 225, 255
 rgba[..., 3] = np.clip(lines * 1.4 * 255, 0, 255).astype(np.uint8)
 Image.fromarray(rgba).save(OUT + "hero-caustics.webp", "WEBP", quality=80, method=6)
 
