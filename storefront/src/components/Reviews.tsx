@@ -90,13 +90,9 @@ export async function ReviewsStrip() {
             <p className="mt-3 flex items-center gap-3 text-smoke">
               <Stars n={average ?? 0} /> {average} out of 5 from {count} {count === 1 ? "review" : "reviews"}
             </p>
-          ) : (
-            <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-[var(--line)] px-3 py-1 text-[0.8rem] text-champagne">
-              Sample reviews — preview only. Real customer reviews replace these automatically.
-            </p>
-          )}
+          ) : null}
         </div>
-        <Link href="/reviews" className="btn btn-ghost">{real ? "Read all reviews" : "Write a review"}</Link>
+        <Link href="/reviews" className="btn btn-ghost">Read all reviews</Link>
       </div>
       <div className="gk-reviews mt-10 space-y-4 overflow-hidden" role="region" aria-label="Reviews">
         {rows.map((row, i) => (
@@ -171,11 +167,7 @@ export async function AllReviews() {
         <p className="lede mt-5 flex items-center gap-3">
           <Stars n={average ?? 0} size={20} /> {average} out of 5 from {count} {count === 1 ? "review" : "reviews"}
         </p>
-      ) : (
-        <p className="lede mt-5">
-          We&apos;re a new house, so our first reviews are still on their way. Every review here comes from a real customer and is checked before it&apos;s published.
-        </p>
-      )}
+      ) : null}
       <div className="mt-12 grid gap-12 lg:grid-cols-[1.3fr_.7fr]">
         {count > 0 ? (
           <ul className="grid gap-4 sm:grid-cols-2">
@@ -183,9 +175,6 @@ export async function AllReviews() {
           </ul>
         ) : SAMPLE_REVIEWS_ON ? (
           <div>
-            <p className="mb-4 inline-flex rounded-full border border-[var(--line)] px-3 py-1 text-[0.8rem] text-champagne">
-              Sample reviews — preview only. Real customer reviews replace these automatically.
-            </p>
             <ul className="grid gap-4 sm:grid-cols-2">
               {sampleReviews.map((r) => (
                 <li key={r.id} className="flex h-full flex-col rounded-[var(--radius-m)] border border-[var(--line-soft)] bg-ebony p-5">

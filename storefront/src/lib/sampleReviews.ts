@@ -1,8 +1,10 @@
 /**
- * SAMPLE reviews — written to show how the reviews section looks before the shop has real ones.
- * They are labelled as samples on the page, never go into search-engine review data,
- * and disappear automatically once the first real review is approved in Admin → Reviews.
- * Switch them off completely with NEXT_PUBLIC_SAMPLE_REVIEWS=off (do this before launch).
+ * SAMPLE reviews — written to show the client how the reviews section looks before the shop has real ones.
+ * Safeguards, because made-up reviews on a live UK shop are illegal (DMCC Act 2024):
+ *  - shown only on the preview address (*.vercel.app / localhost), never on the shop's real domain
+ *  - never go into search-engine review data
+ *  - disappear automatically once the first real review is approved in Admin → Reviews
+ *  - NEXT_PUBLIC_SAMPLE_REVIEWS=off switches them off everywhere
  */
 export type SampleReview = {
   id: string;
@@ -15,7 +17,17 @@ export type SampleReview = {
   when: string; // shown as-is
 };
 
-export const SAMPLE_REVIEWS_ON = (process.env.NEXT_PUBLIC_SAMPLE_REVIEWS || "on") !== "off";
+function onPreviewAddress(): boolean {
+  const url = process.env.NEXT_PUBLIC_SITE_URL || "";
+  try {
+    const host = new URL(url).hostname;
+    return host.endsWith(".vercel.app") || host === "localhost" || host === "127.0.0.1";
+  } catch {
+    return false;
+  }
+}
+
+export const SAMPLE_REVIEWS_ON = (process.env.NEXT_PUBLIC_SAMPLE_REVIEWS || "on") !== "off" && onPreviewAddress();
 
 export const sampleReviews: SampleReview[] = [
   { id: "s1", name: "Amelia R.", place: "Manchester", rating: 5, scent: "baccara-rouge", when: "2 weeks ago", title: "Honestly can't tell the difference", body: "I've owned the original for years and sprayed them side by side. The dry-down is so close my sister couldn't pick which was which. Still on my scarf the next morning." },
