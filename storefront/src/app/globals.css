@@ -499,58 +499,108 @@ body {
   .gk-liquid::after, .btn-gold::after, .gk-mist { display: none; }
 }
 
-/* ── Hero set: marble, drifting light, travelling ribbons, film grain ─────── */
-.gk-hero-stone {
-  background: url("/brand/hero-stone.webp") center / cover no-repeat;
-  opacity: 0.9;
-  animation: gk-stone 40s ease-in-out infinite alternate;
+/* ── Hero set: deep water, moving light, drops, ripples, leaves, condensation ── */
+.gk-water { background: #06201f; }
+.gk-water-base {
+  background: url("/brand/hero-water.webp") center / cover no-repeat;
+  animation: gk-swell 26s ease-in-out infinite alternate;
 }
-@keyframes gk-stone {
-  to { transform: scale(1.08) translate(-1.5%, 1%); }
-}
-.gk-hero-glow {
+@keyframes gk-swell { to { transform: scale(1.07) translate(-1%, 1.2%); } }
+/* tiled light; the element is bigger than the screen and slides exactly one tile, so it loops seamlessly */
+.gk-caustic {
   position: absolute;
-  border-radius: 9999px;
+  left: 0;
+  top: 0;
+  background-image: url("/brand/hero-caustics.webp");
+  background-repeat: repeat;
   will-change: transform;
 }
-.gk-hero-glow-a {
-  width: 60vmax; height: 60vmax; left: 38%; top: 5%;
-  background: radial-gradient(circle, rgba(201, 140, 60, 0.38), rgba(201, 140, 60, 0.12) 40%, transparent 68%);
-  animation: gk-drift-a 18s ease-in-out infinite alternate;
+.gk-caustic-a {
+  width: calc(100% + 700px); height: calc(100% + 700px);
+  background-size: 700px 700px;
+  opacity: 0.16;
+  animation: gk-drift-tile-a 22s linear infinite;
 }
-.gk-hero-glow-b {
-  width: 46vmax; height: 46vmax; left: -12%; top: 35%;
-  background: radial-gradient(circle, rgba(170, 60, 50, 0.3), rgba(170, 60, 50, 0.1) 40%, transparent 68%);
-  animation: gk-drift-b 23s ease-in-out infinite alternate;
+.gk-caustic-b {
+  width: calc(100% + 1100px); height: calc(100% + 1100px);
+  background-size: 1100px 1100px;
+  opacity: 0.1;
+  transform-origin: 0 0;
+  animation: gk-drift-tile-b 34s linear infinite;
 }
-.gk-hero-glow-c {
-  width: 34vmax; height: 34vmax; left: 62%; top: 55%;
-  background: radial-gradient(circle, rgba(40, 130, 120, 0.2), rgba(40, 130, 120, 0.06) 40%, transparent 68%);
-  animation: gk-drift-c 27s ease-in-out infinite alternate;
+@keyframes gk-drift-tile-a { from { transform: translate(-700px, 0); } to { transform: translate(0, -700px); } }
+@keyframes gk-drift-tile-b { from { transform: translate(0, -1100px); } to { transform: translate(-1100px, 0); } }
+
+/* a drop falls, then rings spread across the surface */
+.gk-drip-fall {
+  transform-box: fill-box;
+  opacity: 0;
+  animation: gk-fall var(--dt, 7s) cubic-bezier(.55, 0, 1, .45) var(--dd, 0s) infinite;
 }
-@keyframes gk-drift-a { to { transform: translate(-14vw, 8vh) scale(1.15); } }
-@keyframes gk-drift-b { to { transform: translate(18vw, -10vh) scale(0.9); } }
-@keyframes gk-drift-c { to { transform: translate(-22vw, -18vh) scale(1.2); } }
-.gk-ribbon path {
-  stroke-dasharray: 34 66;
-  stroke-dashoffset: 100;
-  animation: gk-run var(--rt, 10s) linear var(--rd, 0s) infinite;
+@keyframes gk-fall {
+  0% { opacity: 0; transform: translateY(-620px); }
+  3% { opacity: 1; }
+  11% { opacity: 1; transform: translateY(0); }
+  12%, 100% { opacity: 0; transform: translateY(0); }
 }
-@keyframes gk-run {
-  to { stroke-dashoffset: -100; }
+.gk-ripple {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: gk-ring var(--dt, 7s) ease-out calc(var(--dd, 0s) + var(--lag, 0s)) infinite;
 }
-.gk-hero-grain {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 .9  0 0 0 0 .8  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  opacity: 0.12;
-  animation: gk-grain 0.9s steps(4) infinite;
+@keyframes gk-ring {
+  0%, 11% { opacity: 0; transform: scale(0.05); }
+  13% { opacity: 0.75; }
+  55% { opacity: 0; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
 }
-@keyframes gk-grain {
-  25% { transform: translate(-3%, 2%); }
-  50% { transform: translate(2%, -3%); }
-  75% { transform: translate(-1%, 3%); }
+
+/* leaves floating on the surface */
+.gk-leaf {
+  animation: gk-float-leaf var(--lt, 20s) ease-in-out infinite alternate;
 }
+@keyframes gk-float-leaf {
+  to { transform: translate(var(--lx), var(--ly)) rotate(var(--lr)); }
+}
+.gk-leaf > g { transform-box: fill-box; }
+
+/* condensation on the glass in front */
+.gk-condensation {
+  background: url("/brand/hero-drops.webp") center / cover no-repeat;
+  opacity: 0.85;
+}
+.gk-runner {
+  position: absolute;
+  border-radius: 50% 50% 48% 48% / 42% 42% 58% 58%;
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.95) 0 14%, transparent 22%),
+    radial-gradient(ellipse at 50% 80%, rgba(235, 255, 250, 0.55), transparent 55%),
+    rgba(190, 240, 232, 0.16);
+  box-shadow: inset 0 -2px 2px rgba(0, 20, 20, 0.45), 0 1px 1px rgba(0, 0, 0, 0.2);
+  animation: gk-run-down var(--rt, 14s) cubic-bezier(.7, 0, .9, .6) var(--rd, 0s) infinite;
+}
+/* the wet trail it leaves behind */
+.gk-runner::before {
+  content: "";
+  position: absolute;
+  left: 30%;
+  right: 30%;
+  bottom: 60%;
+  height: var(--trail, 0px);
+  border-radius: 9999px;
+  background: linear-gradient(to top, rgba(210, 250, 242, 0.22), transparent);
+}
+@keyframes gk-run-down {
+  0%, 20% { transform: translateY(0); opacity: 0; }
+  24% { opacity: 1; }
+  85% { transform: translateY(var(--rl, 40vh)); opacity: 1; }
+  100% { transform: translateY(var(--rl, 40vh)); opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .gk-hero-stone, .gk-hero-glow, .gk-ribbon path, .gk-hero-grain { animation: none !important; }
+  .gk-water-base, .gk-caustic, .gk-drip-fall, .gk-ripple, .gk-leaf, .gk-runner { animation: none !important; }
+  .gk-drip-fall, .gk-runner { display: none; }
 }
 
 /* ── Top ticker: never stops, pauses when you hover or focus it ───────────── */
