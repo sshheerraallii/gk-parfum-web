@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { getReviews, getScents, type PublicReview } from "@/lib/medusa";
 import { ReviewForm } from "./ReviewForm";
+import { ProductVisual } from "./ProductVisual";
+import { SAMPLE_REVIEWS_ON, sampleReviews } from "@/lib/sampleReviews";
+import type { Scent } from "@/lib/catalog";
 
 export function Stars({ n, size = 16 }: { n: number; size?: number }) {
   return (
@@ -29,25 +32,83 @@ function ReviewCard({ r, productName }: { r: PublicReview; productName?: string 
   );
 }
 
-/** Homepage strip — renders nothing until there are approved reviews. */
+/** A review as the home page shows it — real (from the admin) or a sample. */
+type Shown = { id: string; name: string; place?: string; rating: number; title?: string | null; body: string; scent?: Scent; verified?: boolean; when?: string };
+
+function MarqueeCard({ r }: { r: Shown }) {
+  return (
+    <li className="flex w-[300px] shrink-0 flex-col rounded-[var(--radius-m)] border border-[var(--line-soft)] bg-ebony/90 p-5 sm:w-[360px]">
+      <div className="flex items-center justify-between">
+        <Stars n={r.rating} />
+        {r.when && <span className="small text-smoke">{r.when}</span>}
+      </div>
+      {r.title && <p className="mt-3 font-display text-[1.35rem] leading-tight text-ivory">{r.title}</p>}
+      <p className="mt-2 flex-1 text-[0.95rem] leading-relaxed text-smoke">&ldquo;{r.body}&rdquo;</p>
+      <div className="mt-4 flex items-center gap-3 border-t border-[var(--line-soft)] pt-4">
+        {r.scent && (
+          <Link href={`/perfume/${r.scent.slug}`} className="h-12 w-9 shrink-0" aria-label={r.scent.name}>
+            <ProductVisual s={r.scent} className="h-12 w-auto" />
+          </Link>
+        )}
+        <div className="min-w-0">
+          <p className="truncate text-ivory">
+            {r.name}
+            {r.place && <span className="text-smoke"> · {r.place}</span>}
+          </p>
+          {r.scent && (
+            <p className="small truncate text-champagne">
+              {r.scent.name}
+              {r.verified && <span className="text-smoke"> · Verified buyer</span>}
+            </p>
+          )}
+        </div>
+      </div>
+    </li>
+  );
+}
+
+/**
+ * Home page reviews: two rows gliding in opposite directions. Shows real, approved reviews as soon as there
+ * are any; until then (and only while NEXT_PUBLIC_SAMPLE_REVIEWS isn't "off") clearly-labelled sample reviews.
+ */
 export async function ReviewsStrip() {
   const [{ reviews, count, average }, scents] = await Promise.all([getReviews(), getScents()]);
-  if (!count) return null;
-  const name = (h: string | null) => scents.find((s) => s.slug === h)?.name;
+  const bySlug = (h?: string | null) => scents.find((x) => x.slug === h);
+  const real = count > 0;
+  if (!real && !SAMPLE_REVIEWS_ON) return null;
+  const list: Shown[] = real
+    ? reviews.map((r) => ({ id: r.id, name: r.name, rating: r.rating, title: r.title, body: r.body, scent: bySlug(r.product_handle), verified: r.verified }))
+    : sampleReviews.map((r) => ({ id: r.id, name: r.name, place: r.place, rating: r.rating, title: r.title, body: r.body, scent: bySlug(r.scent), when: r.when }));
+  const half = Math.ceil(list.length / 2);
+  const rows = list.length > 6 ? [list.slice(0, half), list.slice(half)] : [list];
   return (
-    <section className="wrap py-20" aria-labelledby="reviews-strip">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+    <section className="py-20 md:py-28" aria-labelledby="reviews-strip">
+      <div className="wrap flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 id="reviews-strip" data-reveal className="display-l">What customers say</h2>
-          <p className="mt-3 flex items-center gap-3 text-smoke">
-            <Stars n={average ?? 0} /> {average} out of 5 from {count} {count === 1 ? "review" : "reviews"}
-          </p>
+          {real ? (
+            <p className="mt-3 flex items-center gap-3 text-smoke">
+              <Stars n={average ?? 0} /> {average} out of 5 from {count} {count === 1 ? "review" : "reviews"}
+            </p>
+          ) : (
+            <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-[var(--line)] px-3 py-1 text-[0.8rem] text-champagne">
+              Sample reviews — preview only. Real customer reviews replace these automatically.
+            </p>
+          )}
         </div>
-        <Link href="/reviews" className="btn btn-ghost">Read all reviews</Link>
+        <Link href="/reviews" className="btn btn-ghost">{real ? "Read all reviews" : "Write a review"}</Link>
       </div>
-      <ul className="mt-10 grid gap-4 md:grid-cols-3">
-        {reviews.slice(0, 3).map((r) => <ReviewCard key={r.id} r={r} productName={name(r.product_handle)} />)}
-      </ul>
+      <div className="gk-reviews mt-10 space-y-4 overflow-hidden" role="region" aria-label="Reviews">
+        {rows.map((row, i) => (
+          <div key={i} className="gk-reviews-row">
+            <ul className={`gk-reviews-track flex w-max gap-4 ${i % 2 ? "gk-reviews-rev" : ""}`} style={{ ["--n" as string]: row.length }}>
+              {[...row, ...row].map((r, k) => (
+                <MarqueeCard key={`${r.id}-${k}`} r={r} />
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
@@ -120,6 +181,23 @@ export async function AllReviews() {
           <ul className="grid gap-4 sm:grid-cols-2">
             {reviews.map((r) => <ReviewCard key={r.id} r={r} productName={name(r.product_handle)} />)}
           </ul>
+        ) : SAMPLE_REVIEWS_ON ? (
+          <div>
+            <p className="mb-4 inline-flex rounded-full border border-[var(--line)] px-3 py-1 text-[0.8rem] text-champagne">
+              Sample reviews — preview only. Real customer reviews replace these automatically.
+            </p>
+            <ul className="grid gap-4 sm:grid-cols-2">
+              {sampleReviews.map((r) => (
+                <li key={r.id} className="flex h-full flex-col rounded-[var(--radius-m)] border border-[var(--line-soft)] bg-ebony p-5">
+                  <Stars n={r.rating} />
+                  <p className="mt-3 font-display text-[1.35rem] leading-tight text-ivory">{r.title}</p>
+                  <p className="mt-2 flex-1 text-smoke">{r.body}</p>
+                  <p className="small mt-4 text-ivory">{r.name} <span className="text-smoke">· {r.place}</span></p>
+                  <p className="small text-smoke">on {name(r.scent)}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
         ) : (
           <div className="rounded-[var(--radius-m)] border border-dashed border-[var(--line)] p-10">
             <p className="display-m">Be one of the first</p>

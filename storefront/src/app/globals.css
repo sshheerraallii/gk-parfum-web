@@ -619,3 +619,27 @@ body {
   .gk-ticker { overflow-x: auto; }
   .gk-ticker-track { animation: none !important; }
 }
+
+/* ── Reviews: two rows gliding in opposite directions, pause on hover/touch ── */
+.gk-reviews-row {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.gk-reviews-track {
+  padding-inline: 8px;
+  animation: gk-reviews calc(var(--n, 10) * 6s) linear infinite;
+}
+.gk-reviews-rev {
+  animation-direction: reverse;
+}
+.gk-reviews-row:hover .gk-reviews-track,
+.gk-reviews-row:active .gk-reviews-track {
+  animation-play-state: paused;
+}
+@keyframes gk-reviews {
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gk-reviews-row { overflow-x: auto; }
+  .gk-reviews-track { animation: none !important; }
+}
