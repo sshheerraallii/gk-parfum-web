@@ -20,11 +20,16 @@ const nextConfig: NextConfig = {
 
 // scents renamed in October 2026: keep old links and search results working
 async function redirects() {
-  return Object.entries(RENAMED_SLUGS).map(([from, to]) => ({
-    source: `/perfume/${from}`,
-    destination: `/perfume/${to}`,
-    permanent: true,
-  }));
+  return [
+    ...Object.entries(RENAMED_SLUGS).map(([from, to]) => ({
+      source: `/perfume/${from}`,
+      destination: `/perfume/${to}`,
+      permanent: true,
+    })),
+    // the fragrance guides became the blog
+    { source: "/guides", destination: "/blog", permanent: true },
+    { source: "/guides/:slug", destination: "/blog/:slug", permanent: true },
+  ];
 }
 
 async function headers() {

@@ -4,13 +4,14 @@ import { useEffect, useRef } from "react";
 import { useAccount } from "@/lib/account";
 import { useCart, type CartLine } from "@/lib/cart";
 import { wakeBackend } from "@/lib/store-client";
+import { useGuestWish } from "@/lib/wishlist";
 
 /**
  * Loads the signed-in customer, brings their saved bag back on sign-in (merged with
- * anything already in the bag), and keeps the saved bag up to date as it changes.
+ * anything already in the bag) and any wishlist hearts saved as a guest, and keeps the saved bag up to date as it changes.
  */
 export function AccountSync() {
-  const { init, account, saveBag } = useAccount();
+  const { init, account, saveBag, mergeWishes } = useAccount();
   const lines = useCart((s) => s.lines);
   const setLines = useCart((s) => s.setLines);
   const merged = useRef<string | null>(null);
@@ -24,6 +25,11 @@ export function AccountSync() {
   useEffect(() => {
     if (!account || merged.current === account.email) return;
     merged.current = account.email;
+    // hearts saved as a guest join the account's wishlist
+    const guestWish = useGuestWish.getState();
+    if (guestWish.items.length) {
+      mergeWishes(guestWish.items).then(() => guestWish.set([]));
+    }
     if (!account.bag.length) return;
     const map = new Map<string, CartLine>(lines.map((l) => [l.key, l]));
     for (const l of account.bag) {

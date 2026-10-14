@@ -257,7 +257,7 @@ function Dashboard() {
                     return (
                       <li key={l.key} className="flex items-center gap-4 p-4">
                         <ProductVisual s={s} className="h-14 w-auto max-w-[40px]" />
-                        <p className="flex-1 text-ivory">{s.name}{l.sub && <span className="small ml-2 text-champagne">every 4 weeks</span>}</p>
+                        <p className="flex-1 text-ivory">{s.name}{l.sub && <span className="small ml-2 text-champagne">every 3 months</span>}</p>
                         <p className="text-smoke">× {l.qty}</p>
                       </li>
                     );

@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart";
 import { useOffers } from "@/lib/useOffers";
 import { useAccount } from "@/lib/account";
+import { useWishlist } from "@/lib/wishlist";
+import { HeartIcon } from "./ScentCard";
 import { formatPrice } from "@/lib/catalog";
 
 const NAV = [
@@ -14,6 +16,7 @@ const NAV = [
   { href: "/shop/unisex", label: "Unisex" },
   { href: "/bundle", label: "Build your bundle" },
   { href: "/reviews", label: "Reviews" },
+  { href: "/blog", label: "Blog" },
 ];
 
 function BagIcon() {
@@ -78,6 +81,7 @@ export function Header() {
   const count = useCart((s) => s.lines.reduce((a, l) => a + l.qty, 0));
   const setOpen = useCart((s) => s.setOpen);
   const account = useAccount((s) => s.account);
+  const wish = useWishlist();
   const [menu, setMenu] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -140,6 +144,18 @@ export function Header() {
             <SearchIcon />
           </Link>
           <Link
+            href="/wishlist"
+            className="relative flex h-11 w-11 items-center justify-center text-ivory hover:text-champagne"
+            aria-label={`Your wishlist, ${wish.count} saved`}
+          >
+            <HeartIcon size={20} on={wish.count > 0} />
+            {wish.count > 0 && (
+              <span key={wish.count} className="gk-heart-pop absolute right-0.5 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-gilt px-1 text-[0.62rem] font-semibold text-[#14110e]">
+                {wish.count}
+              </span>
+            )}
+          </Link>
+          <Link
             href="/account"
             className="flex h-11 w-11 items-center justify-center text-ivory hover:text-champagne"
             aria-label={mounted && account ? `Your account, ${account.first_name || account.email}` : "Sign in or create an account"}
@@ -170,7 +186,7 @@ export function Header() {
       >
         <nav aria-label="Mobile" className="wrap py-4">
           <ul className="flex flex-col">
-            {[...NAV, { href: "/shop", label: "All scents" }, { href: "/account", label: "My account" }, { href: "/search", label: "Search" }].map((n) => (
+            {[...NAV, { href: "/shop", label: "All scents" }, { href: "/wishlist", label: "Wishlist" }, { href: "/account", label: "My account" }, { href: "/search", label: "Search" }].map((n) => (
               <li key={n.href}>
                 <Link href={n.href} className="display-m block border-b border-[var(--line-soft)] py-3 text-ivory">
                   {n.label}

@@ -7,7 +7,7 @@ type Offers = {
   tiers: { enabled: boolean; discountQty: number; discountPct: number; freeShipQty: number }
   freeDelivery: { enabled: boolean; threshold: number }
   giftBox: { enabled: boolean }
-  subscription: { enabled: boolean; pct: number; weeks: number }
+  subscription: { enabled: boolean; pct: number; months: number }
   bestSellers: string[]
 }
 type Product = { id: string; handle: string; title: string; thumbnail: string | null; variants?: { sku: string | null }[] }
@@ -112,13 +112,13 @@ const OffersPage = () => {
         <Row>
           <Head
             title="Subscribe & save"
-            help="Shoppers can choose 'Deliver every few weeks' on a scent. Doesn't stack with the bundle discount — each bottle gets the better one."
+            help="Shoppers can choose 'Deliver every 3 months' on a scent. Doesn't stack with the bundle discount — each bottle gets the better one."
             on={o.subscription.enabled}
             set={(v) => setO({ ...o, subscription: { ...o.subscription, enabled: v } })}
           />
           <div className="grid max-w-[460px] grid-cols-2 gap-4">
             <Num label="Discount (%)" value={o.subscription.pct} min={1} set={(n) => setO({ ...o, subscription: { ...o.subscription, pct: n } })} />
-            <Num label="Every (weeks)" value={o.subscription.weeks} min={1} set={(n) => setO({ ...o, subscription: { ...o.subscription, weeks: n } })} />
+            <Num label="Every (months)" value={o.subscription.months} min={1} set={(n) => setO({ ...o, subscription: { ...o.subscription, months: Math.min(12, Math.max(1, Math.round(n))) } })} />
           </div>
         </Row>
 

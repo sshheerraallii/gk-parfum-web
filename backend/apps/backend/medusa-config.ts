@@ -5,6 +5,7 @@ loadEnv(process.env.NODE_ENV || "development", process.cwd())
 const modules: { resolve: string; options?: Record<string, unknown> }[] = [
   { resolve: "./src/modules/gk-settings" },
   { resolve: "./src/modules/gk-engage" },
+  { resolve: "./src/modules/gk-blog" },
 ]
 
 // Card, Apple Pay, Google Pay, PayPal and Klarna all run through Stripe's Payment Element.

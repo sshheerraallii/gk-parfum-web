@@ -45,7 +45,7 @@ function DemoThanks() {
               <li key={i.title} className="flex justify-between gap-4 py-3">
                 <span className="text-ivory">
                   {i.title} <span className="text-smoke">× {i.qty}</span>
-                  {i.sub && <span className="small block text-champagne">Delivered every 4 weeks</span>}
+                  {i.sub && <span className="small block text-champagne">Delivered every 3 months</span>}
                 </span>
                 <span className="text-ivory">{formatPrice(i.unit * i.qty)}</span>
               </li>

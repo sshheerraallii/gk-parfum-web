@@ -7,7 +7,7 @@ import { useOffers } from "@/lib/useOffers";
 import { bySlug, formatPrice, inspiredLabel } from "@/lib/catalog";
 import { useBestSellers, useCatalog } from "./CatalogProvider";
 import { ProductVisual } from "./ProductVisual";
-import { nextReward, priceCart } from "@/lib/offers";
+import { everyLabel, nextReward, priceCart } from "@/lib/offers";
 import { TierProgress } from "./TierProgress";
 
 export function CartDrawer() {
@@ -100,7 +100,7 @@ export function CartDrawer() {
                         </span>
                       </div>
                       <p className="small mt-0.5 text-smoke">Inspired by {inspiredLabel(s)} · 100 ml</p>
-                      {l.sub && <p className="small mt-1 text-champagne">Delivered every {offers.subscription.weeks} weeks</p>}
+                      {l.sub && <p className="small mt-1 text-champagne">Delivered every {everyLabel(offers.subscription.months)}</p>}
                       <div className="mt-3 flex items-center gap-3">
                         <div className="flex items-center rounded-full border border-[var(--line)]">
                           <button type="button" className="flex h-9 w-9 items-center justify-center text-lg text-ivory" onClick={() => setQty(l.key, l.qty - 1)} aria-label={`One less ${s.name}`}>−</button>

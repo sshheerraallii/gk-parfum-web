@@ -17,7 +17,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Can I get my favourite delivered regularly?",
-    a: "Yes. On any scent, choose \"Deliver every 4 weeks\" to save 10% on that bottle. You can pause or cancel any time by getting in touch. Bundle and subscription savings don't add together — each bottle gets the better one.",
+    a: "Yes. On any scent, choose \"Deliver every 3 months\" to save 10% on that bottle. You can pause or cancel any time by getting in touch. Bundle and subscription savings don't add together — each bottle gets the better one.",
   },
   {
     q: "How fast is delivery?",

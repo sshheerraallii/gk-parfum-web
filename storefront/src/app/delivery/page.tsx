@@ -14,7 +14,7 @@ export default function Delivery() {
       <h2>Gift box</h2>
       <p>Every order arrives in our signature gift box, free of charge.</p>
       <h2>Repeat deliveries</h2>
-      <p>If you chose &ldquo;Deliver every 4 weeks&rdquo; on a scent, we send it again every 4 weeks at 10% off. To pause, change or cancel, just <a href="/contact">get in touch</a>.</p>
+      <p>If you chose &ldquo;Deliver every 3 months&rdquo; on a scent, we send it again every 3 months at 10% off. To pause, change or cancel, just <a href="/contact">get in touch</a>.</p>
       <h2>When will it ship?</h2>
       <p>Orders placed before 1pm on a working day are usually posted the same day, and always within one working day.</p>
       <h2>Tracking</h2>

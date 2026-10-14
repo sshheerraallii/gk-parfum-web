@@ -60,62 +60,6 @@
     ]
   },
   {
-    "sku": "GKP-002M",
-    "slug": "imagine",
-    "name": "Imagine",
-    "inspiredBy": {
-      "brand": "Louis Vuitton",
-      "name": "Imagination"
-    },
-    "gender": "men",
-    "families": [
-      "Citrus",
-      "Fresh",
-      "Woody"
-    ],
-    "mood": "fresh",
-    "time": "day",
-    "notes": {
-      "top": [
-        "Citron",
-        "Bergamot",
-        "Sicilian orange"
-      ],
-      "heart": [
-        "Neroli",
-        "Ginger",
-        "Cinnamon"
-      ],
-      "base": [
-        "Black tea",
-        "Ambroxan",
-        "Guaiac wood",
-        "Olibanum"
-      ]
-    },
-    "description": "A burst of citron, bergamot and orange over a heart of neroli and warm ginger, settling on black tea and soft woods. Bright, clean and quietly refined.",
-    "longevityHours": [
-      12,
-      24
-    ],
-    "occasions": [
-      "Smart casual",
-      "Daily wear",
-      "Date night"
-    ],
-    "price": 1799,
-    "tint": "#E6D58A",
-    "oneLiner": "Sparkling citrus over black tea.",
-    "tags": [
-      "Citrus",
-      "Fresh",
-      "Woody",
-      "Office Wear",
-      "Casual",
-      "Summer"
-    ]
-  },
-  {
     "sku": "GKP-003M",
     "slug": "kings-code",
     "name": "King's Code",
@@ -557,6 +501,62 @@
     ]
   },
   {
+    "sku": "GKP-002M",
+    "slug": "imagine",
+    "name": "Imagine",
+    "inspiredBy": {
+      "brand": "Louis Vuitton",
+      "name": "Imagination"
+    },
+    "gender": "men",
+    "families": [
+      "Citrus",
+      "Fresh",
+      "Woody"
+    ],
+    "mood": "fresh",
+    "time": "day",
+    "notes": {
+      "top": [
+        "Citron",
+        "Bergamot",
+        "Sicilian orange"
+      ],
+      "heart": [
+        "Neroli",
+        "Ginger",
+        "Cinnamon"
+      ],
+      "base": [
+        "Black tea",
+        "Ambroxan",
+        "Guaiac wood",
+        "Olibanum"
+      ]
+    },
+    "description": "A burst of citron, bergamot and orange over a heart of neroli and warm ginger, settling on black tea and soft woods. Bright, clean and quietly refined.",
+    "longevityHours": [
+      12,
+      24
+    ],
+    "occasions": [
+      "Smart casual",
+      "Daily wear",
+      "Date night"
+    ],
+    "price": 1799,
+    "tint": "#E6D58A",
+    "oneLiner": "Sparkling citrus over black tea.",
+    "tags": [
+      "Citrus",
+      "Fresh",
+      "Woody",
+      "Office Wear",
+      "Casual",
+      "Summer"
+    ]
+  },
+  {
     "sku": "GKP-011U",
     "slug": "lost-berry",
     "name": "Lost Berry",
@@ -620,7 +620,7 @@
       "brand": "Louis Vuitton",
       "name": "Symphony"
     },
-    "gender": "women",
+    "gender": "unisex",
     "families": [
       "Citrus",
       "Fresh",

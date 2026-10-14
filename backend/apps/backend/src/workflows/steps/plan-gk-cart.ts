@@ -1,6 +1,6 @@
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
 import { ContainerRegistrationKeys, MedusaError, QueryContext } from "@medusajs/framework/utils"
-import { allocate, BUNDLE_DELIVERY_CODE, GIFT_BOX_SKU, type Unit } from "../../lib/offers"
+import { allocate, BUNDLE_DELIVERY_CODE, everyLabel, GIFT_BOX_SKU, type Unit } from "../../lib/offers"
 import { GK_SETTINGS_MODULE } from "../../modules/gk-settings"
 import type GkSettingsService from "../../modules/gk-settings/service"
 import type { PricedVariant } from "../../lib/query-types"
@@ -104,7 +104,7 @@ export const planGkCartStep = createStep("plan-gk-cart", async (input: PlanGkCar
       metadata.gk_discount = `Subscribe & save ${offers.subscription.pct}% off`
     }
     if (u.sub) {
-      metadata.gk_subscription = `Every ${offers.subscription.weeks} weeks`
+      metadata.gk_subscription = `Every ${everyLabel(offers.subscription.months)}`
     }
     grouped.set(key, { variant_id: u.variant_id, quantity: 1, unit_price: u.charged, metadata })
   }

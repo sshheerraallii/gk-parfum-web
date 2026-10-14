@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { formatPrice, inspiredLabel, searchScents, type Scent } from "@/lib/catalog";
 import { SwipeRow } from "./SwipeRow";
 import { ScentMotes } from "./ScentMotes";
+import { Podium } from "./Podium";
 import { useBestSellers, useCatalog } from "./CatalogProvider";
 import { ProductVisual } from "./ProductVisual";
 import { ProductScene } from "./ProductScene";
@@ -110,20 +111,16 @@ export function Matcher() {
           ) : (
             <>
               <h3 className="mb-4 text-[1.15rem] font-bold uppercase leading-none tracking-[0.06em] text-ivory md:text-[1.3rem]">Best Sellers</h3>
-              <SwipeRow label="Best sellers" className="sm:hidden">
-                {best.slice(0, 6).map((s) => (
-                  <li key={s.slug} className="w-[42%] shrink-0 snap-start">
-                    <BestCard s={s} />
-                  </li>
-                ))}
-              </SwipeRow>
-              <ul className="hidden grid-cols-3 gap-3 sm:grid">
-                {best.slice(0, 6).map((s) => (
-                  <li key={s.slug}>
-                    <BestCard s={s} />
-                  </li>
-                ))}
-              </ul>
+              <Podium winners={best.slice(0, 3)} />
+              {best.length > 3 && (
+                <SwipeRow label="More best sellers" className="mt-6">
+                  {best.slice(3, 9).map((s) => (
+                    <li key={s.slug} className="w-[42%] shrink-0 snap-start sm:w-[31%]">
+                      <BestCard s={s} />
+                    </li>
+                  ))}
+                </SwipeRow>
+              )}
             </>
           )}
         </div>

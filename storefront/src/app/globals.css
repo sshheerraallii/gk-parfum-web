@@ -213,7 +213,7 @@ body {
 .prose-gk > * + * {
   margin-top: 1.1em;
 }
-.prose-gk h2 {
+.prose-gk > h2 {
   font-family: var(--font-cormorant), Georgia, serif;
   font-weight: 500;
   font-size: clamp(1.6rem, 2.4vw, 2rem);
@@ -221,18 +221,18 @@ body {
   color: var(--ivory);
   margin-top: 2.2em;
 }
-.prose-gk ul {
+.prose-gk > ul {
   list-style: none;
   padding: 0;
 }
-.prose-gk ul li {
+.prose-gk > ul li {
   position: relative;
   padding-left: 1.4em;
 }
-.prose-gk ul li + li {
+.prose-gk > ul li + li {
   margin-top: 0.55em;
 }
-.prose-gk ul li::before {
+.prose-gk > ul li::before {
   content: "";
   position: absolute;
   left: 0;
@@ -242,12 +242,12 @@ body {
   transform: rotate(45deg);
   background: var(--gilt);
 }
-.prose-gk a {
+.prose-gk > :not(.not-prose) a {
   color: var(--champagne);
   text-decoration: underline;
   text-underline-offset: 4px;
 }
-.prose-gk strong {
+.prose-gk > :not(.not-prose) strong {
   color: var(--ivory);
   font-weight: 500;
 }
@@ -643,3 +643,121 @@ body {
   .gk-reviews-row { overflow-x: auto; }
   .gk-reviews-track { animation: none !important; }
 }
+
+/* ── Best Sellers podium: spotlights, steps rising 3rd → 2nd → 1st, confetti on the winner ── */
+.gk-pod-step {
+  background: linear-gradient(180deg, #e2c07a, #b88a45 38%, #8a6430);
+  border-radius: 6px 6px 0 0;
+  box-shadow: inset 0 1px 0 rgba(255, 240, 200, 0.6), 0 -10px 30px -12px rgba(232, 199, 122, 0.45);
+  transform-origin: bottom;
+  transition: transform 0.75s cubic-bezier(0.2, 0.9, 0.2, 1.15) var(--d, 0s);
+}
+.gk-pod-first .gk-pod-step {
+  background: linear-gradient(180deg, #f3d996, #c9a15b 40%, #95692f);
+}
+.gk-pod-card {
+  transition:
+    opacity 0.6s ease calc(var(--d, 0s) + 0.35s),
+    transform 0.8s cubic-bezier(0.2, 0.9, 0.25, 1.2) calc(var(--d, 0s) + 0.35s);
+}
+.js .gk-podium:not(.is-in) .gk-pod-step { transform: scaleY(0); }
+.js .gk-podium:not(.is-in) .gk-pod-card { opacity: 0; transform: translateY(-46px) scale(0.88); }
+
+.gk-medal {
+  position: absolute;
+  left: 50%;
+  bottom: -14px;
+  translate: -50% 0;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  font: 600 0.95rem/1 var(--font-display, serif);
+  color: #1d1813;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+}
+.gk-medal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.75) 50%, transparent 65%);
+  translate: -120% 0;
+  animation: gk-medal-sheen 3.6s ease-in-out infinite calc(var(--d, 0s) + 1.6s);
+}
+.gk-medal-gold { background: radial-gradient(circle at 35% 30%, #fff1c2, #e2b85e 45%, #a8772f); width: 36px; height: 36px; bottom: -17px; }
+.gk-medal-silver { background: radial-gradient(circle at 35% 30%, #ffffff, #c9cdd2 45%, #858b93); }
+.gk-medal-bronze { background: radial-gradient(circle at 35% 30%, #ffd8b0, #c4844a 45%, #84502a); }
+@keyframes gk-medal-sheen { 0%, 60% { translate: -120% 0; } 85%, 100% { translate: 120% 0; } }
+.gk-medal { transition: scale 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) calc(var(--d, 0s) + 0.95s); }
+.js .gk-podium:not(.is-in) .gk-medal { scale: 0; }
+
+.gk-crown { filter: drop-shadow(0 2px 6px rgba(232, 199, 122, 0.55)); transition: opacity 0.5s ease 2.3s, transform 0.6s cubic-bezier(0.3, 1.5, 0.5, 1) 2.3s; }
+.js .gk-podium:not(.is-in) .gk-crown { opacity: 0; transform: translateY(-14px) rotate(-12deg); }
+
+/* spotlights: sweep the stage, then settle on the steps and breathe */
+.gk-spot {
+  position: absolute;
+  top: -12%;
+  width: 46%;
+  height: 120%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 236, 190, 0.32), rgba(255, 236, 190, 0.05) 70%, transparent);
+  clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
+  transform-origin: 50% 0;
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+.gk-spot-l { left: -2%; --rest: -8deg; --from: 28deg; }
+.gk-spot-c { left: 27%; --rest: 0deg; --from: -30deg; width: 46%; }
+.gk-spot-r { right: -2%; --rest: 8deg; --from: -28deg; }
+.gk-podium.is-in .gk-spot { animation: gk-spot-sweep 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards, gk-spot-breathe 4.5s ease-in-out 2.2s infinite; }
+.gk-podium.is-in .gk-spot-c { animation-delay: 0.3s, 2.5s; }
+.gk-podium.is-in .gk-spot-r { animation-delay: 0.15s, 2.35s; }
+@keyframes gk-spot-sweep {
+  0% { opacity: 0; transform: rotate(var(--from)); }
+  25% { opacity: 1; }
+  100% { opacity: 0.85; transform: rotate(var(--rest)); }
+}
+@keyframes gk-spot-breathe { 0%, 100% { opacity: 0.85; } 50% { opacity: 0.55; } }
+
+.gk-confetti i {
+  position: absolute;
+  top: 0;
+  border-radius: 1px;
+  opacity: 0;
+}
+.gk-podium.is-in .gk-confetti i { animation: gk-confetti var(--ct) cubic-bezier(0.25, 0.6, 0.4, 1) calc(2.1s + var(--cd)) forwards; }
+@keyframes gk-confetti {
+  0% { opacity: 0; transform: translateY(-10px) rotate(0); }
+  10% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(260px) rotate(var(--cr)) rotateX(540deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gk-pod-step, .gk-pod-card, .gk-medal, .gk-crown { transition: none !important; }
+  .js .gk-podium:not(.is-in) .gk-pod-step, .js .gk-podium:not(.is-in) .gk-pod-card, .js .gk-podium:not(.is-in) .gk-medal, .js .gk-podium:not(.is-in) .gk-crown { transform: none; opacity: 1; scale: 1; }
+  .gk-podium .gk-spot { animation: none !important; opacity: 0.6; transform: rotate(var(--rest)); }
+  .gk-confetti { display: none; }
+  .gk-medal::after { animation: none; }
+}
+
+/* wishlist heart: a little pop when saved */
+.gk-heart-pop { animation: gk-heart-pop 0.55s cubic-bezier(0.3, 1.6, 0.5, 1); }
+@keyframes gk-heart-pop {
+  0% { transform: scale(0.6); }
+  45% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) { .gk-heart-pop { animation: none; } }
+
+/* blog extras */
+.prose-gk > h3 { font-family: var(--font-cormorant), Georgia, serif; font-weight: 500; font-size: 1.45rem; line-height: 1.2; color: var(--ivory); margin-top: 1.8em; }
+.prose-gk > :not(.not-prose) a:hover { color: var(--ivory); }
+.prose-gk ol { list-style: decimal; padding-left: 1.4em; }
+.prose-gk ol li + li { margin-top: 0.55em; }
+.prose-gk ol li::marker { color: var(--gilt); }
+.prose-gk blockquote { border-left: 2px solid var(--gilt); padding: 0.2em 0 0.2em 1.2em; font-family: var(--font-cormorant), Georgia, serif; font-size: 1.45rem; line-height: 1.35; color: var(--ivory); font-style: italic; }
+.prose-gk hr { border: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gilt), transparent); margin: 2.5em 0; opacity: 0.6; }

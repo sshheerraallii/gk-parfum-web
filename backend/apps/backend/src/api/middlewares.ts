@@ -18,7 +18,7 @@ export const GkOffersSchema = z.object({
   }),
   freeDelivery: z.object({ enabled: z.boolean(), threshold: z.number().min(0).max(1000) }),
   giftBox: z.object({ enabled: z.boolean() }),
-  subscription: z.object({ enabled: z.boolean(), pct: z.number().min(1).max(90), weeks: z.number().int().min(1).max(26) }),
+  subscription: z.object({ enabled: z.boolean(), pct: z.number().min(1).max(90), months: z.number().int().min(1).max(12) }),
   bestSellers: z.array(z.string().min(1)).max(12),
 })
 export type GkOffersBody = z.infer<typeof GkOffersSchema>
@@ -61,6 +61,27 @@ export const ReviewSchema = z.object({
 })
 export type ReviewBody = z.infer<typeof ReviewSchema>
 
+const url = z.string().trim().max(2000).refine((v) => v === "" || /^(https?:\/\/|\/)/.test(v), "Must be a web address starting with https:// or /")
+export const GkPostSchema = z.object({
+  title: z.string().trim().min(1, "Give the post a title").max(200),
+  slug: z
+    .string()
+    .trim()
+    .min(1)
+    .max(120)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Web address: lowercase letters, numbers and dashes only"),
+  excerpt: z.string().max(400).nullish(),
+  cover_url: url.nullish(),
+  body: z.string().max(100000),
+  author: z.string().max(120).nullish(),
+  tags: z.array(z.string().trim().min(1).max(40)).max(12).nullish(),
+  status: z.enum(["draft", "published"]),
+  published_at: z.string().datetime({ offset: true }).nullish(),
+  seo_title: z.string().max(120).nullish(),
+  seo_description: z.string().max(320).nullish(),
+})
+export type GkPostBody = z.infer<typeof GkPostSchema>
+
 export const StatusSchema = z.object({ status: z.string().min(1).max(20) })
 export type StatusBody = z.infer<typeof StatusSchema>
 
@@ -84,6 +105,8 @@ export default defineMiddlewares({
     { method: ["POST"], matcher: "/admin/gk/offers", middlewares: [validateAndTransformBody(GkOffersSchema)] },
     { method: ["POST"], matcher: "/admin/gk/messages/:id", middlewares: [validateAndTransformBody(StatusSchema)] },
     { method: ["POST"], matcher: "/admin/gk/reviews/:id", middlewares: [validateAndTransformBody(StatusSchema)] },
+    { method: ["POST"], matcher: "/admin/gk/posts", middlewares: [validateAndTransformBody(GkPostSchema)] },
+    { method: ["POST"], matcher: "/admin/gk/posts/:id", middlewares: [validateAndTransformBody(GkPostSchema)] },
     { method: ["POST", "DELETE"], matcher: "/store/carts/:id/line-items*", middlewares: [blockDirectLineItemEdits] },
   ],
 })

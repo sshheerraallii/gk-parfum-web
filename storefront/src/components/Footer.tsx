@@ -28,7 +28,7 @@ const cols = [
     links: [
       { href: "/inspired-by", label: "Inspired by…" },
       { href: "/reviews", label: "Reviews" },
-      { href: "/guides", label: "Fragrance guides" },
+      { href: "/blog", label: "The GK Journal (blog)" },
       { href: "/about", label: "Our story" },
     ],
   },

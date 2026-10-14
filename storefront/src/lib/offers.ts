@@ -7,14 +7,14 @@
  *   1 bottle   → full price
  *   2+ bottles → 10% off every bottle
  *   3+ bottles → 10% off + free delivery
- * Subscribe (deliver every 4 weeks) → 10% off that bottle, even on its own.
+ * Subscribe (deliver every 3 months) → 10% off that bottle, even on its own.
  * Free delivery on any order over £65. Free signature gift box with every order.
  */
 export interface Offers {
   tiers: { enabled: boolean; discountQty: number; discountPct: number; freeShipQty: number };
   freeDelivery: { enabled: boolean; threshold: number };
   giftBox: { enabled: boolean; name: string };
-  subscription: { enabled: boolean; pct: number; weeks: number };
+  subscription: { enabled: boolean; pct: number; months: number };
   shipping: { id: string; name: string; eta: string; price: number }[];
   /** product handles chosen in Admin → Offers; when empty the backend picks the best-stocked */
   bestSellers: string[];
@@ -24,13 +24,16 @@ export const defaultOffers: Offers = {
   tiers: { enabled: true, discountQty: 2, discountPct: 10, freeShipQty: 3 },
   freeDelivery: { enabled: true, threshold: 6500 },
   giftBox: { enabled: true, name: "Signature gift box" },
-  subscription: { enabled: true, pct: 10, weeks: 4 },
+  subscription: { enabled: true, pct: 10, months: 3 },
   shipping: [
     { id: "tracked-48", name: "Royal Mail Tracked 48", eta: "2–3 working days", price: 399 },
     { id: "tracked-24", name: "Royal Mail Tracked 24", eta: "Next working day", price: 599 },
   ],
-  bestSellers: ["eventus", "baccara-rouge", "angels-pour", "noir-orchid", "lost-berry", "delina-rose"],
+  bestSellers: ["eventus", "nomad", "imagine"],
 };
+
+/** "3 months" / "month" — for "Deliver every …" */
+export const everyLabel = (months: number) => (months === 1 ? "month" : `${months} months`);
 
 export interface PricedLine {
   slug: string;

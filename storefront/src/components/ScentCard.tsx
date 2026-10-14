@@ -2,19 +2,17 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { type Scent, genderLabel, inspiredLabel } from "@/lib/catalog";
 import { Price } from "./Price";
 import { useCart } from "@/lib/cart";
-import { useAccount } from "@/lib/account";
+import { useWishlist } from "@/lib/wishlist";
 import { ProductScene } from "./ProductScene";
 import { tiltHandlers, useUncapOnView } from "@/lib/useUncap";
 
 export function WishButton({ slug, name, className = "" }: { slug: string; name: string; className?: string }) {
-  const account = useAccount((s) => s.account);
-  const toggle = useAccount((s) => s.toggleWish);
-  const router = useRouter();
-  const on = !!account?.wishlist.includes(slug);
+  const { has, toggle } = useWishlist();
+  const [pop, setPop] = useState(0);
+  const on = has(slug);
   return (
     <button
       type="button"
@@ -22,15 +20,20 @@ export function WishButton({ slug, name, className = "" }: { slug: string; name:
       aria-label={on ? `Remove ${name} from your wishlist` : `Save ${name} to your wishlist`}
       onClick={(e) => {
         e.preventDefault();
-        if (!account) router.push(`/account?next=${encodeURIComponent(location.pathname)}`);
-        else toggle(slug);
+        toggle(slug).then((now) => now && setPop((n) => n + 1));
       }}
       className={`flex h-10 w-10 items-center justify-center rounded-full bg-[#0f0c0a]/60 backdrop-blur transition-colors hover:text-champagne ${on ? "text-champagne" : "text-ivory"} ${className}`}
     >
-      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden fill={on ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6">
-        <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z" strokeLinejoin="round" />
-      </svg>
+      <HeartIcon on={on} key={pop} className={pop ? "gk-heart-pop" : ""} />
     </button>
+  );
+}
+
+export function HeartIcon({ on = false, size = 18, className = "" }: { on?: boolean; size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden fill={on ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" className={className}>
+      <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z" strokeLinejoin="round" />
+    </svg>
   );
 }
 

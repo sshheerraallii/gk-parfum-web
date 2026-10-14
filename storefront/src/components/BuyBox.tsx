@@ -5,10 +5,13 @@ import { useState } from "react";
 import { formatPrice } from "@/lib/catalog";
 import { useCart } from "@/lib/cart";
 import { useOffers } from "@/lib/useOffers";
+import { everyLabel } from "@/lib/offers";
+import { useWishlist } from "@/lib/wishlist";
+import { HeartIcon } from "./ScentCard";
 
 const off = (p: number, pct: number) => Math.round((p * (100 - pct)) / 100);
 
-/** Product purchase options, Mister Fragrance style: how many bottles, and one-off or every 4 weeks. */
+/** Product purchase options, Mister Fragrance style: how many bottles, and one-off or every 3 months. */
 export function BuyBox({ slug, price, name }: { slug: string; price: number; name: string }) {
   const add = useCart((s) => s.add);
   const offers = useOffers();
@@ -17,6 +20,8 @@ export function BuyBox({ slug, price, name }: { slug: string; price: number; nam
   const [packs, setPacks] = useState<1 | 3>(1);
   const [mode, setMode] = useState<"once" | "sub">("once");
   const [added, setAdded] = useState(false);
+  const wish = useWishlist();
+  const [pop, setPop] = useState(0);
 
   const each = packs >= t.discountQty && t.enabled ? off(price, t.discountPct) : mode === "sub" && sub.enabled ? off(price, sub.pct) : price;
   const total = each * packs;
@@ -79,7 +84,7 @@ export function BuyBox({ slug, price, name }: { slug: string; price: number; nam
               onClick={() => setMode(m)}
               className={`rounded-[12px] border px-4 py-3 text-left transition-colors ${mode === m ? "border-gilt bg-[#0f0c0a]/50" : "border-[var(--line-soft)] hover:border-[var(--line)]"}`}
             >
-              <span className="block text-ivory">{m === "once" ? "One-off purchase" : `Deliver every ${sub.weeks} weeks`}</span>
+              <span className="block text-ivory">{m === "once" ? "One-off purchase" : `Deliver every ${everyLabel(sub.months)}`}</span>
               <span className="small text-smoke">
                 {m === "once" ? formatPrice(price) : <>{formatPrice(off(price, sub.pct))} <span className="text-champagne">· {sub.pct}% off</span></>}
               </span>
@@ -98,6 +103,15 @@ export function BuyBox({ slug, price, name }: { slug: string; price: number; nam
         }}
       >
         {added ? `${name} added` : `Add to bag · ${formatPrice(total)}`}
+      </button>
+      <button
+        type="button"
+        aria-pressed={wish.has(slug)}
+        onClick={() => wish.toggle(slug).then((on) => on && setPop((n) => n + 1))}
+        className={`mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-full border transition-colors ${wish.has(slug) ? "border-gilt text-champagne" : "border-[var(--line)] text-ivory hover:border-gilt"}`}
+      >
+        <HeartIcon on={wish.has(slug)} key={pop} className={pop ? "gk-heart-pop" : ""} />
+        {wish.has(slug) ? "Saved to your wishlist" : "Add to wishlist"}
       </button>
 
       <ul className="small mt-5 space-y-2 text-smoke">

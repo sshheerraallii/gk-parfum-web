@@ -1,5 +1,6 @@
 import "server-only";
 import { defaultOffers, type Offers } from "./offers";
+import { starterPosts, type Post } from "./blog";
 import { scents as localScents, type Gender, type Mood, type Occasion, type Scent } from "./catalog";
 
 export const MEDUSA_URL = process.env.MEDUSA_BACKEND_URL || process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "";
@@ -30,7 +31,11 @@ export async function getOffers(): Promise<Offers> {
     tiers: { ...defaultOffers.tiers, ...(o.tiers ?? {}) },
     freeDelivery: { ...defaultOffers.freeDelivery, ...(o.freeDelivery ?? {}) },
     giftBox: { ...defaultOffers.giftBox, ...(o.giftBox ?? {}) },
-    subscription: { ...defaultOffers.subscription, ...(o.subscription ?? {}) },
+    subscription: {
+      enabled: o.subscription?.enabled ?? defaultOffers.subscription.enabled,
+      pct: o.subscription?.pct ?? defaultOffers.subscription.pct,
+      months: o.subscription?.months || defaultOffers.subscription.months,
+    },
     shipping: o.shipping?.length ? o.shipping : defaultOffers.shipping,
     bestSellers: o.bestSellers?.length ? o.bestSellers : defaultOffers.bestSellers,
   };
@@ -131,4 +136,30 @@ export async function getReviews(product?: string): Promise<{ reviews: PublicRev
     `/store/gk/reviews${product ? `?product=${encodeURIComponent(product)}` : ""}`
   );
   return j ?? { reviews: [], count: 0, average: null };
+}
+
+/* ── blog ───────────────────────────────────────────────────────────────────── */
+
+/** Published posts, newest first. The built-in starter posts are shown only when the backend can't be reached. */
+export async function getPosts(): Promise<Post[]> {
+  const j = await store<{ posts: Post[] }>("/store/gk/posts?full=1", 300);
+  if (!j?.posts) return starterPosts;
+  return j.posts;
+}
+
+export async function getPost(slug: string): Promise<Post | null> {
+  if (!MEDUSA_URL || !PUBLISHABLE_KEY) return starterPosts.find((p) => p.slug === slug) ?? null;
+  try {
+    const r = await fetch(`${MEDUSA_URL}/store/gk/posts/${encodeURIComponent(slug)}`, {
+      headers: { "x-publishable-api-key": PUBLISHABLE_KEY },
+      next: { revalidate: 300, tags: ["catalog"] },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (r.status === 404) return null;
+    if (!r.ok) throw new Error(String(r.status));
+    return ((await r.json()) as { post: Post }).post;
+  } catch {
+    // backend asleep or down: fall back to the starter copy if there is one
+    return starterPosts.find((p) => p.slug === slug) ?? null;
+  }
 }

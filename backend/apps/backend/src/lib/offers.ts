@@ -13,7 +13,7 @@ export type GkOffers = {
   tiers: { enabled: boolean; discountQty: number; discountPct: number; freeShipQty: number }
   freeDelivery: { enabled: boolean; threshold: number }
   giftBox: { enabled: boolean }
-  subscription: { enabled: boolean; pct: number; weeks: number }
+  subscription: { enabled: boolean; pct: number; months: number }
   /** product handles, in display order. Empty = best-stocked products are used. */
   bestSellers: string[]
 }
@@ -22,7 +22,7 @@ export const DEFAULT_OFFERS: GkOffers = {
   tiers: { enabled: true, discountQty: 2, discountPct: 10, freeShipQty: 3 },
   freeDelivery: { enabled: true, threshold: 65 },
   giftBox: { enabled: true },
-  subscription: { enabled: true, pct: 10, weeks: 4 },
+  subscription: { enabled: true, pct: 10, months: 3 },
   bestSellers: [],
 }
 
@@ -33,10 +33,18 @@ export function normaliseOffers(raw: Partial<GkOffers> | null | undefined): GkOf
     tiers: { ...DEFAULT_OFFERS.tiers, ...(r.tiers ?? {}) },
     freeDelivery: { ...DEFAULT_OFFERS.freeDelivery, ...(r.freeDelivery ?? {}) },
     giftBox: { ...DEFAULT_OFFERS.giftBox, ...(r.giftBox ?? {}) },
-    subscription: { ...DEFAULT_OFFERS.subscription, ...(r.subscription ?? {}) },
+    // older saves counted in weeks; the repeat is now in months (3 by default)
+    subscription: (() => {
+      const sub = (r.subscription ?? {}) as Partial<GkOffers["subscription"]> & { weeks?: number }
+      const months = Number.isInteger(sub.months) && sub.months! >= 1 ? sub.months! : DEFAULT_OFFERS.subscription.months
+      return { enabled: sub.enabled ?? DEFAULT_OFFERS.subscription.enabled, pct: sub.pct ?? DEFAULT_OFFERS.subscription.pct, months }
+    })(),
     bestSellers: Array.isArray(r.bestSellers) ? r.bestSellers.filter((h) => typeof h === "string") : [],
   }
 }
+
+/** "3 months", "1 month" */
+export const everyLabel = (months: number) => (months === 1 ? "month" : `${months} months`)
 
 export const GIFT_BOX_SKU = "GKP-BOX-01"
 /** Promotion code the cart sync adds automatically when a bag reaches the free-delivery tier. */

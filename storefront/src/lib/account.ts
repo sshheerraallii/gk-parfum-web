@@ -92,6 +92,8 @@ interface AccountState {
   logout: () => void;
   saveProfile: (b: Partial<Pick<Account, "first_name" | "last_name" | "phone" | "marketing">>) => Promise<void>;
   toggleWish: (slug: string) => Promise<boolean>;
+  /** adds hearts saved before signing in */
+  mergeWishes: (slugs: string[]) => Promise<void>;
   saveBag: (lines: CartLine[]) => Promise<void>;
   addAddress: (a: Omit<Address, "id">) => Promise<void>;
   removeAddress: (id: string) => Promise<void>;
@@ -174,6 +176,17 @@ export const useAccount = create<AccountState>()((set, get) => ({
     if (get().demo) write(DEMO_KEY, next);
     else await saveMeta(next, { gk_wishlist: next.wishlist }).catch(() => {});
     return on;
+  },
+
+  mergeWishes: async (slugs) => {
+    const acc = get().account;
+    if (!acc || !slugs.length) return;
+    const list = [...new Set([...acc.wishlist, ...slugs])];
+    if (list.length === acc.wishlist.length) return;
+    const next = { ...acc, wishlist: list };
+    set({ account: next });
+    if (get().demo) write(DEMO_KEY, next);
+    else await saveMeta(next, { gk_wishlist: list }).catch(() => {});
   },
 
   saveBag: async (lines) => {

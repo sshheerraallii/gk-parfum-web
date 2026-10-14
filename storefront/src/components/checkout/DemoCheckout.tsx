@@ -7,7 +7,7 @@ import { useCart } from "@/lib/cart";
 import { useCatalog } from "../CatalogProvider";
 import { useOffers } from "@/lib/useOffers";
 import { formatPrice } from "@/lib/catalog";
-import { priceCart, shippingFor } from "@/lib/offers";
+import { everyLabel, priceCart, shippingFor } from "@/lib/offers";
 import { ProductVisual } from "../ProductVisual";
 import { recordDemoOrder, useAccount } from "@/lib/account";
 import { EMAIL, Field, Section, UK_POSTCODE } from "./CheckoutClient";
@@ -140,7 +140,7 @@ export function DemoCheckout() {
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-ink">{s.name}</p>
-              <p className="text-[0.85rem] text-ink-soft">{l.sub ? `Delivered every ${offers.subscription.weeks} weeks` : "100 ml"}</p>
+              <p className="text-[0.85rem] text-ink-soft">{l.sub ? `Delivered every ${everyLabel(offers.subscription.months)}` : "100 ml"}</p>
             </div>
             <p className="text-ink">{formatPrice(s.price * l.qty)}</p>
           </li>
