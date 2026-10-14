@@ -1,5 +1,5 @@
 /**
- * The hero's set: cool, deep water. Light dances across it, drops fall and ripple out,
+ * The hero's set: cool, deep water, with citrus slices, blossoms and rose petals floating in it. Light dances across it, drops fall and ripple out,
  * mint leaves drift on the surface, and condensation beads on the glass in front, a few drops
  * slowly running down. All CSS/SVG over three small textures (tools/hero_water.py) — no video.
  */
@@ -7,6 +7,8 @@ export function HeroBackdrop() {
   return (
     <div aria-hidden className="gk-water pointer-events-none absolute inset-0 -z-10 overflow-hidden">
       <div className="gk-water-base absolute inset-[-4%]" />
+      {/* colour: fruit, flowers and petals floating in the water, warm light on the right */}
+      <div className="gk-bloom absolute inset-[-3%]" />
       {/* two layers of moving light, at different sizes and speeds, so the pattern never visibly repeats */}
       <div className="gk-caustic gk-caustic-a" />
       <div className="gk-caustic gk-caustic-b" />
@@ -72,7 +74,7 @@ export function HeroBackdrop() {
 
       {/* fade into the page below */}
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[var(--velvet)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(85%_75%_at_50%_45%,transparent,rgba(2,14,14,.55))]" />
+      <div className="absolute inset-0 bg-[radial-gradient(85%_75%_at_50%_45%,transparent,rgba(2,14,14,.4))]" />
     </div>
   );
 }

@@ -506,6 +506,22 @@ body {
   animation: gk-swell 26s ease-in-out infinite alternate;
 }
 @keyframes gk-swell { to { transform: scale(1.07) translate(-1%, 1.2%); } }
+/* the floating fruit and flowers bob gently on their own slow rhythm */
+.gk-bloom {
+  background: url("/brand/hero-bloom.webp") right center / cover no-repeat;
+  animation: gk-bob 18s ease-in-out infinite alternate;
+  transform-origin: 80% 60%;
+  filter: saturate(1.2) brightness(1.1);
+}
+@keyframes gk-bob {
+  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  50% { transform: translate(-0.6%, 0.8%) rotate(-0.6deg) scale(1.015); }
+  100% { transform: translate(0.5%, -0.5%) rotate(0.4deg) scale(1.03); }
+}
+@media (max-width: 767px) {
+  /* phones: the bottle sits on top, so let the colour fill behind it and fade under the text */
+  .gk-bloom { background-position: 80% 50%; -webkit-mask-image: linear-gradient(to bottom, #000 50%, rgba(0, 0, 0, 0.35) 78%); mask-image: linear-gradient(to bottom, #000 50%, rgba(0, 0, 0, 0.35) 78%); }
+}
 /* tiled light; the element is bigger than the screen and slides exactly one tile, so it loops seamlessly */
 .gk-caustic {
   position: absolute;
@@ -599,7 +615,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gk-water-base, .gk-caustic, .gk-drip-fall, .gk-ripple, .gk-leaf, .gk-runner { animation: none !important; }
+  .gk-water-base, .gk-bloom, .gk-caustic, .gk-drip-fall, .gk-ripple, .gk-leaf, .gk-runner { animation: none !important; }
   .gk-drip-fall, .gk-runner { display: none; }
 }
 
