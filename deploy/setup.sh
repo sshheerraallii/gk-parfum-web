@@ -7,6 +7,7 @@
 # backend/admin, shop and HTTPS, then sets up automatic updates from GitHub and nightly database backups.
 # Safe to run again: it keeps existing secrets and data.
 set -euo pipefail
+# (when piped from curl, every command that could read stdin gets </dev/null so it can't swallow the rest of this script)
 
 DOMAIN="${1:-}"
 ADMIN_EMAIL="${2:-}"
@@ -74,23 +75,23 @@ fi
 set -a; . "$ENVF"; set +a
 
 say "Database, backend + admin, HTTPS (first build takes ~5–10 minutes)"
-docker compose up -d --build postgres redis backend caddy
+docker compose up -d --build postgres redis backend caddy </dev/null
 echo -n "Waiting for the backend"
 for i in $(seq 1 120); do
   if [ "$(docker inspect -f '{{.State.Health.Status}}' "$(docker compose ps -q backend)" 2>/dev/null)" = "healthy" ]; then echo " — ready"; break; fi
   echo -n "."; sleep 5
-  [ "$i" = 120 ] && { echo; echo "Backend didn't start. Logs:"; docker compose logs --tail 80 backend; exit 1; }
+  [ "$i" = 120 ] && { echo; echo "Backend didn't start. Logs:"; docker compose logs --tail 80 backend </dev/null; exit 1; }
 done
 
 if [ -z "${MEDUSA_PUBLISHABLE_KEY:-}" ]; then
-  PK=$(docker compose exec -T postgres psql -U gk -d gk_medusa -Atc "select token from api_key where type='publishable' and revoked_at is null order by created_at limit 1")
+  PK=$(docker compose exec -T postgres psql -U gk -d gk_medusa -Atc "select token from api_key where type='publishable' and revoked_at is null order by created_at limit 1" </dev/null)
   [ -n "$PK" ] || { echo "No publishable key found"; exit 1; }
   sed -i "s|^MEDUSA_PUBLISHABLE_KEY=.*|MEDUSA_PUBLISHABLE_KEY=$PK|" "$ENVF"
   export MEDUSA_PUBLISHABLE_KEY="$PK"
 fi
 
 say "Shop (building…)"
-docker compose up -d --build storefront
+docker compose up -d --build storefront </dev/null
 
 say "Automatic updates + nightly backups"
 chmod +x "$DIR/deploy/update.sh" "$DIR/deploy/backup.sh"
@@ -101,7 +102,7 @@ cat > /etc/cron.d/gk-parfum <<CRON
 30 2 * * * root $DIR/deploy/backup.sh >> /var/log/gk-backup.log 2>&1
 CRON
 git -C "$DIR" rev-parse HEAD > "$DIR/deploy/.deployed"
-"$DIR/deploy/backup.sh" >/dev/null 2>&1 || true
+"$DIR/deploy/backup.sh" </dev/null >/dev/null 2>&1 || true
 
 IP=$(curl -fsS -4 https://ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
 cat <<DONE
