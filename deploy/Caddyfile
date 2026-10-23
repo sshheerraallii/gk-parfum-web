@@ -1,4 +1,4 @@
-# Automatic HTTPS for both domains.
+# Automatic HTTPS for the shop and the backend/admin.
 {$SITE_DOMAIN} {
 	encode zstd gzip
 	reverse_proxy storefront:3000
@@ -10,5 +10,11 @@ www.{$SITE_DOMAIN} {
 
 {$ADMIN_DOMAIN} {
 	encode zstd gzip
+	# the admin panel lives at /app — send the bare address there
+	@root path /
+	redir @root /app 302
+	request_body {
+		max_size 60MB
+	}
 	reverse_proxy backend:9000
 }

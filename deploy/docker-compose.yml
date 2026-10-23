@@ -1,5 +1,5 @@
 # One-box deployment: database, cache, backend + admin, storefront, HTTPS.
-# Usage (on the server):  cp .env.example .env  →  fill it in  →  docker compose up -d --build
+# Set up by deploy/setup.sh (first time) and kept current by deploy/update.sh (every few minutes).
 services:
   postgres:
     image: postgres:16-alpine
@@ -45,6 +45,12 @@ services:
       # this server has room to spare, unlike the 512 MB free tier
       NODE_OPTIONS: --max-old-space-size=1024
     volumes: [uploads:/app/static]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:9000/health >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 120s
 
   storefront:
     build:
@@ -55,7 +61,8 @@ services:
         NEXT_PUBLIC_SITE_URL: https://${SITE_DOMAIN}
         NEXT_PUBLIC_STRIPE_KEY: ${STRIPE_PUBLISHABLE_KEY}
     restart: unless-stopped
-    depends_on: [backend]
+    depends_on:
+      backend: { condition: service_healthy }
     environment:
       # server-side fetches go straight to the backend container
       MEDUSA_BACKEND_URL: http://backend:9000
@@ -70,7 +77,6 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddydata:/data
-    depends_on: [storefront, backend]
 
 volumes:
   pgdata:

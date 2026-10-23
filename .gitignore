@@ -7,3 +7,4 @@ node_modules
 backend/.medusa
 backend/build
 storefront/out
+deploy/.deployed

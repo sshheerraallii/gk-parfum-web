@@ -55,6 +55,24 @@ if (process.env.S3_BUCKET) {
       ],
     },
   })
+} else if (/^https?:\/\//.test(process.env.MEDUSA_BACKEND_URL || "")) {
+  // Own server (VPS): photos live on the server's disk (a Docker volume) and are served from /static
+  // on the backend's public address, so the links in the shop work from anywhere.
+  modules.push({
+    resolve: "@medusajs/medusa/file",
+    options: {
+      providers: [
+        {
+          resolve: "@medusajs/medusa/file-local",
+          id: "local",
+          options: {
+            upload_dir: "static",
+            backend_url: `${process.env.MEDUSA_BACKEND_URL!.replace(/\/$/, "")}/static`,
+          },
+        },
+      ],
+    },
+  })
 }
 
 module.exports = defineConfig({
