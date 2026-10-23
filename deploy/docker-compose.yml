@@ -29,7 +29,7 @@ services:
       postgres: { condition: service_healthy }
       redis: { condition: service_started }
     environment:
-      DATABASE_URL: postgres://gk:${POSTGRES_PASSWORD}@postgres:5432/gk_medusa
+      DATABASE_URL: postgres://gk:${POSTGRES_PASSWORD}@postgres:5432/gk_medusa?sslmode=disable
       REDIS_URL: redis://redis:6379
       STORE_CORS: https://${SITE_DOMAIN}
       ADMIN_CORS: https://${ADMIN_DOMAIN}
