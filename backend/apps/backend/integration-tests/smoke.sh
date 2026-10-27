@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # End-to-end smoke test of the GK cart rules against a running backend.
-# Usage: PK=<publishable key> ./integration-tests/smoke.sh [http://localhost:9000]
+# Usage: PK=<publishable key> ./integration-tests/smoke.sh [http://localhost:9000]   (backend needs ALLOW_TEST_ORDERS=true — orders are placed with the "pay later" test provider)
 set -euo pipefail
 API=${1:-http://localhost:9000}
 H=(-H "x-publishable-api-key: $PK" -H "Content-Type: application/json")

@@ -31,6 +31,8 @@ import {
 import { ProductVisual } from "../ProductVisual";
 
 const STRIPE_KEY = process.env.NEXT_PUBLIC_STRIPE_KEY || "";
+// "Place test order" (no payment) — preview/testing only; the backend refuses it unless ALLOW_TEST_ORDERS=true
+const TEST_ORDERS = process.env.NEXT_PUBLIC_ALLOW_TEST_ORDERS === "true";
 let stripePromise: Promise<Stripe | null> | null = null;
 const getStripe = () => (STRIPE_KEY ? (stripePromise ??= loadStripe(STRIPE_KEY)) : null);
 
@@ -512,14 +514,21 @@ export function CheckoutClient() {
                 <p className="text-ink-soft" role="status">Loading secure payment…</p>
               )
             ) : (
-              <div>
-                <div className="rounded-[12px] border border-dashed border-[var(--paper-line)] bg-white p-5 text-[0.95rem] text-ink-soft">
-                  Test mode: card payments switch on when the Stripe keys are added. Placing an order now records it in the admin without taking payment.
+              TEST_ORDERS ? (
+                <div>
+                  <div className="rounded-[12px] border border-dashed border-[var(--paper-line)] bg-white p-5 text-[0.95rem] text-ink-soft">
+                    Test mode: card payments switch on when the Stripe keys are added. Placing an order now records it in the admin without taking payment.
+                  </div>
+                  <button type="button" onClick={placeTestOrder} disabled={placing} className="btn btn-ink mt-6 w-full">
+                    {placing ? "Placing order…" : `Place test order · ${formatPrice(pence(cart.total))}`}
+                  </button>
                 </div>
-                <button type="button" onClick={placeTestOrder} disabled={placing} className="btn btn-ink mt-6 w-full">
-                  {placing ? "Placing order…" : `Place test order · ${formatPrice(pence(cart.total))}`}
-                </button>
-              </div>
+              ) : (
+                <div className="rounded-[12px] border border-[var(--paper-line)] bg-white p-5 text-[0.95rem] text-ink-soft" role="status">
+                  <p className="font-medium text-ink">Online checkout opens very soon.</p>
+                  <p className="mt-1">We&apos;re switching on secure card payments. Your bag is saved — or <Link href="/contact" className="underline underline-offset-4">message us</Link> and we&apos;ll take your order personally.</p>
+                </div>
+              )
             )}
             {payError && (
               <p className="mt-4 text-[0.92rem] text-[#b4432f]" role="alert">

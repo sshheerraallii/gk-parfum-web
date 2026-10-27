@@ -40,6 +40,8 @@ services:
       MEDUSA_BACKEND_URL: https://${ADMIN_DOMAIN}
       STRIPE_API_KEY: ${STRIPE_API_KEY}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      # "pay later" test orders — keep false on the live shop
+      ALLOW_TEST_ORDERS: ${ALLOW_TEST_ORDERS:-false}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
       # emails (Resend) — order confirmation, dispatch, password reset, owner alerts
       RESEND_API_KEY: ${RESEND_API_KEY:-}
@@ -65,6 +67,7 @@ services:
         NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY: ${MEDUSA_PUBLISHABLE_KEY}
         NEXT_PUBLIC_SITE_URL: https://${SITE_DOMAIN}
         NEXT_PUBLIC_STRIPE_KEY: ${STRIPE_PUBLISHABLE_KEY}
+        NEXT_PUBLIC_ALLOW_TEST_ORDERS: ${ALLOW_TEST_ORDERS:-false}
     restart: unless-stopped
     depends_on:
       backend: { condition: service_healthy }

@@ -90,6 +90,19 @@ function blockDirectLineItemEdits(_req: MedusaRequest, res: MedusaResponse, _nex
   res.status(403).json({ type: "not_allowed", message: "Update the bag through /store/gk/carts/:id/sync" })
 }
 
+/**
+ * "Pay later" test orders (Medusa's system payment provider) only when ALLOW_TEST_ORDERS=true —
+ * on the live shop every order must go through a real payment provider.
+ */
+function blockTestPayments(req: MedusaRequest, res: MedusaResponse, next: MedusaNextFunction) {
+  const provider = (req.body as { provider_id?: string } | undefined)?.provider_id
+  if (provider === "pp_system_default" && process.env.ALLOW_TEST_ORDERS !== "true") {
+    res.status(403).json({ type: "not_allowed", message: "Online checkout isn't open yet — card payments are being switched on." })
+    return
+  }
+  next()
+}
+
 export default defineMiddlewares({
   routes: [
     {
@@ -108,5 +121,6 @@ export default defineMiddlewares({
     { method: ["POST"], matcher: "/admin/gk/posts", middlewares: [validateAndTransformBody(GkPostSchema)] },
     { method: ["POST"], matcher: "/admin/gk/posts/:id", middlewares: [validateAndTransformBody(GkPostSchema)] },
     { method: ["POST", "DELETE"], matcher: "/store/carts/:id/line-items*", middlewares: [blockDirectLineItemEdits] },
+    { method: ["POST"], matcher: "/store/payment-collections/:id/payment-sessions", middlewares: [blockTestPayments] },
   ],
 })
