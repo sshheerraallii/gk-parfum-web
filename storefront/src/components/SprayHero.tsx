@@ -118,8 +118,9 @@ export function SprayHero() {
     s.pressAt = s.t;
     s.holdFired = false;
     s.released = false;
-    const slot = slotRef.current!.getBoundingClientRect();
-    const hr = sectionRef.current!.getBoundingClientRect();
+    if (!slotRef.current || !sectionRef.current) return;
+    const slot = slotRef.current.getBoundingClientRect();
+    const hr = sectionRef.current.getBoundingClientRect();
     const aimX = slot.left + slot.width * 0.55 - hr.left;
     const aimY = slot.top + slot.height * 0.5 - hr.top;
     const baseAng = Math.atan2(aimY - n.y, aimX - n.x);
@@ -177,7 +178,9 @@ export function SprayHero() {
     s.sprite = sp;
 
     const resize = () => {
-      const r = sectionRef.current!.getBoundingClientRect();
+      // the observer can fire once more after leaving the page — nothing to measure then
+      if (!sectionRef.current || !slotRef.current) return;
+      const r = sectionRef.current.getBoundingClientRect();
       s.dpr = Math.min(window.devicePixelRatio || 1, 2);
       s.w = r.width;
       s.h = r.height;
