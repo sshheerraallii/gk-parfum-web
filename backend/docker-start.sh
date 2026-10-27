@@ -5,6 +5,9 @@ set -e
 # Database tables + first-time GK seed. Safe to run on every boot.
 ./node_modules/.bin/medusa db:migrate
 
+# Make sure checkout offers the payment providers whose keys are set (e.g. Stripe added later).
+./node_modules/.bin/medusa exec ./src/scripts/ensure-payment-providers.js || echo "GK: payment provider check skipped"
+
 # Optional: create the first admin login from env vars (ignored if it already exists).
 if [ -n "$ADMIN_EMAIL" ] && [ -n "$ADMIN_PASSWORD" ]; then
   ./node_modules/.bin/medusa user -e "$ADMIN_EMAIL" -p "$ADMIN_PASSWORD" >/dev/null 2>&1 \
