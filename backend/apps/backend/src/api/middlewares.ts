@@ -1,6 +1,7 @@
 import { configureStoreSearch, defineMiddlewares, validateAndTransformBody } from "@medusajs/framework/http"
 import type { MedusaNextFunction, MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { z } from "@medusajs/framework/zod"
+import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
 
 export const SyncGkCartSchema = z.object({
   lines: z
@@ -103,6 +104,30 @@ function blockTestPayments(req: MedusaRequest, res: MedusaResponse, next: Medusa
   next()
 }
 
+/**
+ * Pre-launch: the shop is public but not selling yet. Payments are refused unless the cart carries the
+ * preview key (testers open gkparfum.co.uk/preview?key=… once). SHOP_MODE=live switches this off.
+ */
+async function prelaunchGate(req: MedusaRequest, res: MedusaResponse, next: MedusaNextFunction) {
+  if ((process.env.SHOP_MODE || "live") !== "prelaunch") {
+    return next()
+  }
+  const key = process.env.PREVIEW_KEY || ""
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  let meta: Record<string, unknown> | null | undefined
+  if (req.params.id?.startsWith("pay_col_")) {
+    const { data } = await query.graph({ entity: "payment_collection", fields: ["id", "cart.metadata"], filters: { id: req.params.id } })
+    meta = (data[0] as { cart?: { metadata?: Record<string, unknown> | null } } | undefined)?.cart?.metadata
+  } else {
+    const { data } = await query.graph({ entity: "cart", fields: ["id", "metadata"], filters: { id: req.params.id } })
+    meta = (data[0] as { metadata?: Record<string, unknown> | null } | undefined)?.metadata
+  }
+  if (key && meta?.gk_preview === key) {
+    return next()
+  }
+  res.status(403).json({ type: "not_allowed", message: "We're launching very soon — online checkout isn't open yet." })
+}
+
 export default defineMiddlewares({
   routes: [
     {
@@ -121,6 +146,7 @@ export default defineMiddlewares({
     { method: ["POST"], matcher: "/admin/gk/posts", middlewares: [validateAndTransformBody(GkPostSchema)] },
     { method: ["POST"], matcher: "/admin/gk/posts/:id", middlewares: [validateAndTransformBody(GkPostSchema)] },
     { method: ["POST", "DELETE"], matcher: "/store/carts/:id/line-items*", middlewares: [blockDirectLineItemEdits] },
-    { method: ["POST"], matcher: "/store/payment-collections/:id/payment-sessions", middlewares: [blockTestPayments] },
+    { method: ["POST"], matcher: "/store/payment-collections/:id/payment-sessions", middlewares: [blockTestPayments, prelaunchGate] },
+    { method: ["POST"], matcher: "/store/carts/:id/complete", middlewares: [prelaunchGate] },
   ],
 })

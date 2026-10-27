@@ -8,26 +8,36 @@ const modules: { resolve: string; options?: Record<string, unknown> }[] = [
   { resolve: "./src/modules/gk-blog" },
 ]
 
-// Card, Apple Pay, Google Pay, PayPal and Klarna all run through Stripe's Payment Element.
-// Turn individual methods on in the Stripe dashboard → Settings → Payment methods.
+// Payments. Stripe: cards, Apple Pay, Google Pay, Klarna/Clearpay through the Payment Element (turn methods on
+// in the Stripe dashboard → Settings → Payment methods). PayPal: its own button at checkout.
+const paymentProviders: { resolve: string; id: string; options: Record<string, unknown> }[] = []
 if (process.env.STRIPE_API_KEY) {
-  modules.push({
-    resolve: "@medusajs/medusa/payment",
+  paymentProviders.push({
+    resolve: "@medusajs/medusa/payment-stripe",
+    id: "stripe",
     options: {
-      providers: [
-        {
-          resolve: "@medusajs/medusa/payment-stripe",
-          id: "stripe",
-          options: {
-            apiKey: process.env.STRIPE_API_KEY,
-            webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
-            capture: true,
-            automatic_payment_methods: true,
-          },
-        },
-      ],
+      apiKey: process.env.STRIPE_API_KEY,
+      webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+      capture: true,
+      automatic_payment_methods: true,
     },
   })
+}
+if (process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET) {
+  paymentProviders.push({
+    resolve: "./src/modules/paypal",
+    id: "paypal",
+    options: {
+      clientId: process.env.PAYPAL_CLIENT_ID,
+      clientSecret: process.env.PAYPAL_CLIENT_SECRET,
+      // sandbox unless told it's live
+      sandbox: process.env.PAYPAL_MODE !== "live",
+      apiUrl: process.env.PAYPAL_API_URL,
+    },
+  })
+}
+if (paymentProviders.length) {
+  modules.push({ resolve: "@medusajs/medusa/payment", options: { providers: paymentProviders } })
 }
 
 // Product photos uploaded in the admin. Without S3 settings they're saved on the server's own disk,

@@ -3,24 +3,29 @@ import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
 import { updateRegionsWorkflow } from "@medusajs/medusa/core-flows"
 
 /**
- * Runs on every backend start (docker-start.sh). When Stripe keys are set, makes sure every region
- * offers Stripe at checkout — the database may have been created before the keys were added.
+ * Runs on every backend start (docker-start.sh). Makes every region offer exactly the payment providers whose
+ * keys are set (Stripe, PayPal) — the database may have been created before the keys were added.
  */
 export default async function ensurePaymentProviders({ container }: ExecArgs) {
   const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
-  if (!process.env.STRIPE_API_KEY) {
+  const wanted = [
+    process.env.STRIPE_API_KEY ? "pp_stripe_stripe" : null,
+    process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET ? "pp_paypal_paypal" : null,
+  ].filter((p): p is string => !!p)
+  if (!wanted.length) {
     return
   }
   const query = container.resolve(ContainerRegistrationKeys.QUERY)
   const { data: regions } = await query.graph({ entity: "region", fields: ["id", "name", "payment_providers.id"] })
   for (const r of regions) {
     const ids = (r.payment_providers ?? []).filter(Boolean).map((p) => p!.id)
-    if (ids.includes("pp_stripe_stripe")) {
+    const missing = wanted.filter((w) => !ids.includes(w))
+    if (!missing.length) {
       continue
     }
     await updateRegionsWorkflow(container).run({
-      input: { selector: { id: r.id }, update: { payment_providers: ["pp_stripe_stripe", ...ids] } },
+      input: { selector: { id: r.id }, update: { payment_providers: [...missing, ...ids] } },
     })
-    logger.info(`GK: Stripe switched on for ${r.name}`)
+    logger.info(`GK: ${missing.map((m) => (m.includes("stripe") ? "Stripe" : "PayPal")).join(" + ")} switched on for ${r.name}`)
   }
 }

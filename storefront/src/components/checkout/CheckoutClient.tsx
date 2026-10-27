@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js/pure";
+import { SHOP_MODE, checkoutOpen } from "@/lib/preview";
+import { PayPalPay, paypalConfigured } from "./PayPalPay";
 import type { Stripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useCart } from "@/lib/cart";
@@ -233,13 +235,18 @@ export function CheckoutClient() {
     return () => clearTimeout(t);
   }, [cart, addressOk, email, addr, marketing, syncLines]);
 
-  const stripeOn = !!STRIPE_KEY && providers.includes("pp_stripe_stripe");
+  const open = mounted && checkoutOpen();
+  const stripeOn = open && !!STRIPE_KEY && providers.includes("pp_stripe_stripe");
+  const paypalOn = open && paypalConfigured() && providers.includes("pp_paypal_paypal");
+  const [method, setMethod] = useState<"card" | "paypal">("card");
+  const payWith = stripeOn && paypalOn ? method : stripeOn ? "card" : paypalOn ? "paypal" : null;
   const readyToPay = !!cart && addressOk && !!optionId && !!cart.shipping_methods?.length;
 
   // 3. (re)start the payment session whenever the amount changes
   const total = cart?.total;
   useEffect(() => {
-    if (!readyToPay || !cart || !stripeOn) return;
+    if (!readyToPay || !cart || payWith !== "card") return;
+    setClientSecret(null);
     let live = true;
     startPayment(cart.id, "pp_stripe_stripe")
       .then((s) => live && setClientSecret((s?.data?.client_secret as string) ?? null))
@@ -248,7 +255,7 @@ export function CheckoutClient() {
       live = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [readyToPay, stripeOn, total]);
+  }, [readyToPay, payWith, total]);
 
   const chooseOption = async (id: string) => {
     if (!cart) return;
@@ -493,10 +500,37 @@ export function CheckoutClient() {
           </Section>
 
           <Section n={4} title="Payment" muted={!readyToPay}>
-            {!readyToPay ? (
+            {SHOP_MODE === "prelaunch" && open && (
+              <p className="mb-4 rounded-full bg-[#1d1813] px-4 py-2 text-center text-[0.8rem] text-[#f1e9da]">Pre-launch preview · payments here are tests</p>
+            )}
+            {!open ? (
+              <div className="rounded-[12px] border border-[var(--paper-line)] bg-white p-5 text-[0.95rem] text-ink-soft" role="status">
+                <p className="font-medium text-ink">We&apos;re launching very soon.</p>
+                <p className="mt-1">Online checkout opens in the next few days. Your bag is saved — or <Link href="/contact" className="underline underline-offset-4">message us</Link> and we&apos;ll let you know the moment we&apos;re live.</p>
+              </div>
+            ) : !readyToPay ? (
               <p className="text-ink-soft">Choose delivery first.</p>
-            ) : stripeOn ? (
-              clientSecret ? (
+            ) : payWith ? (
+              <div>
+                {stripeOn && paypalOn && (
+                  <div role="radiogroup" aria-label="How would you like to pay?" className="mb-5 grid grid-cols-2 gap-2">
+                    {(["card", "paypal"] as const).map((m) => (
+                      <button
+                        key={m}
+                        type="button"
+                        role="radio"
+                        aria-checked={payWith === m}
+                        onClick={() => { setMethod(m); setPayError(null); }}
+                        className={`h-12 rounded-[10px] border text-[0.95rem] transition-colors ${payWith === m ? "border-ink bg-white text-ink" : "border-[var(--paper-line)] text-ink-soft hover:border-ink"}`}
+                      >
+                        {m === "card" ? "Card · Apple Pay · Google Pay" : "PayPal"}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {payWith === "paypal" ? (
+                  <PayPalPay cart={cart} onDone={finish} />
+                ) : clientSecret ? (
                 <Elements
                   key={clientSecret}
                   stripe={getStripe()}
@@ -512,7 +546,8 @@ export function CheckoutClient() {
                 </Elements>
               ) : (
                 <p className="text-ink-soft" role="status">Loading secure payment…</p>
-              )
+              )}
+              </div>
             ) : (
               TEST_ORDERS ? (
                 <div>

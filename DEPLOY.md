@@ -8,6 +8,22 @@ First-time setup on a fresh Ubuntu server (as root), after pointing DNS `@`, `ww
 curl -fsSL https://raw.githubusercontent.com/sshheerraallii/gk-parfum-web/main/deploy/setup.sh | bash -s -- <domain> <admin-email>
 ```
 
+## Launch switch (payments)
+
+`deploy/shop.sh` keeps test and live keys side by side in `deploy/.env` and flips the shop between modes:
+
+```bash
+bash /opt/gk-parfum-web/deploy/shop.sh status      # mode + which keys are stored (masked)
+bash /opt/gk-parfum-web/deploy/shop.sh keys        # store Stripe test/live or PayPal sandbox/live keys (hidden input)
+bash /opt/gk-parfum-web/deploy/shop.sh prelaunch   # public site, checkout closed; testers use the printed /preview?key=… link
+bash /opt/gk-parfum-web/deploy/shop.sh live        # go live: live keys, checkout open (asks you to type LIVE)
+```
+
+- **prelaunch**: test keys active, `SHOP_MODE=prelaunch`. The backend refuses payments unless the bag carries `PREVIEW_KEY`, which a browser gets by opening `https://<domain>/preview?key=…` once. Everyone else sees "launching very soon".
+- **live**: live Stripe (+ live PayPal if stored) active, `SHOP_MODE=live`, checkout open.
+- Stripe webhook (test and live each have their own signing secret): `https://admin.<domain>/hooks/payment/stripe_stripe`, events `payment_intent.succeeded`, `payment_intent.amount_capturable_updated`, `payment_intent.payment_failed`, `payment_intent.partially_funded`.
+- PayPal: credentials from developer.paypal.com → Apps & Credentials (Sandbox and Live apps). No webhook needed — the payment is captured when the order is placed.
+
 ## 1. How changes go live (yes — git push deploys to the VPS)
 
 1. Make the change in the repo (Claude does this in a session), commit, **push to `main`**.

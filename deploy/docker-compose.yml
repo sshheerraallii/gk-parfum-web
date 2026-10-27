@@ -42,6 +42,12 @@ services:
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
       # "pay later" test orders — keep false on the live shop
       ALLOW_TEST_ORDERS: ${ALLOW_TEST_ORDERS:-false}
+      PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID:-}
+      PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET:-}
+      PAYPAL_MODE: ${PAYPAL_MODE:-sandbox}
+      # prelaunch = checkout closed except for testers with the preview key; live = open. Switch with deploy/shop.sh
+      SHOP_MODE: ${SHOP_MODE:-prelaunch}
+      PREVIEW_KEY: ${PREVIEW_KEY:-}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
       # emails (Resend) — order confirmation, dispatch, password reset, owner alerts
       RESEND_API_KEY: ${RESEND_API_KEY:-}
@@ -68,6 +74,8 @@ services:
         NEXT_PUBLIC_SITE_URL: https://${SITE_DOMAIN}
         NEXT_PUBLIC_STRIPE_KEY: ${STRIPE_PUBLISHABLE_KEY}
         NEXT_PUBLIC_ALLOW_TEST_ORDERS: ${ALLOW_TEST_ORDERS:-false}
+        NEXT_PUBLIC_PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID:-}
+        NEXT_PUBLIC_SHOP_MODE: ${SHOP_MODE:-prelaunch}
     restart: unless-stopped
     depends_on:
       backend: { condition: service_healthy }

@@ -1,5 +1,7 @@
 "use client";
 
+import { previewKey } from "./preview";
+
 /** Browser-side calls to the Medusa store API, used by checkout. */
 const URL_ = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "";
 const KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "";
@@ -172,6 +174,9 @@ export async function removePromo(cartId: string, code: string) {
 }
 
 export async function startPayment(cartId: string, provider: string) {
+  // pre-launch testers: tag the bag with the preview key so the backend accepts the payment
+  const pk = previewKey();
+  if (pk) await updateCart(cartId, { metadata: { gk_preview: pk } });
   const cart = await getCart(cartId);
   let pcId = cart.payment_collection?.id;
   if (!pcId) {
