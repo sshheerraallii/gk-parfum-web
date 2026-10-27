@@ -31,7 +31,7 @@ redeploy() {
 }
 
 # one-time: the keys entered before this script existed were the Stripe sandbox ones — park them as test keys
-if [ -z "$(get STRIPE_TEST_API_KEY)" ] && [[ "$(get STRIPE_API_KEY)" == sk_test_* ]]; then
+if [ -z "$(get STRIPE_TEST_API_KEY)" ] && [[ "$(get STRIPE_API_KEY)" == sk_test_* || "$(get STRIPE_API_KEY)" == rk_test_* ]]; then
   put STRIPE_TEST_PUBLISHABLE_KEY "$(get STRIPE_PUBLISHABLE_KEY)"
   put STRIPE_TEST_API_KEY "$(get STRIPE_API_KEY)"
   put STRIPE_TEST_WEBHOOK_SECRET "$(get STRIPE_WEBHOOK_SECRET)"
@@ -66,7 +66,7 @@ keys() {
        ask STRIPE_TEST_API_KEY "Stripe TEST secret key (sk_test_…)" secret
        ask STRIPE_TEST_WEBHOOK_SECRET "Stripe TEST webhook signing secret (whsec_…)" secret ;;
     2) ask STRIPE_LIVE_PUBLISHABLE_KEY "Stripe LIVE publishable key (pk_live_…)"
-       ask STRIPE_LIVE_API_KEY "Stripe LIVE secret key (sk_live_…)" secret
+       ask STRIPE_LIVE_API_KEY "Stripe LIVE secret key (sk_live_… or rk_live_…)" secret
        ask STRIPE_LIVE_WEBHOOK_SECRET "Stripe LIVE webhook signing secret (whsec_…)" secret ;;
     3) ask PAYPAL_TEST_CLIENT_ID "PayPal SANDBOX client ID"
        ask PAYPAL_TEST_CLIENT_SECRET "PayPal SANDBOX secret" secret ;;
@@ -103,7 +103,7 @@ case "${1:-status}" in
     ;;
   live)
     [ -n "$(get STRIPE_LIVE_API_KEY)" ] || { echo "No LIVE Stripe keys stored yet — run: bash $0 keys  (choose 2)"; exit 1; }
-    [[ "$(get STRIPE_LIVE_API_KEY)" == sk_live_* ]] || { echo "The stored LIVE Stripe secret doesn't start with sk_live_ — check it with: bash $0 keys"; exit 1; }
+    [[ "$(get STRIPE_LIVE_API_KEY)" == sk_live_* || "$(get STRIPE_LIVE_API_KEY)" == rk_live_* ]] || { echo "The stored LIVE Stripe key doesn't start with sk_live_ or rk_live_ — check it with: bash $0 keys"; exit 1; }
     [ -n "$(get STRIPE_LIVE_WEBHOOK_SECRET)" ] || { echo "No LIVE Stripe webhook secret — create the live webhook in Stripe first, then: bash $0 keys"; exit 1; }
     [ -n "$(get PAYPAL_LIVE_CLIENT_ID)" ] || echo "Note: no LIVE PayPal keys — the shop goes live with Stripe only (PayPal hidden)."
     read -rp "Go LIVE now? Real cards will be charged. Type LIVE to confirm: " ok
