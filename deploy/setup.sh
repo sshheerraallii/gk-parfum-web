@@ -64,7 +64,7 @@ ADMIN_PASSWORD=$ADMIN_PASSWORD
 MEDUSA_PUBLISHABLE_KEY=
 # emails (resend.com) — add the key, then run: bash $DIR/deploy/update.sh --force
 RESEND_API_KEY=
-EMAIL_FROM=GK Parfum <orders@$DOMAIN>
+EMAIL_FROM="GK Parfum <orders@$DOMAIN>"
 OWNER_EMAIL=$ADMIN_EMAIL
 # payments — add the live keys later, then run: bash $DIR/deploy/update.sh --force
 STRIPE_PUBLISHABLE_KEY=
