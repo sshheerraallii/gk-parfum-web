@@ -87,7 +87,7 @@ if (process.env.RESEND_API_KEY) {
           options: {
             channels: ["email"],
             apiKey: process.env.RESEND_API_KEY,
-            from: process.env.EMAIL_FROM || "GK Parfum <orders@gkparfum.co.uk>",
+            from: process.env.EMAIL_FROM || "GK Parfum <sales@gkparfum.co.uk>",
             replyTo: process.env.OWNER_EMAIL || process.env.ADMIN_EMAIL,
             apiUrl: process.env.RESEND_API_URL,
           },
