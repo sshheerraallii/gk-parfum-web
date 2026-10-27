@@ -41,6 +41,11 @@ services:
       STRIPE_API_KEY: ${STRIPE_API_KEY}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      # emails (Resend) — order confirmation, dispatch, password reset, owner alerts
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      EMAIL_FROM: ${EMAIL_FROM:-GK Parfum <orders@${SITE_DOMAIN}>}
+      OWNER_EMAIL: ${OWNER_EMAIL:-${ADMIN_EMAIL:-}}
+      STOREFRONT_URL: https://${SITE_DOMAIN}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
       # this server has room to spare, unlike the 512 MB free tier
       NODE_OPTIONS: --max-old-space-size=1024

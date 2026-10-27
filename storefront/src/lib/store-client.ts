@@ -332,3 +332,13 @@ export async function requestPasswordReset(email: string) {
     body: JSON.stringify({ identifier: email }),
   });
 }
+
+/** Sets a new password with the one-time token from the reset email. */
+export async function resetPassword(token: string, password: string) {
+  const r = await fetch(`${URL_}/auth/customer/emailpass/update`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ password }),
+  });
+  if (!r.ok) throw new StoreError("This reset link has expired or was already used. Ask for a new one.", r.status);
+}

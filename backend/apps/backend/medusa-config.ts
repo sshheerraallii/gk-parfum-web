@@ -75,6 +75,28 @@ if (process.env.S3_BUCKET) {
   })
 }
 
+// Shop emails (order confirmation, dispatch, password reset, owner alerts) via Resend.
+if (process.env.RESEND_API_KEY) {
+  modules.push({
+    resolve: "@medusajs/medusa/notification",
+    options: {
+      providers: [
+        {
+          resolve: "./src/modules/resend",
+          id: "resend",
+          options: {
+            channels: ["email"],
+            apiKey: process.env.RESEND_API_KEY,
+            from: process.env.EMAIL_FROM || "GK Parfum <orders@gkparfum.co.uk>",
+            replyTo: process.env.OWNER_EMAIL || process.env.ADMIN_EMAIL,
+            apiUrl: process.env.RESEND_API_URL,
+          },
+        },
+      ],
+    },
+  })
+}
+
 module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
