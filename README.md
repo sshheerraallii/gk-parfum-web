@@ -63,7 +63,7 @@ Without Stripe keys, checkout runs in **test mode**: orders are created in the a
 
 ## Free client preview
 
-Step-by-step in **[DEPLOY.md](DEPLOY.md)**: shop on Vercel, admin + API on Render (`render.yaml`), database on Supabase — £0, auto-deploys on `git push`.
+Step-by-step in **[DEPLOY.md](DEPLOY.md)**: one VPS running Docker Compose (Caddy, Next.js shop, Medusa backend + admin, PostgreSQL, Redis). Auto-deploys within ~3 minutes of a `git push` to `main`.
 
 ## Go live on a server
 
