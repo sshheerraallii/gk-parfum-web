@@ -583,7 +583,11 @@ function StripePay({ cart, onDone, name, email }: { cart: MCart; onDone: (id: st
         setErr(e instanceof Error ? e.message : "Payment taken but the order didn't save — contact us and we'll sort it.");
         setBusy(false);
       }
+      return;
     }
+    // anything else (cancelled, needs another card…) — never leave the button stuck on "Paying…"
+    setErr(paymentIntent ? `Payment not completed (${paymentIntent.status.replace(/_/g, " ")}). Please try again or use another card.` : "Payment not completed. Please try again.");
+    setBusy(false);
   };
 
   return (
