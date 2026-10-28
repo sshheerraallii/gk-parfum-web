@@ -92,7 +92,14 @@ services:
       ADMIN_DOMAIN: ${ADMIN_DOMAIN}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - /opt/caddy-sites:/etc/caddy/sites:ro
       - caddydata:/data
+    # shared network so other projects' containers can be reverse-proxied by this Caddy
+    networks: [default, web]
+
+networks:
+  web:
+    name: web   # created by this stack; other projects join it as external
 
 volumes:
   pgdata:

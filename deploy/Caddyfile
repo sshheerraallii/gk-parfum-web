@@ -1,4 +1,7 @@
 # Automatic HTTPS for the shop and the backend/admin.
+# Other sites on this server: drop a <name>.caddy file in /opt/caddy-sites on the host (see DEPLOY.md → "Other sites").
+import /etc/caddy/sites/*.caddy
+
 {$SITE_DOMAIN} {
 	encode zstd gzip
 	reverse_proxy storefront:3000

@@ -73,3 +73,26 @@ gunzip -c /root/backups/gk-2026-10-23.sql.gz | docker compose exec -T postgres p
 - "Forgot password" fails until email (Resend) is added — use `set-admin-password.sh`.
 
 ---
+
+## Other sites on this server
+
+GK's Caddy owns ports 80/443 and also loads every `/opt/caddy-sites/*.caddy` file on the host. To add a site:
+
+1. Give the other project its own `docker-compose.yml` (its own database etc.), with the web container on the shared external network `web` and **no published ports**:
+   ```yaml
+   services:
+     app:
+       container_name: wredd-app        # unique name — Caddy reaches it by this
+       networks: [default, web]
+   networks:
+     web:
+       external: true
+   ```
+2. Create `/opt/caddy-sites/<name>.caddy`:
+   ```
+   dashboard.example.com {
+   	encode zstd gzip
+   	reverse_proxy wredd-app:8080
+   }
+   ```
+3. Point the domain's A record at the server, then reload Caddy: `docker exec deploy-caddy-1 caddy reload --config /etc/caddy/Caddyfile`. HTTPS is automatic.

@@ -79,6 +79,7 @@ fi
 set -a; . "$ENVF"; set +a
 
 say "Database, backend + admin, HTTPS (first build takes ~5–10 minutes)"
+mkdir -p /opt/caddy-sites
 docker compose up -d --build postgres redis backend caddy </dev/null
 echo -n "Waiting for the backend"
 for i in $(seq 1 120); do
